@@ -1,0 +1,42 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP +5V5
+K POWER, PWR
+$ENDCMP
+#
+$CMP ADS1115
+D 16-bit analog to digital converter, 4 inputs, integrated temperature sensor, I2C interface
+K adc i2c quad
+F http://www.ti.com/lit/ds/symlink/ads1114.pdf
+$ENDCMP
+#
+$CMP DS1343/1344
+D Low-Current SPI/3-Wire RTCs
+K RTC
+$ENDCMP
+#
+$CMP DS3234
+D SPI Bus RTC with Integrated Oscillator
+K RTC
+F analog-dev/ad9708.pdf
+$ENDCMP
+#
+$CMP FGPMMOPA6
+D GPS Module
+$ENDCMP
+#
+$CMP HE721C
+K Single Pole Relay
+F http://www.littelfuse.com/~/media/electronics/datasheets/reed_relays/littelfuse_reed_relays_he700_datasheet.pdf.pdf
+$ENDCMP
+#
+$CMP L6920DB
+D CDA 8 bits
+K CDA
+$ENDCMP
+#
+$CMP RFM69HCW
+D ISM Transceiver Module
+$ENDCMP
+#
+#End Doc Library
