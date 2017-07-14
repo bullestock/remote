@@ -1,4 +1,4 @@
-update=Thu 13 Jul 2017 11:42:33 PM CEST
+update=Fri 14 Jul 2017 08:53:16 PM CEST
 version=1
 last_client=kicad
 [pcbnew]
@@ -58,7 +58,7 @@ LibName26=opto
 LibName27=atmel
 LibName28=contrib
 LibName29=valves
-LibName30=libs/Alex-KiCad-Misc
-LibName31=libs/arduino
-LibName32=libs/nRF24L01+
-LibName33=libs/switches
+LibName30=libs/arduino
+LibName31=libs/nRF24L01+
+LibName32=libs/switches
+LibName33=libs/oled
