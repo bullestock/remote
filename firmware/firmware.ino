@@ -29,6 +29,11 @@ const int RIGHT_Y_PIN = A3;
 
 Adafruit_SSD1306 display(OLED_SDA, OLED_SCK, OLED_DC, OLED_RESET, OLED_CS);
 
+const int NOF_DELAY_SAMPLES = 100;
+uint16_t delay_samples[NOF_DELAY_SAMPLES];
+int actual_delay_samples = 0;
+
+
 void setup()
 {
     pinMode(LEFT_X_PIN, INPUT);
@@ -42,9 +47,7 @@ void setup()
     display.display();
     delay(1000);
     display.clearDisplay();
-    display.setTextSize(1);
     display.setTextColor(WHITE);
-    display.clearDisplay();
     display.setCursor(0, 0);
     display.print("Version ");
     display.print(VERSION);
@@ -55,6 +58,7 @@ void setup()
     {
         display.clearDisplay();
         display.setCursor(0, 0);
+        display.setTextSize(2);
         display.print("No radio!");
         display.display();
         while (1)
@@ -83,10 +87,14 @@ void setup()
   
     display.clearDisplay();
     display.setCursor(0, 1);
+    display.setTextSize(2);
     display.print(F("Ready"));
     display.display();
     delay(100);
 
+    for (int i = 0; i < NOF_DELAY_SAMPLES; ++i)
+        delay_samples[i] = 0;
+    
     // Start the radio listening for data
     radio.startListening();
 }
@@ -110,8 +118,10 @@ void loop()
     {
         Serial.println(F("Send failed"));
         display.clearDisplay();
-        display.setCursor(0, 1);
-        display.print(F("Send failed"));
+        display.setTextSize(2);
+        display.setCursor(0, 0);
+        display.println("");
+        display.print(F("Failed"));
         display.display();
     }
 
@@ -134,7 +144,9 @@ void loop()
         // Describe the results
         Serial.println(F("Failed, response timed out."));
         display.clearDisplay();
-        display.setCursor(0, 1);
+        display.setTextSize(2);
+        display.setCursor(0, 0);
+        display.println("");
         display.print(F("Timeout"));
         display.display();
     }
@@ -142,15 +154,33 @@ void loop()
     {
         uint16_t received_tick;
         radio.read(&received_tick, sizeof(received_tick));
-        const auto end_time = micros();
+        const uint16_t end_time = micros();
 
+        for (int i = actual_delay_samples-1; i > 0; --i)
+            delay_samples[i] = delay_samples[i-1];
+        delay_samples[0] = end_time-frame.ticks;
+        uint32_t sum = 0;
+        for (int i = 0; i < actual_delay_samples; ++i)
+            sum += delay_samples[i];
         display.clearDisplay();
-        display.setCursor(0, 1);
-        display.print(F("Delay "));
-        display.print(end_time-frame.ticks);
+        display.setCursor(0, 0);
+        if (actual_delay_samples < NOF_DELAY_SAMPLES)
+        {
+            ++actual_delay_samples;
+
+            display.setTextSize(1);
+            display.println(F("Connected"));
+        }
+        else
+        {
+            display.setTextSize(1);
+            display.println(F("Connected"));
+            display.setTextSize(2);
+            display.print(sum/NOF_DELAY_SAMPLES);
+            display.print(F(" us"));
+        }
         display.display();
     }
 
-    // Try again 1s later
-    delay(1000);
+    delay(10);
 }
