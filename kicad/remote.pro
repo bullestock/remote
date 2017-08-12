@@ -1,4 +1,4 @@
-update=Sun 06 Aug 2017 09:51:37 PM CEST
+update=Thu 10 Aug 2017 06:45:33 PM CEST
 version=1
 last_client=kicad
 [pcbnew]
@@ -50,3 +50,13 @@ LibName18=libs/nRF24L01+
 LibName19=libs/switches
 LibName20=libs/oled
 LibName21=libs/74xx
+[schematic_editor]
+version=1
+PageLayoutDescrFile=
+PlotDirectoryName=
+SubpartIdSeparator=0
+SubpartFirstId=65
+NetFmtName=
+SpiceForceRefPrefix=0
+SpiceUseNetNumbers=0
+LabSize=60

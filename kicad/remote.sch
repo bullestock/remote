@@ -508,19 +508,11 @@ Wire Wire Line
 Wire Wire Line
 	5850 5900 5700 5900
 Text GLabel 6650 3200 1    60   Input ~ 0
-A4
+A6
 Text GLabel 7650 3200 1    60   Input ~ 0
-A5
+A7
 Wire Wire Line
 	7650 3200 7650 3700
-Text GLabel 4050 5700 0    60   Input ~ 0
-A4
-Text GLabel 3800 5800 0    60   Input ~ 0
-A5
-Wire Wire Line
-	3800 5800 4300 5800
-Wire Wire Line
-	4300 5700 4050 5700
 $Comp
 L AP1117 U?
 U 1 1 59861917
@@ -640,4 +632,12 @@ Wire Wire Line
 	4300 6000 3800 6000
 Text GLabel 3800 6000 0    60   Input ~ 0
 A7
+Text GLabel 3800 5800 0    60   Input ~ 0
+A5
+Wire Wire Line
+	3800 5800 4300 5800
+Wire Wire Line
+	4300 5700 4050 5700
+Text GLabel 4050 5700 0    60   Input ~ 0
+A4
 $EndSCHEMATC
