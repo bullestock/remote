@@ -13,7 +13,9 @@ struct AirFrame
     int16_t right_y;
     uint8_t left_pot;
     uint8_t right_pot;
-    uint8_t switches;
+    // Bits 0-3: Pushbuttons
+    // Bits 8-15: Toggle switches (2 bits each)
+    uint16_t switches;
 };
 
 #pragma pack(pop)
