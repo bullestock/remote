@@ -29,8 +29,8 @@ const int RIGHT_Y_PIN = A3;
 const int SHIFT_CLOCK = 9;
 const int SHIFT_OUT = 10;
 const int SHIFT_LOAD = A5;
-const int SWITCH_PIN = A6;
-const int POT1_PIN = A7;
+const int SWITCH_PIN = A4;
+const int POT1_PIN = A6;
 const int POT2_PIN = A7;
 
 Adafruit_SSD1306 display(OLED_SDA, OLED_SCK, OLED_DC, OLED_RESET, OLED_CS);
