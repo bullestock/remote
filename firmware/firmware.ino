@@ -5,7 +5,7 @@
 
 #include "protocol.h"
 
-const char* VERSION = "0.0.1";
+const char* VERSION = "0.0.2";
 
 bool radioNumber = 0;
 
@@ -14,18 +14,24 @@ byte addresses[][6] = { "1Node", "2Node" };
 // Used to control whether this node is sending or receiving
 bool role = 1;
 
-/* Hardware configuration: Set up nRF24L01 radio on SPI bus plus pins 7 & 8 */
+// Set up nRF24L01 radio on SPI bus (11, 12, 13) plus pins 7 & 8
 RF24 radio(7, 8);
 
-#define OLED_SDA   5
-#define OLED_SCK   6
-#define OLED_DC    3
-#define OLED_CS    2
-#define OLED_RESET 4
+const int OLED_SDA = 5;
+const int OLED_SCK = 6;
+const int OLED_DC = 3;
+const int OLED_CS = 2;
+const int OLED_RESET = 4;
 const int LEFT_X_PIN = A0;
 const int LEFT_Y_PIN = A1;
 const int RIGHT_X_PIN = A2;
 const int RIGHT_Y_PIN = A3;
+const int SHIFT_CLOCK = 9;
+const int SHIFT_OUT = 10;
+const int SHIFT_LOAD = A5;
+const int SWITCH_PIN = A6;
+const int POT1_PIN = A7;
+const int POT2_PIN = A7;
 
 Adafruit_SSD1306 display(OLED_SDA, OLED_SCK, OLED_DC, OLED_RESET, OLED_CS);
 
@@ -40,7 +46,11 @@ void setup()
     pinMode(LEFT_Y_PIN, INPUT);
     pinMode(RIGHT_X_PIN, INPUT);
     pinMode(RIGHT_Y_PIN, INPUT);
-    
+    pinMode(SHIFT_CLOCK, OUTPUT);
+    pinMode(SHIFT_OUT, INPUT);
+    pinMode(SHIFT_LOAD, OUTPUT);
+    pinMode(SWITCH_PIN, OUTPUT);
+            
     Serial.begin(115200);
     Serial.println("Init");
     display.begin(SSD1306_SWITCHCAPVCC);
@@ -99,6 +109,58 @@ void setup()
     radio.startListening();
 }
 
+uint16_t read_switches()
+{
+    uint16_t ret = 0;
+
+    // Read toggles, pass 1
+    digitalWrite(SWITCH_PIN, 0);
+    digitalWrite(SHIFT_CLOCK, 1);
+    digitalWrite(SHIFT_LOAD, 0);
+    delayMicroseconds(5);
+    digitalWrite(SHIFT_LOAD, 1);
+    digitalWrite(SHIFT_CLOCK, 0);
+    for (int i = 0; i < 4; ++i)
+    {
+        auto val = digitalRead(SHIFT_OUT);
+        if (!val)
+            ret |= (1 << (8+2*i));
+        digitalWrite(SHIFT_CLOCK, 1);
+        delayMicroseconds(5);
+        digitalWrite(SHIFT_CLOCK, 0);
+    }
+
+    // Read toggles, pass 2
+    digitalWrite(SWITCH_PIN, 1);
+    digitalWrite(SHIFT_CLOCK, 1);
+    digitalWrite(SHIFT_LOAD, 0);
+    delayMicroseconds(5);
+    digitalWrite(SHIFT_LOAD, 1);
+    digitalWrite(SHIFT_CLOCK, 0);
+    for (int i = 0; i < 4; ++i)
+    {
+        auto val = digitalRead(SHIFT_OUT);
+        if (!val)
+            ret |= (2 << (8+2*i));
+        digitalWrite(SHIFT_CLOCK, 1);
+        delayMicroseconds(5);
+        digitalWrite(SHIFT_CLOCK, 0);
+    }
+
+    // Read pushbuttons
+    for (int i = 0; i < 4; ++i)
+    {
+        auto val = digitalRead(SHIFT_OUT);
+        if (!val)
+            ret |= (1 << i);
+        digitalWrite(SHIFT_CLOCK, 1);
+        delayMicroseconds(5);
+        digitalWrite(SHIFT_CLOCK, 0);
+    }
+    
+    return ret;
+}
+
 void loop()
 {
     AirFrame frame;
@@ -108,8 +170,12 @@ void loop()
     frame.left_y = analogRead(LEFT_Y_PIN);
     frame.right_x = analogRead(RIGHT_X_PIN);
     frame.right_y = analogRead(RIGHT_Y_PIN);
+    frame.switches = read_switches();
+
     char buf[80];
     sprintf(buf, "X %d Y %d X %d Y %d", frame.left_x, frame.left_y, frame.right_x, frame.right_y);
+    Serial.println(buf);
+    sprintf(buf, "S %04X", frame.switches);
     Serial.println(buf);
     frame.switches = 0; // TODO
     
