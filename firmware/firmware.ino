@@ -50,6 +50,8 @@ void setup()
     pinMode(SHIFT_OUT, INPUT);
     pinMode(SHIFT_LOAD, OUTPUT);
     pinMode(SWITCH_PIN, OUTPUT);
+    pinMode(POT1_PIN, INPUT);
+    pinMode(POT2_PIN, INPUT);
             
     Serial.begin(115200);
     Serial.println("Init");
@@ -170,12 +172,14 @@ void loop()
     frame.left_y = analogRead(LEFT_Y_PIN);
     frame.right_x = analogRead(RIGHT_X_PIN);
     frame.right_y = analogRead(RIGHT_Y_PIN);
+    frame.left_pot = analogRead(POT1_PIN)/4;
+    frame.right_pot = analogRead(POT2_PIN)/4;
     frame.switches = read_switches();
 
     char buf[80];
     sprintf(buf, "X %d Y %d X %d Y %d", frame.left_x, frame.left_y, frame.right_x, frame.right_y);
     Serial.println(buf);
-    sprintf(buf, "S %04X", frame.switches);
+    sprintf(buf, "S %04X P %02X %02X", frame.switches, frame.left_pot, frame.right_pot);
     Serial.println(buf);
     frame.switches = 0; // TODO
     
