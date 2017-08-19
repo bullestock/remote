@@ -181,7 +181,6 @@ void loop()
     Serial.println(buf);
     sprintf(buf, "S %04X P %02X %02X", frame.switches, frame.left_pot, frame.right_pot);
     Serial.println(buf);
-    frame.switches = 0; // TODO
     
     radio.stopListening();
     if (!radio.write(&frame, sizeof(frame)))
