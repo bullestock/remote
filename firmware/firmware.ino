@@ -5,14 +5,9 @@
 
 #include "protocol.h"
 
-const char* VERSION = "0.0.2";
+const char* VERSION = "0.0.3";
 
-bool radioNumber = 0;
-
-byte addresses[][6] = { "1Node", "2Node" };
-
-// Used to control whether this node is sending or receiving
-bool role = 1;
+byte addresses[][6] = { "1BULL", "2BULL" };
 
 // Set up nRF24L01 radio on SPI bus (11, 12, 13) plus pins 7 & 8
 RF24 radio(7, 8);
@@ -83,19 +78,11 @@ void setup()
     // Go above WiFi channels
     radio.setChannel(108);
     // Set the PA Level low to prevent power supply related issues
-    radio.setPALevel(RF24_PA_LOW);
+    radio.setPALevel(RF24_PA_MAX);
   
     // Open a writing and reading pipe on each radio, with opposite addresses
-    if (radioNumber)
-    {
-        radio.openWritingPipe(addresses[1]);
-        radio.openReadingPipe(1, addresses[0]);
-    }
-    else
-    {
-        radio.openWritingPipe(addresses[0]);
-        radio.openReadingPipe(1, addresses[1]);
-    }
+    radio.openWritingPipe(addresses[0]);
+    radio.openReadingPipe(1, addresses[1]);
   
     display.clearDisplay();
     display.setCursor(0, 1);
@@ -163,6 +150,9 @@ uint16_t read_switches()
     return ret;
 }
 
+unsigned long failures = 0;
+unsigned long successes = 0;
+
 void loop()
 {
     AirFrame frame;
@@ -185,15 +175,10 @@ void loop()
     radio.stopListening();
     if (!radio.write(&frame, sizeof(frame)))
     {
-        Serial.println(F("Send failed"));
-        display.clearDisplay();
-        display.setTextSize(2);
-        display.setCursor(0, 0);
-        display.println("");
-        display.print(F("Failed"));
-        display.display();
+        ++failures;
+        return;
     }
-
+    
     radio.startListening();
     const auto started_waiting_at = micros();
     bool timeout = false;
@@ -210,46 +195,36 @@ void loop()
         
     if (timeout)
     {
-        // Describe the results
-        Serial.println(F("Failed, response timed out."));
-        display.clearDisplay();
-        display.setTextSize(2);
-        display.setCursor(0, 0);
-        display.println("");
-        display.print(F("Timeout"));
-        display.display();
+        ++failures;
+        return;
     }
+    ++successes;
+    
+    uint16_t received_tick;
+    radio.read(&received_tick, sizeof(received_tick));
+    const uint16_t end_time = micros();
+
+    for (int i = actual_delay_samples-1; i > 0; --i)
+        delay_samples[i] = delay_samples[i-1];
+    delay_samples[0] = end_time-frame.ticks;
+    uint32_t sum = 0;
+    for (int i = 0; i < actual_delay_samples; ++i)
+        sum += delay_samples[i];
+    display.clearDisplay();
+    display.setCursor(0, 0);
+    display.setTextSize(1);
+    char buf2[30];
+    sprintf(buf2, "%lu/%lu", failures, successes);
+    display.println(buf2);
+    if (actual_delay_samples < NOF_DELAY_SAMPLES)
+        ++actual_delay_samples;
     else
     {
-        uint16_t received_tick;
-        radio.read(&received_tick, sizeof(received_tick));
-        const uint16_t end_time = micros();
-
-        for (int i = actual_delay_samples-1; i > 0; --i)
-            delay_samples[i] = delay_samples[i-1];
-        delay_samples[0] = end_time-frame.ticks;
-        uint32_t sum = 0;
-        for (int i = 0; i < actual_delay_samples; ++i)
-            sum += delay_samples[i];
-        display.clearDisplay();
-        display.setCursor(0, 0);
-        if (actual_delay_samples < NOF_DELAY_SAMPLES)
-        {
-            ++actual_delay_samples;
-
-            display.setTextSize(1);
-            display.println(F("Connected"));
-        }
-        else
-        {
-            display.setTextSize(1);
-            display.println(F("Connected"));
-            display.setTextSize(2);
-            display.print(sum/NOF_DELAY_SAMPLES);
-            display.print(F(" us"));
-        }
-        display.display();
+        display.setTextSize(2);
+        sprintf(buf2, "RTT %d ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
+        display.print(buf2);
     }
+    display.display();
 
     delay(10);
 }
