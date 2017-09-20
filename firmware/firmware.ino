@@ -155,8 +155,8 @@ unsigned long successes = 0;
 
 void loop()
 {
-    AirFrame frame;
-    frame.magic = AirFrame::MAGIC_VALUE;
+    ForwardAirFrame frame;
+    frame.magic = ForwardAirFrame::MAGIC_VALUE;
     frame.ticks = micros();
     frame.left_x = analogRead(LEFT_X_PIN);
     frame.left_y = analogRead(LEFT_Y_PIN);
@@ -200,13 +200,19 @@ void loop()
     }
     ++successes;
     
-    uint16_t received_tick;
-    radio.read(&received_tick, sizeof(received_tick));
-    const uint16_t end_time = micros();
+    ReturnAirFrame ret_frame;
+    radio.read(&ret_frame, sizeof(ret_frame));
+    if (ret_frame.magic == ReturnAirFrame::MAGIC_VALUE)
+    {
+        const uint16_t end_time = micros();
 
-    for (int i = actual_delay_samples-1; i > 0; --i)
-        delay_samples[i] = delay_samples[i-1];
-    delay_samples[0] = end_time-frame.ticks;
+        for (int i = actual_delay_samples-1; i > 0; --i)
+            delay_samples[i] = delay_samples[i-1];
+        delay_samples[0] = end_time-frame.ticks;
+    }
+    else
+        ++failures;
+
     uint32_t sum = 0;
     for (int i = 0; i < actual_delay_samples; ++i)
         sum += delay_samples[i];
@@ -214,14 +220,15 @@ void loop()
     display.setCursor(0, 0);
     display.setTextSize(1);
     char buf2[30];
-    sprintf(buf2, "%lu/%lu", failures, successes);
+    sprintf(buf2, "%lu/%lu %d.%03d V", failures, successes,
+            ret_frame.battery / 1000, ret_frame.battery % 1000);
     display.println(buf2);
     if (actual_delay_samples < NOF_DELAY_SAMPLES)
         ++actual_delay_samples;
     else
     {
         display.setTextSize(2);
-        sprintf(buf2, "RTT %d ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
+        sprintf(buf2, "RTT %lu ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
         display.print(buf2);
     }
     display.display();
