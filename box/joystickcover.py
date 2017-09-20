@@ -14,7 +14,7 @@ SEGMENTS = 128
 def assembly():
     outer_s = sphere(r = 16)
     inner_s = sphere(r = 14)
-    hole = cylinder(r = 10, h = 20)
+    hole = cylinder(r = 13, h = 20)
     block = translate([-20, -20, -20])(cube([40, 40, 20]))
     flange = translate([0, 0, 0])(cylinder(r = 20, h = 2))
     return flange + outer_s - inner_s - block - hole
