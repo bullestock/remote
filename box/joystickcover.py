@@ -12,12 +12,18 @@ from solid.utils import *
 SEGMENTS = 128
 
 def assembly():
-    outer_s = sphere(r = 16)
-    inner_s = sphere(r = 14)
-    hole = cylinder(r = 13, h = 20)
+    r1 = 16
+    r2 = 15
+    outer_s = sphere(r = r1)
+    inner_s = sphere(r = r2)
+    sph = outer_s - inner_s
+    tube_h = 3
+    hole1 = cylinder(r = 14, h = 25)
+    hole2 = cylinder(r = r2, h = 5)
+    tube = cylinder(r = 16, h = tube_h) - down(1)(cylinder(r = 14, h = tube_h+2))
     block = translate([-20, -20, -20])(cube([40, 40, 20]))
     flange = translate([0, 0, 0])(cylinder(r = 20, h = 2))
-    return flange + outer_s - inner_s - block - hole
+    return flange + up(tube_h)(sph) + tube - block - down(1)(hole1) - down(1)(hole2)
 
 if __name__ == '__main__':
     a = assembly()
