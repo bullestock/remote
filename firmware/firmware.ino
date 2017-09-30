@@ -165,12 +165,15 @@ void loop()
     frame.left_pot = analogRead(POT1_PIN)/4;
     frame.right_pot = analogRead(POT2_PIN)/4;
     frame.switches = read_switches();
-
+    set_crc(frame);
+    
+#if 1
     char buf[80];
     sprintf(buf, "X %d Y %d X %d Y %d", frame.left_x, frame.left_y, frame.right_x, frame.right_y);
     Serial.println(buf);
     sprintf(buf, "S %04X P %02X %02X", frame.switches, frame.left_pot, frame.right_pot);
     Serial.println(buf);
+#endif
     
     radio.stopListening();
     if (!radio.write(&frame, sizeof(frame)))
@@ -202,7 +205,8 @@ void loop()
     
     ReturnAirFrame ret_frame;
     radio.read(&ret_frame, sizeof(ret_frame));
-    if (ret_frame.magic == ReturnAirFrame::MAGIC_VALUE)
+    if ((ret_frame.magic == ReturnAirFrame::MAGIC_VALUE) &&
+        check_crc(ret_frame))
     {
         const uint16_t end_time = micros();
 
@@ -220,8 +224,8 @@ void loop()
     display.setCursor(0, 0);
     display.setTextSize(1);
     char buf2[30];
-    sprintf(buf2, "%lu/%lu %d.%03d V", failures, successes,
-            ret_frame.battery / 1000, ret_frame.battery % 1000);
+    sprintf(buf2, "%lu/%lu %d.%d V", failures, successes,
+            ret_frame.battery / 1000, (ret_frame.battery % 1000)/100);
     display.println(buf2);
     if (actual_delay_samples < NOF_DELAY_SAMPLES)
         ++actual_delay_samples;
