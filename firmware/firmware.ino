@@ -5,7 +5,7 @@
 
 #include "protocol.h"
 
-const char* VERSION = "0.0.3";
+const char* VERSION = "0.0.4";
 
 byte addresses[][6] = { "1BULL", "2BULL" };
 
@@ -156,11 +156,14 @@ unsigned long successes = 0;
 
 uint16_t battery = 0;
 
-void loop()
+bool blink_state = false;
+int blink_count = 0;
+
+bool send_frame(unsigned long ticks, bool& timeout)
 {
     ForwardAirFrame frame;
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
-    frame.ticks = micros();
+    frame.ticks = ticks;
     frame.left_x = analogRead(LEFT_X_PIN);
     frame.left_y = analogRead(LEFT_Y_PIN);
     frame.right_x = analogRead(RIGHT_X_PIN);
@@ -181,27 +184,43 @@ void loop()
     radio.stopListening();
     if (!radio.write(&frame, sizeof(frame)))
     {
-        ++failures;
-        return;
+        //Serial.println("Radio write failed");
+        return false;
     }
     
     radio.startListening();
     const auto started_waiting_at = micros();
-    bool timeout = false;
     
     while (!radio.available())
-    {
         if (micros() - started_waiting_at > 200000)
         {
             // Waited longer than 200 ms
             timeout = true;
-            break;
-        }      
-    }
-        
+            return false;
+        }
+
+    return true;
+}
+
+int consecutive_errors = 0;
+bool show_error = false;
+
+void loop()
+{
+    const auto ticks = micros();
+    bool timeout = false;
+    bool ok = send_frame(ticks, timeout);
+    if (ok)
+        consecutive_errors = 0;
+    else
+        ++consecutive_errors;
+
     if (timeout)
         ++failures;
-    else
+
+    bool show_error = (consecutive_errors > 10);
+
+    if (ok)
     {
         ++successes;
     
@@ -214,12 +233,15 @@ void loop()
 
             for (int i = actual_delay_samples-1; i > 0; --i)
                 delay_samples[i] = delay_samples[i-1];
-            delay_samples[0] = end_time-frame.ticks;
+            delay_samples[0] = end_time-ticks;
 
             battery = ret_frame.battery;
         }
         else
+        {
             ++crc_errors;
+            show_error = true;
+        }
     }
 
     uint32_t sum = 0;
@@ -236,11 +258,23 @@ void loop()
         ++actual_delay_samples;
     else
     {
-        display.setTextSize(2);
-        sprintf(buf2, "RTT %lu ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
-        display.print(buf2);
+        // Serial.print("E ");
+        // Serial.print(show_error);
+        // Serial.print(" B ");
+        // Serial.println(blink_state);
+        if (!show_error || blink_state)
+        {
+            sprintf(buf2, "RTT %lu ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
+            display.setTextSize(2);
+            display.print(buf2);
+        }
     }
     display.display();
 
     delay(10);
+    if (++blink_count > 10)
+    {
+        blink_count = 0;
+        blink_state = !blink_state;
+    }
 }
