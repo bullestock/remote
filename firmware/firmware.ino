@@ -151,7 +151,10 @@ uint16_t read_switches()
 }
 
 unsigned long failures = 0;
+unsigned long crc_errors = 0;
 unsigned long successes = 0;
+
+uint16_t battery = 0;
 
 void loop()
 {
@@ -167,7 +170,7 @@ void loop()
     frame.switches = read_switches();
     set_crc(frame);
     
-#if 1
+#if 0
     char buf[80];
     sprintf(buf, "X %d Y %d X %d Y %d", frame.left_x, frame.left_y, frame.right_x, frame.right_y);
     Serial.println(buf);
@@ -197,25 +200,27 @@ void loop()
     }
         
     if (timeout)
-    {
         ++failures;
-        return;
-    }
-    ++successes;
-    
-    ReturnAirFrame ret_frame;
-    radio.read(&ret_frame, sizeof(ret_frame));
-    if ((ret_frame.magic == ReturnAirFrame::MAGIC_VALUE) &&
-        check_crc(ret_frame))
-    {
-        const uint16_t end_time = micros();
-
-        for (int i = actual_delay_samples-1; i > 0; --i)
-            delay_samples[i] = delay_samples[i-1];
-        delay_samples[0] = end_time-frame.ticks;
-    }
     else
-        ++failures;
+    {
+        ++successes;
+    
+        ReturnAirFrame ret_frame;
+        radio.read(&ret_frame, sizeof(ret_frame));
+        if ((ret_frame.magic == ReturnAirFrame::MAGIC_VALUE) &&
+            check_crc(ret_frame))
+        {
+            const uint16_t end_time = micros();
+
+            for (int i = actual_delay_samples-1; i > 0; --i)
+                delay_samples[i] = delay_samples[i-1];
+            delay_samples[0] = end_time-frame.ticks;
+
+            battery = ret_frame.battery;
+        }
+        else
+            ++crc_errors;
+    }
 
     uint32_t sum = 0;
     for (int i = 0; i < actual_delay_samples; ++i)
@@ -224,8 +229,8 @@ void loop()
     display.setCursor(0, 0);
     display.setTextSize(1);
     char buf2[30];
-    sprintf(buf2, "%lu/%lu %d.%d V", failures, successes,
-            ret_frame.battery / 1000, (ret_frame.battery % 1000)/100);
+    sprintf(buf2, "%lu/%lu/%lu %d.%d V", failures, crc_errors, successes,
+            battery / 1000, (battery % 1000)/100);
     display.println(buf2);
     if (actual_delay_samples < NOF_DELAY_SAMPLES)
         ++actual_delay_samples;
