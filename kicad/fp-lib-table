@@ -12,4 +12,5 @@
   (lib (name Remote)(type KiCad)(uri ${KIPRJMOD}/pretty/Remote.pretty)(options "")(descr ""))
   (lib (name Capacitor_SMD)(type KiCad)(uri ${KIPRJMOD}/pretty/Capacitor_SMD.pretty)(options "")(descr ""))
   (lib (name Package_TO_SOT_SMD)(type KiCad)(uri ${KIPRJMOD}/pretty/Package_TO_SOT_SMD.pretty)(options "")(descr ""))
+  (lib (name Milling)(type KiCad)(uri ${KIPRJMOD}/pretty/Milling.pretty)(options "")(descr ""))
 )

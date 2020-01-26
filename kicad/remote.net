@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/torsten/projects/remote/kicad/remote.sch)
-    (date "Sat 25 Jan 2020 23:03:20 CET")
+    (date "Sat 25 Jan 2020 23:21:02 CET")
     (tool "Eeschema 5.1.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block

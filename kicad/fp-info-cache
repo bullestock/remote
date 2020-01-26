@@ -1,4 +1,4 @@
-3370622142531874
+3376967192492590
 Capacitor_SMD
 CP_Elec_3x5.3
 SMT capacitor, aluminium electrolytic, 3x5.3, Cornell Dubilier Electronics 
@@ -8266,6 +8266,20 @@ Surface mounted pin header SMD 2x40 2.54mm double row
 0
 80
 80
+Milling
+DIP-16_W7.62mm_Milling
+16-lead though-hole mounted DIP package, row spacing 7.62 mm (300 mils), LongPads
+THT DIP DIL PDIP 2.54mm 7.62mm 300mil LongPads
+0
+16
+16
+Milling
+JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling
+JST XH series connector, B03B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH side entry
+0
+3
+3
 Module
 A20_OLINUXINO_LIME2
 A20 Olinuxino LIME2, 1.2GHz, 512-1024MB RAM, Micro-SD, NAND or eMMC, 1000Mbit Ethernet
@@ -13131,6 +13145,20 @@ Through hole pin header THT 1x07 2.54mm single row
 0
 7
 7
+Remote
+Potentiometer_4mm_axis
+Through hole straight pin header, 1x03, 2.54mm pitch, single row
+Through hole pin header THT 1x03 2.54mm single row
+0
+3
+3
+Remote
+Switch_1x02_P6mm
+Through hole straight pin header, 1x03, 2.54mm pitch, single row
+Through hole pin header THT 1x03 2.54mm single row
+0
+2
+2
 Remote
 Switch_1x02_P8mm
 Through hole straight pin header, 1x03, 2.54mm pitch, single row
