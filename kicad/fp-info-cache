@@ -1,4 +1,4 @@
-3376967192492590
+3386447896399590
 Capacitor_SMD
 CP_Elec_3x5.3
 SMT capacitor, aluminium electrolytic, 3x5.3, Cornell Dubilier Electronics 
@@ -8274,12 +8274,40 @@ THT DIP DIL PDIP 2.54mm 7.62mm 300mil LongPads
 16
 16
 Milling
+JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling
+JST XH series connector, B02B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH side entry
+0
+2
+2
+Milling
 JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling
 JST XH series connector, B03B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
 connector JST XH side entry
 0
 3
 3
+Milling
+JST_XH_B04B-XH-A_1x04_P2.50mm_Vertical_Milling
+JST XH series connector, B04B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH side entry
+0
+4
+4
+Milling
+JST_XH_B07B-XH-A_1x07_P2.50mm_Vertical_Milling
+JST XH series connector, B07B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH side entry
+0
+7
+7
+Milling
+JST_XH_B08B-XH-A_1x08_P2.50mm_Vertical_Milling
+JST XH series connector, B08B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator
+connector JST XH side entry
+0
+8
+8
 Module
 A20_OLINUXINO_LIME2
 A20 Olinuxino LIME2, 1.2GHz, 512-1024MB RAM, Micro-SD, NAND or eMMC, 1000Mbit Ethernet
@@ -13147,36 +13175,50 @@ Through hole pin header THT 1x07 2.54mm single row
 7
 Remote
 Potentiometer_4mm_axis
-Through hole straight pin header, 1x03, 2.54mm pitch, single row
-Through hole pin header THT 1x03 2.54mm single row
+Potentiometer, 4 mm axis
+potentiometer
+0
+3
+3
+Remote
+Potentiometer_6mm_axis_square
+Potentiometer, 6 mm axis, 10 x 12 mm
+potentiometer
 0
 3
 3
 Remote
 Switch_1x02_P6mm
-Through hole straight pin header, 1x03, 2.54mm pitch, single row
-Through hole pin header THT 1x03 2.54mm single row
+Momentary switch, single pole, 6 mm pitch, 12 mm diameter
+switch
 0
 2
 2
 Remote
 Switch_1x02_P8mm
-Through hole straight pin header, 1x03, 2.54mm pitch, single row
-Through hole pin header THT 1x03 2.54mm single row
+Momentary switch, single pole, 8 mm pitch, 15 mm diameter
+switch
 0
 2
 2
 Remote
 Switch_1x03_P5.08mm
-Through hole straight pin header, 1x03, 2.54mm pitch, single row
-Through hole pin header THT 1x03 2.54mm single row
+Switch SPST, 1x03, 5.08 mm pitch
+switch spst
 0
 3
 3
 Remote
+Switch_2x03_P3mm_Slide
+Slide switch dual pole, 3 positions
+switch
+0
+8
+8
+Remote
 XDCR_COM-09032
-
-
+Analog 2-axis joystick with button
+joystick
 0
 14
 14

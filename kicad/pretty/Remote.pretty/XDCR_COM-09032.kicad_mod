@@ -1,4 +1,6 @@
-(module XDCR_COM-09032 (layer F.Cu) (tedit 5E2D714F)
+(module XDCR_COM-09032 (layer F.Cu) (tedit 5E2DDBFB)
+  (descr "Analog 2-axis joystick with button")
+  (tags joystick)
   (fp_text reference REF** (at -2.625 -15.235) (layer F.SilkS)
     (effects (font (size 1 1) (thickness 0.015)))
   )

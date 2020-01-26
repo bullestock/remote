@@ -1,4 +1,4 @@
-(module JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling (layer F.Cu) (tedit 5E2D730A)
+(module JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling (layer F.Cu) (tedit 5E2E07BE)
   (descr "JST XH series connector, B03B-XH-A (http://www.jst-mfg.com/product/pdf/eng/eXH.pdf), generated with kicad-footprint-generator")
   (tags "connector JST XH side entry")
   (fp_text reference REF** (at 2.5 -3.55) (layer F.SilkS)
