@@ -1,0 +1,728 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 2 2
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L remote-rescue:SW_Push SW6
+U 1 1 59877B61
+P 1200 6000
+F 0 "SW6" H 1250 6100 50  0000 L CNN
+F 1 "SW_Push" H 1200 5940 50  0000 C CNN
+F 2 "Remote:Switch_1x02_P6mm" H 1200 6200 50  0001 C CNN
+F 3 "" H 1200 6200 50  0001 C CNN
+	1    1200 6000
+	0    1    1    0   
+$EndComp
+$Comp
+L remote-rescue:SW_Push SW7
+U 1 1 59877B68
+P 1650 6000
+F 0 "SW7" H 1700 6100 50  0000 L CNN
+F 1 "SW_Push" H 1650 5940 50  0000 C CNN
+F 2 "Remote:Switch_1x02_P6mm" H 1650 6200 50  0001 C CNN
+F 3 "" H 1650 6200 50  0001 C CNN
+	1    1650 6000
+	0    1    1    0   
+$EndComp
+$Comp
+L remote-rescue:SW_Push SW8
+U 1 1 59877B6F
+P 2100 6000
+F 0 "SW8" H 2150 6100 50  0000 L CNN
+F 1 "SW_Push" H 2100 5940 50  0000 C CNN
+F 2 "Remote:Switch_1x02_P6mm" H 2100 6200 50  0001 C CNN
+F 3 "" H 2100 6200 50  0001 C CNN
+	1    2100 6000
+	0    1    1    0   
+$EndComp
+$Comp
+L remote-rescue:R R9
+U 1 1 59877B76
+P 750 4800
+F 0 "R9" V 830 4800 50  0000 C CNN
+F 1 "10K" V 750 4800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 680 4800 50  0001 C CNN
+F 3 "" H 750 4800 50  0001 C CNN
+	1    750  4800
+	1    0    0    -1  
+$EndComp
+$Comp
+L remote-rescue:R R10
+U 1 1 59877B7D
+P 1200 4800
+F 0 "R10" V 1280 4800 50  0000 C CNN
+F 1 "10K" V 1200 4800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1130 4800 50  0001 C CNN
+F 3 "" H 1200 4800 50  0001 C CNN
+	1    1200 4800
+	1    0    0    -1  
+$EndComp
+$Comp
+L remote-rescue:R R11
+U 1 1 59877B84
+P 1650 4800
+F 0 "R11" V 1730 4800 50  0000 C CNN
+F 1 "10K" V 1650 4800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1580 4800 50  0001 C CNN
+F 3 "" H 1650 4800 50  0001 C CNN
+	1    1650 4800
+	1    0    0    -1  
+$EndComp
+$Comp
+L remote-rescue:R R12
+U 1 1 59877B8B
+P 2100 4800
+F 0 "R12" V 2180 4800 50  0000 C CNN
+F 1 "10K" V 2100 4800 50  0000 C CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2030 4800 50  0001 C CNN
+F 3 "" H 2100 4800 50  0001 C CNN
+	1    2100 4800
+	1    0    0    -1  
+$EndComp
+$Comp
+L remote-rescue:GND #PWR0117
+U 1 1 59877B96
+P 750 6400
+F 0 "#PWR0117" H 750 6150 50  0001 C CNN
+F 1 "GND" H 750 6250 50  0000 C CNN
+F 2 "" H 750 6400 50  0001 C CNN
+F 3 "" H 750 6400 50  0001 C CNN
+	1    750  6400
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	750  6200 750  6300
+Wire Wire Line
+	750  6300 1200 6300
+Connection ~ 750  6300
+Wire Wire Line
+	1200 6200 1200 6300
+Connection ~ 1200 6300
+$Comp
+L remote-rescue:+5V #PWR0118
+U 1 1 598780A9
+P 750 4350
+F 0 "#PWR0118" H 750 4200 50  0001 C CNN
+F 1 "+5V" H 750 4490 50  0000 C CNN
+F 2 "" H 750 4350 50  0001 C CNN
+F 3 "" H 750 4350 50  0001 C CNN
+	1    750  4350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	750  4350 750  4550
+Wire Wire Line
+	750  4550 1200 4550
+Wire Wire Line
+	1200 4550 1200 4650
+Connection ~ 750  4550
+Connection ~ 1200 4550
+$Comp
+L remote-rescue:SW_SPDT_MSM SW1
+U 1 1 59878694
+P 1850 2800
+F 0 "SW1" V 1750 2950 50  0000 C CNN
+F 1 "SW_SPDT_MSM" V 1450 2800 50  0000 C CNN
+F 2 "Remote:Switch_1x03_P5.08mm" H 1850 2800 50  0001 C CNN
+F 3 "" H 1850 2800 50  0001 C CNN
+	1    1850 2800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L remote-rescue:SW_SPDT_MSM SW2
+U 1 1 59878715
+P 2350 2800
+F 0 "SW2" V 2250 2950 50  0000 C CNN
+F 1 "SW_SPDT_MSM" V 1950 2800 50  0000 C CNN
+F 2 "Remote:Switch_1x03_P5.08mm" H 2350 2800 50  0001 C CNN
+F 3 "" H 2350 2800 50  0001 C CNN
+	1    2350 2800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L remote-rescue:SW_SPDT_MSM SW3
+U 1 1 5987878A
+P 2850 2800
+F 0 "SW3" V 2750 2950 50  0000 C CNN
+F 1 "SW_SPDT_MSM" V 2450 2800 50  0000 C CNN
+F 2 "Remote:Switch_1x03_P5.08mm" H 2850 2800 50  0001 C CNN
+F 3 "" H 2850 2800 50  0001 C CNN
+	1    2850 2800
+	0    -1   -1   0   
+$EndComp
+$Comp
+L remote-rescue:SW_SPDT_MSM SW4
+U 1 1 59878802
+P 3350 2800
+F 0 "SW4" V 3250 2950 50  0000 C CNN
+F 1 "SW_SPDT_MSM" V 2950 2800 50  0000 C CNN
+F 2 "Remote:Switch_1x03_P5.08mm" H 3350 2800 50  0001 C CNN
+F 3 "" H 3350 2800 50  0001 C CNN
+	1    3350 2800
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	750  6300 750  6400
+Wire Wire Line
+	750  4550 750  4650
+$Comp
+L power:GND #PWR0119
+U 1 1 5E33B7E4
+P 1250 3250
+F 0 "#PWR0119" H 1250 3000 50  0001 C CNN
+F 1 "GND" H 1255 3077 50  0000 C CNN
+F 2 "" H 1250 3250 50  0001 C CNN
+F 3 "" H 1250 3250 50  0001 C CNN
+	1    1250 3250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1250 3250 1250 3100
+Wire Wire Line
+	1250 3100 1850 3100
+Wire Wire Line
+	3350 3100 3350 3000
+Wire Wire Line
+	2850 3000 2850 3100
+Connection ~ 2850 3100
+Wire Wire Line
+	2850 3100 3350 3100
+Wire Wire Line
+	2350 3000 2350 3100
+Connection ~ 2350 3100
+Wire Wire Line
+	2350 3100 2850 3100
+Wire Wire Line
+	1850 3000 1850 3100
+Connection ~ 1850 3100
+Wire Wire Line
+	1850 3100 2350 3100
+$Comp
+L Device:R R1
+U 1 1 5E3502C4
+P 1750 1400
+F 0 "R1" H 1820 1446 50  0000 L CNN
+F 1 "10k" H 1820 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1680 1400 50  0001 C CNN
+F 3 "~" H 1750 1400 50  0001 C CNN
+	1    1750 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 5E350684
+P 1950 1400
+F 0 "R2" H 2020 1446 50  0000 L CNN
+F 1 "10k" H 2020 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 1880 1400 50  0001 C CNN
+F 3 "~" H 1950 1400 50  0001 C CNN
+	1    1950 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 5E350A26
+P 2250 1400
+F 0 "R3" H 2320 1446 50  0000 L CNN
+F 1 "10k" H 2320 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2180 1400 50  0001 C CNN
+F 3 "~" H 2250 1400 50  0001 C CNN
+	1    2250 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R4
+U 1 1 5E350D6D
+P 2450 1400
+F 0 "R4" H 2520 1446 50  0000 L CNN
+F 1 "10k" H 2520 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2380 1400 50  0001 C CNN
+F 3 "~" H 2450 1400 50  0001 C CNN
+	1    2450 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R5
+U 1 1 5E35129B
+P 2750 1400
+F 0 "R5" H 2820 1446 50  0000 L CNN
+F 1 "10k" H 2820 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2680 1400 50  0001 C CNN
+F 3 "~" H 2750 1400 50  0001 C CNN
+	1    2750 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R6
+U 1 1 5E351534
+P 2950 1400
+F 0 "R6" H 3020 1446 50  0000 L CNN
+F 1 "10k" H 3020 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2880 1400 50  0001 C CNN
+F 3 "~" H 2950 1400 50  0001 C CNN
+	1    2950 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R7
+U 1 1 5E3518D9
+P 3250 1400
+F 0 "R7" H 3320 1446 50  0000 L CNN
+F 1 "10k" H 3320 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 3180 1400 50  0001 C CNN
+F 3 "~" H 3250 1400 50  0001 C CNN
+	1    3250 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R8
+U 1 1 5E351C56
+P 3450 1400
+F 0 "R8" H 3520 1446 50  0000 L CNN
+F 1 "10k" H 3520 1355 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 3380 1400 50  0001 C CNN
+F 3 "~" H 3450 1400 50  0001 C CNN
+	1    3450 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+5V #PWR0122
+U 1 1 5E35F483
+P 1750 1100
+F 0 "#PWR0122" H 1750 950 50  0001 C CNN
+F 1 "+5V" H 1765 1273 50  0000 C CNN
+F 2 "" H 1750 1100 50  0001 C CNN
+F 3 "" H 1750 1100 50  0001 C CNN
+	1    1750 1100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1750 1100 1750 1150
+Wire Wire Line
+	1750 1150 1950 1150
+Wire Wire Line
+	3450 1150 3450 1250
+Connection ~ 1750 1150
+Wire Wire Line
+	1750 1150 1750 1250
+Wire Wire Line
+	3250 1250 3250 1150
+Connection ~ 3250 1150
+Wire Wire Line
+	3250 1150 3450 1150
+Wire Wire Line
+	2950 1150 2950 1250
+Connection ~ 2950 1150
+Wire Wire Line
+	2950 1150 3250 1150
+Wire Wire Line
+	2750 1150 2750 1250
+Connection ~ 2750 1150
+Wire Wire Line
+	2750 1150 2950 1150
+Wire Wire Line
+	2450 1150 2450 1250
+Connection ~ 2450 1150
+Wire Wire Line
+	2450 1150 2750 1150
+Wire Wire Line
+	2250 1250 2250 1150
+Connection ~ 2250 1150
+Wire Wire Line
+	2250 1150 2450 1150
+Wire Wire Line
+	1950 1150 1950 1250
+Connection ~ 1950 1150
+Wire Wire Line
+	1950 1150 2250 1150
+$Comp
+L remote-rescue:SW_Push SW5
+U 1 1 59877B5A
+P 750 6000
+F 0 "SW5" H 800 6100 50  0000 L CNN
+F 1 "SW_Push" H 750 5940 50  0000 C CNN
+F 2 "Remote:Switch_1x02_P6mm" H 750 6200 50  0001 C CNN
+F 3 "" H 750 6200 50  0001 C CNN
+	1    750  6000
+	0    1    1    0   
+$EndComp
+Text GLabel 5100 2600 0    60   Input ~ 0
+CP
+Text GLabel 5100 2450 0    60   Input ~ 0
+PL
+$Comp
+L remote-rescue:SW_Push SW10
+U 1 1 5E2E50E1
+P 3000 6000
+F 0 "SW10" V 2954 6148 50  0000 L CNN
+F 1 "SW_Push" V 3045 6148 50  0000 L CNN
+F 2 "Remote:Switch_1x02_P6mm" H 3000 6200 50  0001 C CNN
+F 3 "" H 3000 6200 50  0001 C CNN
+	1    3000 6000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1200 4550 1650 4550
+$Comp
+L Device:R R13
+U 1 1 5E2EFEB8
+P 2550 4825
+F 0 "R13" H 2620 4871 50  0000 L CNN
+F 1 "10k" H 2620 4780 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2480 4825 50  0001 C CNN
+F 3 "~" H 2550 4825 50  0001 C CNN
+	1    2550 4825
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R14
+U 1 1 5E2F02A3
+P 3000 4825
+F 0 "R14" H 3070 4871 50  0000 L CNN
+F 1 "10k" H 3070 4780 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 2930 4825 50  0001 C CNN
+F 3 "~" H 3000 4825 50  0001 C CNN
+	1    3000 4825
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1650 4550 1650 4650
+Connection ~ 1650 4550
+Wire Wire Line
+	3000 4550 3000 4675
+Wire Wire Line
+	1650 4550 2100 4550
+Wire Wire Line
+	2550 4550 2550 4675
+Connection ~ 2550 4550
+Wire Wire Line
+	2550 4550 3000 4550
+Wire Wire Line
+	2100 4550 2100 4650
+Connection ~ 2100 4550
+Wire Wire Line
+	2100 4550 2550 4550
+Wire Wire Line
+	3000 6300 3000 6200
+Wire Wire Line
+	1200 6300 1650 6300
+Wire Wire Line
+	2550 6200 2550 6300
+Connection ~ 2550 6300
+Wire Wire Line
+	2550 6300 3000 6300
+Wire Wire Line
+	2100 6200 2100 6300
+Connection ~ 2100 6300
+Wire Wire Line
+	2100 6300 2550 6300
+$Comp
+L remote-rescue:SW_Push SW9
+U 1 1 5E2E462E
+P 2550 6000
+F 0 "SW9" V 2504 6148 50  0000 L CNN
+F 1 "SW_Push" V 2595 6148 50  0000 L CNN
+F 2 "Remote:Switch_1x02_P6mm" H 2550 6200 50  0001 C CNN
+F 3 "" H 2550 6200 50  0001 C CNN
+	1    2550 6000
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	1650 6200 1650 6300
+Connection ~ 1650 6300
+Wire Wire Line
+	1650 6300 2100 6300
+Text GLabel 3600 5750 0    60   Input ~ 0
+P6
+Text GLabel 3600 5850 0    60   Input ~ 0
+P7
+$Comp
+L remote:SW_DP3T SW11
+U 1 1 5E3817DA
+P 8575 5175
+F 0 "SW11" H 8575 5458 50  0000 C CNN
+F 1 "SW_DP3T" H 8575 5367 50  0000 C CNN
+F 2 "Remote:Switch_2x03_P3mm_Slide" H 7950 5350 50  0001 C CNN
+F 3 "" H 7950 5350 50  0001 C CNN
+	1    8575 5175
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR01
+U 1 1 5E3937D5
+P 8100 5425
+F 0 "#PWR01" H 8100 5175 50  0001 C CNN
+F 1 "GND" H 8105 5252 50  0000 C CNN
+F 2 "" H 8100 5425 50  0001 C CNN
+F 3 "" H 8100 5425 50  0001 C CNN
+	1    8100 5425
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8100 5425 8100 5175
+Wire Wire Line
+	8100 5175 8300 5175
+$Comp
+L Device:R R15
+U 1 1 5E3981B8
+P 9075 4850
+F 0 "R15" H 9145 4896 50  0000 L CNN
+F 1 "10k" H 9145 4805 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 9005 4850 50  0001 C CNN
+F 3 "~" H 9075 4850 50  0001 C CNN
+	1    9075 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R16
+U 1 1 5E3985BE
+P 9450 4850
+F 0 "R16" H 9520 4896 50  0000 L CNN
+F 1 "10k" H 9520 4805 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 9380 4850 50  0001 C CNN
+F 3 "~" H 9450 4850 50  0001 C CNN
+	1    9450 4850
+	1    0    0    -1  
+$EndComp
+Text GLabel 9775 5075 2    60   Input ~ 0
+P6
+Text GLabel 9775 5275 2    60   Input ~ 0
+P7
+Wire Wire Line
+	8775 5275 9450 5275
+Wire Wire Line
+	8775 5075 9075 5075
+Wire Wire Line
+	9075 5000 9075 5075
+Connection ~ 9075 5075
+Wire Wire Line
+	9075 5075 9775 5075
+Wire Wire Line
+	9450 5000 9450 5275
+Connection ~ 9450 5275
+Wire Wire Line
+	9450 5275 9775 5275
+$Comp
+L power:+5V #PWR02
+U 1 1 5E3AAC29
+P 9075 4550
+F 0 "#PWR02" H 9075 4400 50  0001 C CNN
+F 1 "+5V" H 9090 4723 50  0000 C CNN
+F 2 "" H 9075 4550 50  0001 C CNN
+F 3 "" H 9075 4550 50  0001 C CNN
+	1    9075 4550
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9075 4550 9075 4625
+Wire Wire Line
+	9075 4625 9450 4625
+Wire Wire Line
+	9450 4625 9450 4700
+Wire Wire Line
+	9075 4625 9075 4700
+Connection ~ 9075 4625
+Wire Wire Line
+	1750 1550 1750 1600
+Wire Wire Line
+	1950 1550 1950 1700
+Wire Wire Line
+	2250 1550 2250 1800
+Wire Wire Line
+	2450 1550 2450 1900
+Wire Wire Line
+	2750 1550 2750 2000
+Wire Wire Line
+	3250 1550 3250 2200
+Wire Wire Line
+	4700 1600 1750 1600
+Connection ~ 1750 1600
+Wire Wire Line
+	1750 1600 1750 2600
+Wire Wire Line
+	4700 1700 1950 1700
+Connection ~ 1950 1700
+Wire Wire Line
+	1950 1700 1950 2600
+Wire Wire Line
+	4700 1800 2250 1800
+Connection ~ 2250 1800
+Wire Wire Line
+	2250 1800 2250 2600
+Wire Wire Line
+	4700 1900 2450 1900
+Connection ~ 2450 1900
+Wire Wire Line
+	2450 1900 2450 2600
+Wire Wire Line
+	4700 2000 2750 2000
+Connection ~ 2750 2000
+Wire Wire Line
+	2750 2000 2750 2600
+Wire Wire Line
+	2950 1550 2950 2100
+Wire Wire Line
+	4700 2100 2950 2100
+Connection ~ 2950 2100
+Wire Wire Line
+	2950 2100 2950 2600
+Wire Wire Line
+	4700 2200 3250 2200
+Connection ~ 3250 2200
+Wire Wire Line
+	3250 2200 3250 2600
+Wire Wire Line
+	3450 1550 3450 2300
+Wire Wire Line
+	4700 2300 3450 2300
+Connection ~ 3450 2300
+Wire Wire Line
+	3450 2300 3450 2600
+Wire Wire Line
+	750  4950 750  5150
+Wire Wire Line
+	1200 4950 1200 5250
+Wire Wire Line
+	1650 4950 1650 5350
+Wire Wire Line
+	2100 4950 2100 5450
+Wire Wire Line
+	2550 4975 2550 5550
+Wire Wire Line
+	3000 4975 3000 5650
+Wire Wire Line
+	4250 5750 3600 5750
+Wire Wire Line
+	3600 5850 4250 5850
+Wire Wire Line
+	4250 5650 3000 5650
+Connection ~ 3000 5650
+Wire Wire Line
+	3000 5650 3000 5800
+Wire Wire Line
+	4250 5550 2550 5550
+Connection ~ 2550 5550
+Wire Wire Line
+	2550 5550 2550 5800
+Wire Wire Line
+	4250 5450 2100 5450
+Connection ~ 2100 5450
+Wire Wire Line
+	2100 5450 2100 5800
+Wire Wire Line
+	4250 5350 1650 5350
+Connection ~ 1650 5350
+Wire Wire Line
+	1650 5350 1650 5800
+Wire Wire Line
+	4250 5250 1200 5250
+Connection ~ 1200 5250
+Wire Wire Line
+	1200 5250 1200 5800
+Wire Wire Line
+	4250 5150 750  5150
+Connection ~ 750  5150
+Wire Wire Line
+	750  5150 750  5800
+$Comp
+L Connector_Generic:Conn_01x04 J13
+U 1 1 5E713A8A
+P 4900 1700
+F 0 "J13" H 4980 1692 50  0000 L CNN
+F 1 "Conn_01x04" H 4980 1601 50  0000 L CNN
+F 2 "Milling:JST_XH_B04B-XH-A_1x04_P2.50mm_Vertical_Milling" H 4900 1700 50  0001 C CNN
+F 3 "~" H 4900 1700 50  0001 C CNN
+	1    4900 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x04 J14
+U 1 1 5E7142CA
+P 4900 2100
+F 0 "J14" H 4980 2092 50  0000 L CNN
+F 1 "Conn_01x04" H 4980 2001 50  0000 L CNN
+F 2 "Milling:JST_XH_B04B-XH-A_1x04_P2.50mm_Vertical_Milling" H 4900 2100 50  0001 C CNN
+F 3 "~" H 4900 2100 50  0001 C CNN
+	1    4900 2100
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J10
+U 1 1 5E715B00
+P 4450 5250
+F 0 "J10" H 4530 5292 50  0000 L CNN
+F 1 "Conn_01x03" H 4530 5201 50  0000 L CNN
+F 2 "Milling:JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling" H 4450 5250 50  0001 C CNN
+F 3 "~" H 4450 5250 50  0001 C CNN
+	1    4450 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x03 J11
+U 1 1 5E71608D
+P 4450 5550
+F 0 "J11" H 4530 5592 50  0000 L CNN
+F 1 "Conn_01x03" H 4530 5501 50  0000 L CNN
+F 2 "Milling:JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling" H 4450 5550 50  0001 C CNN
+F 3 "~" H 4450 5550 50  0001 C CNN
+	1    4450 5550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J12
+U 1 1 5E7168F5
+P 4450 5750
+F 0 "J12" H 4530 5742 50  0000 L CNN
+F 1 "Conn_01x02" H 4530 5651 50  0000 L CNN
+F 2 "Milling:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling" H 4450 5750 50  0001 C CNN
+F 3 "~" H 4450 5750 50  0001 C CNN
+	1    4450 5750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	8375 5575 8300 5575
+Wire Wire Line
+	8300 5575 8300 5800
+Wire Wire Line
+	8300 5800 8850 5800
+Wire Wire Line
+	8850 5800 8850 5675
+Wire Wire Line
+	8850 5475 8775 5475
+Wire Wire Line
+	8775 5575 8850 5575
+Connection ~ 8850 5575
+Wire Wire Line
+	8850 5575 8850 5475
+Wire Wire Line
+	8775 5675 8850 5675
+Connection ~ 8850 5675
+Wire Wire Line
+	8850 5675 8850 5575
+Wire Wire Line
+	8775 5175 8875 5175
+Wire Wire Line
+	8875 5175 8875 4775
+Wire Wire Line
+	8875 4775 8100 4775
+Wire Wire Line
+	8100 4775 8100 5175
+Connection ~ 8100 5175
+Wire Wire Line
+	8300 5575 8300 5175
+Connection ~ 8300 5575
+Connection ~ 8300 5175
+Wire Wire Line
+	8300 5175 8375 5175
+$EndSCHEMATC
