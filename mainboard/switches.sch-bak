@@ -357,10 +357,6 @@ F 3 "" H 750 6200 50  0001 C CNN
 	1    750  6000
 	0    1    1    0   
 $EndComp
-Text GLabel 5100 2600 0    60   Input ~ 0
-CP
-Text GLabel 5100 2450 0    60   Input ~ 0
-PL
 $Comp
 L remote-rescue:SW_Push SW10
 U 1 1 5E2E50E1

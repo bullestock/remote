@@ -78,7 +78,7 @@ Wire Wire Line
 Wire Wire Line
 	8700 1375 8450 1375
 Text GLabel 7450 975  1    60   Input ~ 0
-A4
+A7
 Text GLabel 8450 975  1    60   Input ~ 0
 A6
 Wire Wire Line
@@ -92,9 +92,7 @@ $EndSheet
 Text GLabel 6675 2225 0    60   Input ~ 0
 A6
 Text GLabel 6425 2125 0    60   Input ~ 0
-A5
-Text GLabel 6675 2025 0    60   Input ~ 0
-A4
+A7
 Wire Wire Line
 	7450 1875 7450 1925
 Wire Wire Line
@@ -124,17 +122,6 @@ $EndComp
 Wire Wire Line
 	7800 1875 8850 1875
 $Comp
-L Connector_Generic:Conn_01x03 J1
-U 1 1 5E3721E4
-P 1150 1350
-F 0 "J1" H 1068 1667 50  0000 C CNN
-F 1 "Conn_01x03" H 1068 1576 50  0000 C CNN
-F 2 "Milling:JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling" H 1150 1350 50  0001 C CNN
-F 3 "~" H 1150 1350 50  0001 C CNN
-	1    1150 1350
-	-1   0    0    -1  
-$EndComp
-$Comp
 L power:+5V #PWR0109
 U 1 1 5E3728A7
 P 1700 1100
@@ -160,20 +147,10 @@ F 3 "" H 1700 1600 50  0001 C CNN
 	1    1700 1600
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	1700 1600 1700 1450
-Wire Wire Line
-	1700 1450 1350 1450
-Text GLabel 8050 5725 2    60   Input ~ 0
-A5
-Wire Wire Line
-	1800 1350 1350 1350
 Text Notes 650  1250 0    60   ~ 0
 +5V IN
-Text Notes 700  1500 0    60   ~ 0
+Text Notes 675  1375 0    60   ~ 0
 GND
-Text Notes 500  1375 0    60   ~ 0
-BATT SENSE
 $Comp
 L power:PWR_FLAG #FLG0101
 U 1 1 5E38B7FA
@@ -359,31 +336,7 @@ Wire Wire Line
 Wire Wire Line
 	6825 2125 6425 2125
 Wire Wire Line
-	6675 2025 6825 2025
-Wire Wire Line
 	1550 4650 2100 4650
-$Comp
-L Connector_Generic:Conn_01x03 J4
-U 1 1 5E698090
-P 7500 5225
-F 0 "J4" H 7418 5542 50  0000 C CNN
-F 1 "Conn_01x03" H 7418 5451 50  0000 C CNN
-F 2 "Connector_JST:JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical" H 7500 5225 50  0001 C CNN
-F 3 "~" H 7500 5225 50  0001 C CNN
-	1    7500 5225
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Connector_Generic:Conn_01x03 J5
-U 1 1 5E698C2B
-P 7500 5725
-F 0 "J5" H 7418 6042 50  0000 C CNN
-F 1 "Conn_01x03" H 7418 5951 50  0000 C CNN
-F 2 "Connector_JST:JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical" H 7500 5725 50  0001 C CNN
-F 3 "~" H 7500 5725 50  0001 C CNN
-	1    7500 5725
-	-1   0    0    -1  
-$EndComp
 $Comp
 L power:+5V #PWR0130
 U 1 1 5E6B17BB
@@ -415,23 +368,6 @@ F 3 "" H 7875 5950 50  0001 C CNN
 	1    7875 5950
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	7875 5950 7875 5825
-Wire Wire Line
-	7875 5325 7700 5325
-Wire Wire Line
-	7700 5825 7875 5825
-Connection ~ 7875 5825
-Wire Wire Line
-	7875 5825 7875 5325
-Wire Wire Line
-	8050 5725 7700 5725
-Text GLabel 8075 5225 2    60   Input ~ 0
-BAT
-Wire Wire Line
-	8075 5225 7700 5225
-Text GLabel 1800 1350 2    60   Input ~ 0
-BAT
 $Comp
 L Connector_Generic:Conn_01x02 J6
 U 1 1 5E6E9A5E
@@ -465,14 +401,60 @@ Wire Wire Line
 Wire Wire Line
 	2100 6150 2250 6150
 $Comp
-L Connector_Generic:Conn_01x03 J7
-U 1 1 5E7123B6
+L Connector_Generic:Conn_01x02 J1
+U 1 1 5E3EC8B6
+P 1150 1250
+F 0 "J1" H 1068 1467 50  0000 C CNN
+F 1 "Conn_01x02" H 1068 1376 50  0000 C CNN
+F 2 "Milling:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling" H 1150 1250 50  0001 C CNN
+F 3 "~" H 1150 1250 50  0001 C CNN
+	1    1150 1250
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	1350 1350 1700 1350
+Wire Wire Line
+	1700 1350 1700 1600
+$Comp
+L Connector_Generic:Conn_01x02 J3
+U 1 1 5E3EEBB6
+P 7500 5125
+F 0 "J3" H 7418 5342 50  0000 C CNN
+F 1 "Conn_01x02" H 7418 5251 50  0000 C CNN
+F 2 "Milling:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling" H 7500 5125 50  0001 C CNN
+F 3 "~" H 7500 5125 50  0001 C CNN
+	1    7500 5125
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J4
+U 1 1 5E3EF29A
+P 7500 5625
+F 0 "J4" H 7418 5842 50  0000 C CNN
+F 1 "Conn_01x02" H 7418 5751 50  0000 C CNN
+F 2 "Milling:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling" H 7500 5625 50  0001 C CNN
+F 3 "~" H 7500 5625 50  0001 C CNN
+	1    7500 5625
+	-1   0    0    -1  
+$EndComp
+Wire Wire Line
+	7700 5225 7875 5225
+Wire Wire Line
+	7875 5225 7875 5725
+Connection ~ 7875 5725
+Wire Wire Line
+	7875 5725 7875 5950
+$Comp
+L Connector_Generic:Conn_01x02 J5
+U 1 1 5E3F203B
 P 7025 2125
-F 0 "J7" H 7105 2167 50  0000 L CNN
-F 1 "Conn_01x03" H 7105 2076 50  0000 L CNN
-F 2 "Milling:JST_XH_B03B-XH-A_1x03_P2.50mm_Vertical_Milling" H 7025 2125 50  0001 C CNN
+F 0 "J5" H 7105 2117 50  0000 L CNN
+F 1 "Conn_01x02" H 7105 2026 50  0000 L CNN
+F 2 "Milling:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling" H 7025 2125 50  0001 C CNN
 F 3 "~" H 7025 2125 50  0001 C CNN
 	1    7025 2125
 	1    0    0    -1  
 $EndComp
+Wire Wire Line
+	7700 5725 7875 5725
 $EndSCHEMATC
