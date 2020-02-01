@@ -1,7 +1,7 @@
 (export (version D)
   (design
     (source /home/torsten/projects/remote/mainboard/remote.sch)
-    (date "Fri 31 Jan 2020 21:54:21 CET")
+    (date "Sat 01 Feb 2020 15:55:34 CET")
     (tool "Eeschema 5.1.5")
     (sheet (number 1) (name /) (tstamps /)
       (title_block
@@ -40,7 +40,7 @@
       (tstamp 5967EC7D))
     (comp (ref U7)
       (value COM-09032)
-      (footprint Remote:XDCR_COM-09032)
+      (footprint Remote:AnalogJoystick_ALPS_10k)
       (datasheet "Manufacturer Recommendations")
       (fields
         (field (name Field4) "SparkFun Electronics")
@@ -51,7 +51,7 @@
       (tstamp 5E3A7320))
     (comp (ref U8)
       (value COM-09032)
-      (footprint Remote:XDCR_COM-09032)
+      (footprint Remote:AnalogJoystick_ALPS_10k)
       (datasheet "Manufacturer Recommendations")
       (fields
         (field (name Field4) "SparkFun Electronics")

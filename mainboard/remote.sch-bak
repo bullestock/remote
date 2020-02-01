@@ -338,37 +338,6 @@ Wire Wire Line
 Wire Wire Line
 	1550 4650 2100 4650
 $Comp
-L power:+5V #PWR0130
-U 1 1 5E6B17BB
-P 7950 4950
-F 0 "#PWR0130" H 7950 4800 50  0001 C CNN
-F 1 "+5V" H 7965 5123 50  0000 C CNN
-F 2 "" H 7950 4950 50  0001 C CNN
-F 3 "" H 7950 4950 50  0001 C CNN
-	1    7950 4950
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	7950 4950 7950 5125
-Wire Wire Line
-	7950 5625 7700 5625
-Wire Wire Line
-	7700 5125 7950 5125
-Connection ~ 7950 5125
-Wire Wire Line
-	7950 5125 7950 5625
-$Comp
-L power:GND #PWR0131
-U 1 1 5E6BD4D9
-P 7875 5950
-F 0 "#PWR0131" H 7875 5700 50  0001 C CNN
-F 1 "GND" H 7880 5777 50  0000 C CNN
-F 2 "" H 7875 5950 50  0001 C CNN
-F 3 "" H 7875 5950 50  0001 C CNN
-	1    7875 5950
-	1    0    0    -1  
-$EndComp
-$Comp
 L Connector_Generic:Conn_01x02 J6
 U 1 1 5E6E9A5E
 P 2725 4250
@@ -416,35 +385,6 @@ Wire Wire Line
 Wire Wire Line
 	1700 1350 1700 1600
 $Comp
-L Connector_Generic:Conn_01x02 J3
-U 1 1 5E3EEBB6
-P 7500 5125
-F 0 "J3" H 7418 5342 50  0000 C CNN
-F 1 "Conn_01x02" H 7418 5251 50  0000 C CNN
-F 2 "Milling:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling" H 7500 5125 50  0001 C CNN
-F 3 "~" H 7500 5125 50  0001 C CNN
-	1    7500 5125
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Connector_Generic:Conn_01x02 J4
-U 1 1 5E3EF29A
-P 7500 5625
-F 0 "J4" H 7418 5842 50  0000 C CNN
-F 1 "Conn_01x02" H 7418 5751 50  0000 C CNN
-F 2 "Milling:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical_Milling" H 7500 5625 50  0001 C CNN
-F 3 "~" H 7500 5625 50  0001 C CNN
-	1    7500 5625
-	-1   0    0    -1  
-$EndComp
-Wire Wire Line
-	7700 5225 7875 5225
-Wire Wire Line
-	7875 5225 7875 5725
-Connection ~ 7875 5725
-Wire Wire Line
-	7875 5725 7875 5950
-$Comp
 L Connector_Generic:Conn_01x02 J5
 U 1 1 5E3F203B
 P 7025 2125
@@ -455,6 +395,4 @@ F 3 "~" H 7025 2125 50  0001 C CNN
 	1    7025 2125
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	7700 5725 7875 5725
 $EndSCHEMATC
