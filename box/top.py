@@ -22,6 +22,8 @@ joystick_y_pcb= 217.424
 pcb_x_offset = center_x_pcb - center_x
 pcb_y_offset = joystick_y_pcb - joystick_y
 
+# Overall height
+oah = 40
 hole_h = 50
 pcb_z = 10
 
@@ -29,6 +31,10 @@ outline = [1168,5479,1163,5477,1159,5473,1158,5468,1160,5463,1161,5461,1128,5424
 
 def cylinder_at(x, y, d, h):
     return translate([x, y, 0])(cylinder(d = d, h = h))
+
+# Cube centered in x/y
+def c2cube(w, h, d):
+    return translate([-w/2, -h/2, 0])(cube([w, h, d]))
 
 def pot(x, y):
     return translate([x, y, 0])(cylinder(d = 8, h = hole_h))
@@ -86,9 +92,15 @@ def assembly():
             points.append(c)
             c = []
             is_x = True
-    outer = linear_extrude(height = 40)(translate([11, 14.758, 0])(polygon(points = points)))
+    outer = linear_extrude(height = oah)(translate([11, 14.758, 0])(polygon(points = points)))
+    slide_c_w = 10
+    slide_c_h = 25
+    slide_c_d = 10
+    slide_c1 = c2cube(slide_c_w, slide_c_h, .1)
+    slide_c2 = up(slide_c_d)(c2cube(slide_c_w + slide_c_d, slide_c_h + slide_c_d, .1))
+    slide_c = translate([center_x, joystick_y - 1, oah - slide_c_d])(hull()(slide_c1 + slide_c2))
     allholes = holes()
-    return outer - down(1)(allholes)
+    return outer - down(1)(allholes) - slide_c
 
 
 if __name__ == '__main__':
