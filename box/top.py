@@ -149,15 +149,26 @@ def void():
     bot_brim = down(1)(extrude_along_path(shape_pts = bot_shape, path_pts = points))
     return hull()(bot_brim, top_brim)
 
-def assembly():
+def slide_upper_cutout():
     slide_c_w = 10
     slide_c_h = 25
     slide_c_d = 10
     slide_c1 = c2cube(slide_c_w, slide_c_h, .1)
     slide_c2 = up(slide_c_d)(c2cube(slide_c_w + slide_c_d, slide_c_h + slide_c_d, .1))
-    slide_c = translate([center_x, joystick_y - 1, oah - slide_c_d])(hull()(slide_c1 + slide_c2))
+    return translate([center_x, joystick_y - 1, oah - slide_c_d])(hull()(slide_c1 + slide_c2))
+
+def slide_lower_cutout():
+    slide_c_w = 12
+    slide_c_h = 27
+    slide_c_d = 12
+    slide_c1 = c2cube(slide_c_w, slide_c_h, .1)
+    slide_c2 = up(slide_c_d)(c2cube(slide_c_w + slide_c_d, slide_c_h + slide_c_d, .1))
+    return translate([center_x, joystick_y - 1, oah - slide_c_d])(hull()(slide_c1 + slide_c2))
+
+def assembly():
     allholes = holes()
-    return shell() - void() - down(1)(allholes) - slide_c
+    hollow = void() - slide_lower_cutout()
+    return shell() - hollow - down(1)(allholes) - slide_upper_cutout()
 
 
 if __name__ == '__main__':
