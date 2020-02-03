@@ -4,6 +4,7 @@ from __future__ import division
 import os
 import sys
 import re
+from math import cos, radians, sin
 
 # Assumes SolidPython is in site-packages or elsewhwere in sys.path
 from solid import *
@@ -79,7 +80,22 @@ def pcbmounts():
     p1 = pcbsupport(42, 63.428 + 12.5/2)
     return p1
 
-def assembly():
+def circle_p(num_points=10, rad=2):
+    circle_pts = []
+    for i in range(2 * num_points):
+        angle = radians(360 / (2 * num_points) * i)
+        circle_pts.append(Point3(rad * cos(angle), rad * sin(angle), 0))
+    return circle_pts
+
+def square_p(rad=2):
+    square_pts = []
+    square_pts.append(Point3(-rad, -rad, 0))
+    square_pts.append(Point3(rad, -rad, 0))
+    square_pts.append(Point3(rad, rad, 0))
+    square_pts.append(Point3(-rad, rad, 0))
+    return square_pts
+
+def shell():
     is_x = True
     c = []
     points = []
@@ -92,7 +108,14 @@ def assembly():
             points.append(c)
             c = []
             is_x = True
-    outer = linear_extrude(height = oah)(translate([11, 14.758, 0])(polygon(points = points)))
+    rr=3
+    top_shape = circle_p(num_points=10, rad=rr)
+    top_brim = up(oah - 2*rr)(extrude_along_path(shape_pts = top_shape, path_pts = points))
+    bot_shape = square_p(rad=rr)
+    bot_brim = extrude_along_path(shape_pts = bot_shape, path_pts = points)
+    return translate([11, 14.758, 0])(hull()(bot_brim, top_brim))
+
+def assembly():
     slide_c_w = 10
     slide_c_h = 25
     slide_c_d = 10
@@ -100,7 +123,7 @@ def assembly():
     slide_c2 = up(slide_c_d)(c2cube(slide_c_w + slide_c_d, slide_c_h + slide_c_d, .1))
     slide_c = translate([center_x, joystick_y - 1, oah - slide_c_d])(hull()(slide_c1 + slide_c2))
     allholes = holes()
-    return outer - down(1)(allholes) - slide_c
+    return shell() - down(1)(allholes) - slide_c
 
 
 if __name__ == '__main__':
