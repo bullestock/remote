@@ -11,6 +11,7 @@ from solid import *
 from solid.utils import *
 
 from outline import *
+from joystickcover import *
 
 SEGMENTS = 32
 
@@ -22,8 +23,12 @@ center_x_pcb = (159.766 + 90.424)/2
 joystick_y = -38.276 + 16
 joystick_y_pcb= 217.424
 
+joystick_x = 23.977 + 16
+
 pcb_x_offset = center_x_pcb - center_x
 pcb_y_offset = joystick_y_pcb - joystick_y
+
+rr=3
 
 # Overall height
 oah = 40
@@ -44,7 +49,7 @@ def pushbutton(x, y):
     return translate([x, y, 0])(cylinder(d = 14.25, h = hole_h))
 
 def joystick_h(x, y):
-    return translate([x, y, 0])(cylinder(d = 28, h = hole_h))
+    return translate([x, y, 0])(cylinder(d = 30, h = oah+rr+e))
 
 def toggle(x, y):
     return translate([x, y, 0])(cylinder(d = 6, h = hole_h))
@@ -58,8 +63,8 @@ def holes():
     pb1r = pushbutton(76.619 - 12.5/2, 22.774 + 12.5/2)
     pb2r = pushbutton(82.690 - 12.5/2, 1.608 + 12.5/2)
     pb3r = pushbutton(89.273 - 12.5/2, -19.559 + 12.5/2)
-    jlh = joystick_h(-56.440 + 16, joystick_y)
-    jrh = joystick_h(56.440 - 16, joystick_y)
+    jlh = joystick_h(-joystick_x, joystick_y)
+    jrh = joystick_h(joystick_x, joystick_y)
     toggle1 = toggle(-69.152 + 3, 51.603 + 3)
     toggle2 = toggle(-49.736 + 3, 51.603 + 3)
     toggle3 = toggle(49.736 - 3, 51.603 + 3)
@@ -164,10 +169,9 @@ def inner_shape():
     return points
 
 def shell():
-    rr=3
     points = outer_shape()
     top_shape = circle_p(num_points=10, rad=rr)
-    top_brim = up(oah - 2*rr)(extrude_along_path(shape_pts = top_shape, path_pts = points))
+    top_brim = up(oah - rr)(extrude_along_path(shape_pts = top_shape, path_pts = points))
     bot_shape = square_p(rad=rr)
     bot_brim = extrude_along_path(shape_pts = bot_shape, path_pts = points)
     return hull()(bot_brim, top_brim)
@@ -201,7 +205,9 @@ def slide_lower_cutout():
 def assembly():
     allholes = holes()
     hollow = void() - slide_lower_cutout()
-    return shell() - hollow - down(1)(allholes) - slide_upper_cutout()
+    joystick_z = oah
+    jcovers = joystick_cover(-joystick_x, joystick_y, joystick_z) + joystick_cover(joystick_x, joystick_y, joystick_z)
+    return shell() + jcovers - hollow - down(1)(allholes) - slide_upper_cutout()
 
 
 if __name__ == '__main__':
