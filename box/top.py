@@ -28,7 +28,14 @@ joystick_x = 23.977 + 16
 pcb_x_offset = center_x_pcb - center_x
 pcb_y_offset = joystick_y_pcb - joystick_y
 
-rr=3
+# Rounding radius
+rr = 3
+
+# Shell thickness
+th = 2
+
+joystick_dep_d = 50
+joystick_dep_h = 8
 
 # Overall height
 oah = 40
@@ -49,7 +56,14 @@ def pushbutton(x, y):
     return translate([x, y, 0])(cylinder(d = 14.25, h = hole_h))
 
 def joystick_h(x, y):
-    return translate([x, y, 0])(cylinder(d = 30, h = oah+rr+e))
+    return translate([x, y, 0])(cylinder(d = 30, h = oah-joystick_dep_h+rr+e))
+
+def joystick_hollow1(x, y):
+    return translate([x, y, oah - joystick_dep_h + e])(cylinder(d1 = 35, d2 = joystick_dep_d, h = joystick_dep_h))
+
+def joystick_hollow2(x, y):
+    d = 3
+    return translate([x, y, oah - joystick_dep_h + e])(cylinder(d1 = 35+d, d2 = 50+d, h = joystick_dep_h+d))
 
 def toggle(x, y):
     return translate([x, y, 0])(cylinder(d = 6, h = hole_h))
@@ -178,7 +192,6 @@ def shell():
 
 def void():
     rr = 2
-    th = 2
     points = inner_shape()
     top_shape = circle_p(num_points=10, rad=rr)
     top_brim = up(oah - 2*rr - th)(extrude_along_path(shape_pts = top_shape, path_pts = points))
@@ -204,10 +217,17 @@ def slide_lower_cutout():
 
 def assembly():
     allholes = holes()
-    hollow = void() - slide_lower_cutout()
-    joystick_z = oah
+    joystick_z = oah - joystick_dep_h
     jcovers = joystick_cover(-joystick_x, joystick_y, joystick_z) + joystick_cover(joystick_x, joystick_y, joystick_z)
-    return shell() + jcovers - hollow - down(1)(allholes) - slide_upper_cutout()
+    jhollows1 = joystick_hollow1(-joystick_x, joystick_y) + joystick_hollow1(joystick_x, joystick_y)
+    jhollows2 = joystick_hollow2(-joystick_x, joystick_y) + joystick_hollow2(joystick_x, joystick_y)
+    jbz = oah - joystick_dep_h
+    jbottom1 = translate([-joystick_x, joystick_y, jbz])(cylinder(d = joystick_dep_d, h = th))
+    jbottom2 = translate([joystick_x, joystick_y, jbz])(cylinder(d = joystick_dep_d, h = th))
+    outer = shell() - jhollows1 - slide_upper_cutout() + jbottom1 + jbottom2
+    hollow = void() - slide_lower_cutout() - jhollows2
+    return outer + jcovers - hollow - down(1)(allholes)
+    #return shell() - jhollows
 
 
 if __name__ == '__main__':
