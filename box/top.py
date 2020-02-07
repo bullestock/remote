@@ -11,7 +11,6 @@ from solid import *
 from solid.utils import *
 
 from outline import *
-from joystickcover import *
 
 SEGMENTS = 32
 
@@ -21,12 +20,15 @@ center_x = 107.500 + 2.5
 center_x_pcb = (159.766 + 90.424)/2
 
 joystick_y = -38.276 + 16
-joystick_y_pcb= 217.424
+joystick_y_pcb = 217.424
 
 joystick_x = 23.977 + 16
+joystick_x_pcb = 166.624
 
-pcb_x_offset = center_x_pcb - center_x
+pcb_x_offset = joystick_x_pcb - joystick_x
 pcb_y_offset = joystick_y_pcb - joystick_y
+
+slide_offset = 3.5
 
 # Rounding radius
 rr = 3
@@ -34,7 +36,6 @@ rr = 3
 # Shell thickness
 th = 2
 
-joystick_dep_d = 50
 joystick_dep_h = 8
 
 # Overall height, minimum 12
@@ -43,7 +44,7 @@ hole_h = 50
 pcb_z = 10
 
 def cylinder_at(x, y, d, h):
-    return translate([x, y, 0])(cylinder(d = d, h = h))
+    return translate([x, y, oah - th - 17])(cylinder(d = d, h = h))
 
 # Cube centered in x/y
 def c2cube(w, h, d):
@@ -53,20 +54,13 @@ def pot(x, y):
     return translate([x, y, 0])(cylinder(d = 8, h = hole_h))
 
 def pushbutton(x, y):
-    return translate([x, y, 0])(cylinder(d = 14.25, h = hole_h))
+    return translate([x, y, 0])(cylinder(d = 14.5, h = hole_h))
 
 def joystick_h(x, y):
-    return translate([x, y, 0])(cylinder(d = 30, h = oah-joystick_dep_h+rr+e))
-
-def joystick_hollow1(x, y):
-    return translate([x, y, oah - joystick_dep_h + e])(cylinder(d1 = 35, d2 = joystick_dep_d, h = joystick_dep_h))
-
-def joystick_hollow2(x, y):
-    d = 3
-    return translate([x, y, oah - joystick_dep_h + e])(cylinder(d1 = 35+d, d2 = 50+d, h = joystick_dep_h+d))
+    return translate([x, y, 0])(cylinder(d = 50, h = hole_h))
 
 def toggle(x, y):
-    return translate([x, y, 0])(cylinder(d = 6, h = hole_h))
+    return translate([x, y, 0])(cylinder(d = 6.25, h = hole_h))
 
 def holes():
     pot1 = pot(-48.630 + 6.552/2, 11.340 + 6.552/2)
@@ -85,19 +79,29 @@ def holes():
     toggle4 = toggle(69.152 - 3, 51.603 + 3)
     holes1 = pot1 + pot2 + pb1l + pb2l + pb3l + pb1r + pb2r + pb3r
     holes2 = jlh + jrh + toggle1 + toggle2 + toggle3 + toggle4
-    slide = translate([0, joystick_y - 1, 0])(c2cube(18, 33, hole_h))
+    slide = translate([0, joystick_y - slide_offset, 0])(c2cube(18, 33, hole_h))
     # 2 mm right of center
     display_w = 34
     display_bottom_y = joystick_y + 25.9 + 37.85
     display = translate([- display_w/2 + 2, display_bottom_y, 0])(cube([display_w, 16, hole_h]))
     return holes1 + holes2 + slide + display
 
+def map(y):
+    return 195.5 - y 
+
 def pcbsupport(x, y):
-    return cylinder_at(x, y, 3, pcb_z)
+    return cylinder_at(x - pcb_x_offset, map(y), 3, 18)
 
 def pcbmounts():
-    p1 = pcbsupport(42, 63.428 + 12.5/2)
-    return p1
+    p1 = pcbsupport(52, 217)
+    p2 = pcbsupport(200, 217)
+    p3 = pcbsupport(61, 180)
+    p4 = pcbsupport(193, 180)
+    p5 = pcbsupport(54, 153)
+    p6 = pcbsupport(193, 153)
+    p7 = pcbsupport(86, 149)
+    p8 = pcbsupport(162, 149)
+    return p1+p2+p3+p4+p5+p6+p7+p8
 
 def circle_p(num_points=10, rad=2):
     circle_pts = []
@@ -200,24 +204,29 @@ def void():
     return hull()(bot_brim, top_brim)
 
 def slide_flange():
-    inner = translate([0, joystick_y - 1, 0])(c2cube(28, 42, th))
-    outer = translate([e, joystick_y - 1, 0])(c2cube(28+2*th, 42+2*th, th))
-    return up(oah-2*th-e)(outer - inner)
+    inner = down(e)(c2cube(24, 42, th+2*e))
+    outer = c2cube(24+2*th, 42+2*th, th)
+    return translate([0, joystick_y - slide_offset, oah-2*th-e])(outer - inner)
+
+def slide_flange_cut():
+    cut = down(e)(c2cube(30, 32, th+2*e))
+    return translate([0, joystick_y - slide_offset, oah-2*th-e])(cut)
+
+def joystick_flange(x, y):
+    id = 55
+    inner = down(e)(cylinder(d = id, h = th + 2*e))
+    outer = cylinder(d = id+2*th, h = th)
+    return translate([x, y, oah - 2*th-e])(outer - inner)
 
 def assembly():
     allholes = holes()
     joystick_z = oah - joystick_dep_h
-    jcovers = joystick_cover(-joystick_x, joystick_y, joystick_z) + joystick_cover(joystick_x, joystick_y, joystick_z)
-    jhollows1 = joystick_hollow1(-joystick_x, joystick_y) + joystick_hollow1(joystick_x, joystick_y)
-    jhollows2 = joystick_hollow2(-joystick_x, joystick_y) + joystick_hollow2(joystick_x, joystick_y)
     jbz = oah - joystick_dep_h
-    jbottom1 = translate([-joystick_x, joystick_y, jbz])(cylinder(d = joystick_dep_d, h = th))
-    jbottom2 = translate([joystick_x, joystick_y, jbz])(cylinder(d = joystick_dep_d, h = th))
-    outer = shell() - jhollows1 - jbottom1 + jbottom2
-    hollow = void() - jhollows2
-    return outer + jcovers - hollow - down(1)(allholes) + slide_flange()
-    #return shell() - jhollows
-
+    outer = shell()
+    hollow = void()
+    jf = joystick_flange(-joystick_x, joystick_y) + joystick_flange(joystick_x, joystick_y)
+    return outer - hollow - down(1)(allholes) + slide_flange() + jf - slide_flange_cut() + pcbmounts()
+    #return pcbmounts()
 
 if __name__ == '__main__':
     a = assembly()
