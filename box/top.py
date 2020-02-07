@@ -194,7 +194,7 @@ def void():
     rr = 2
     points = inner_shape()
     top_shape = circle_p(num_points=10, rad=rr)
-    top_brim = up(oah - 2*rr - th)(extrude_along_path(shape_pts = top_shape, path_pts = points))
+    top_brim = up(oah - rr - th)(extrude_along_path(shape_pts = top_shape, path_pts = points))
     bot_shape = square_p(rad=rr)
     bot_brim = down(1)(extrude_along_path(shape_pts = bot_shape, path_pts = points))
     return hull()(bot_brim, top_brim)
@@ -202,7 +202,7 @@ def void():
 def slide_flange():
     inner = translate([0, joystick_y - 1, 0])(c2cube(28, 42, th))
     outer = translate([e, joystick_y - 1, 0])(c2cube(28+2*th, 42+2*th, th))
-    return up(oah-3*th-e)(outer - inner)
+    return up(oah-2*th-e)(outer - inner)
 
 def assembly():
     allholes = holes()
