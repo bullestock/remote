@@ -37,8 +37,8 @@ th = 2
 joystick_dep_d = 50
 joystick_dep_h = 8
 
-# Overall height
-oah = 40
+# Overall height, minimum 12
+oah = 12
 hole_h = 50
 pcb_z = 10
 
