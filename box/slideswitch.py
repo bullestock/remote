@@ -31,14 +31,6 @@ rr = 3
 # Shell thickness
 th = 2
 
-joystick_dep_d = 50
-joystick_dep_h = 8
-
-# Overall height, minimum 12
-oah = 12
-hole_h = 50
-pcb_z = 10
-
 def cylinder_at(x, y, d, h):
     return translate([x, y, 0])(cylinder(d = d, h = h))
 
@@ -53,22 +45,22 @@ def slide_upper_cutout():
     slide_c_w = 10
     slide_c_h = 25
     slide_c1 = c2cube(slide_c_w, slide_c_h, e)
-    slide_c2 = up(slide_c_d)(c2cube(slide_c_w + slide_c_d, slide_c_h + slide_c_d, e))
+    slide_c2 = up(slide_c_d - th)(c2cube(slide_c_w + slide_c_d, slide_c_h + slide_c_d, e))
     return hull()(slide_c1 + slide_c2)
 
 def slide_lower_cutout():
     slide_c_w = 12
     slide_c_h = 27
     slide_c1 = c2cube(slide_c_w, slide_c_h, e)
-    slide_c2 = up(slide_c_d+th)(c2cube(slide_c_w + slide_c_d + th, slide_c_h + slide_c_d + th, e))
+    slide_c2 = up(slide_c_d)(c2cube(slide_c_w + slide_c_d + th, slide_c_h + slide_c_d + th, e))
     return hull()(slide_c1 + slide_c2)
 
 def assembly():
-    flange = up(slide_c_d+e)(c2cube(28, 42, 2-e))
+    flange = up(slide_c_d - th + e)(c2cube(24, 42, th-e))
     hole = (c2cube(5, 12, 3))
 
-    #return block - up(2+e)(slide_upper_cutout()) # - slide_lower_cutout()
-    return flange + slide_lower_cutout() - up(2+e)(slide_upper_cutout()) - down(e)(hole)
+    #meas = (c2cube(18, 33, 3))
+    return flange + slide_lower_cutout() - up(2+e)(slide_upper_cutout()) - down(e)(hole) #+ up(10.5)(meas)
 
 if __name__ == '__main__':
     a = assembly()
