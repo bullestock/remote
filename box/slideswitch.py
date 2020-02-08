@@ -56,7 +56,7 @@ def slide_lower_cutout():
     return hull()(slide_c1 + slide_c2)
 
 def assembly():
-    flange = up(slide_c_d - th + e)(c2cube(24, 42, th-e))
+    flange = up(slide_c_d - th + e)(c2cube(23.5, 41.5, th-e))
     hole = (c2cube(5, 12, 3))
 
     #meas = (c2cube(18, 33, 3))
