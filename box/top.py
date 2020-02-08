@@ -28,7 +28,7 @@ joystick_x_pcb = 166.624
 pcb_x_offset = joystick_x_pcb - joystick_x
 pcb_y_offset = joystick_y_pcb - joystick_y
 
-slide_offset = 3.5
+slide_offset = -2.5
 
 # Rounding radius
 rr = 3
