@@ -90,7 +90,7 @@ def map(y):
     return 195.5 - y 
 
 def pcbsupport(x, y):
-    return cylinder_at(x - pcb_x_offset, map(y), 3, 18)
+    return cylinder_at(x - pcb_x_offset, map(y), 4, 18)
 
 def pcbmounts():
     p1 = pcbsupport(52, 217)
