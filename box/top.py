@@ -225,7 +225,7 @@ def assembly():
     outer = shell()
     hollow = void()
     jf = joystick_flange(-joystick_x, joystick_y) + joystick_flange(joystick_x, joystick_y)
-    return outer - hollow + slide_flange() + jf + pcbmounts() - translate([0, -5, 0])(down(1)(allholes) + slide_flange_cut())
+    return outer - hollow + slide_flange() + jf + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes) + slide_flange_cut())
     #return pcbmounts()
 
 if __name__ == '__main__':
