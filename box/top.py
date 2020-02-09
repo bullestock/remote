@@ -97,6 +97,12 @@ def screwstud(x, y):
     i = translate([x, y, oah - th - 22])(cylinder(d = 2, h = 10))
     return o - i
 
+def screwstud2(x, y):
+    d = 2
+    o = translate([x, y, 0])(cylinder(d = 8, h = oah-d))
+    i = translate([x, y, -3])(cylinder(d = 2, h = oah))
+    return o + hole()(i)
+
 def pcbmounts():
     p1 = pcbsupport(52, 217)
     p2 = pcbsupport(200, 217)
@@ -111,8 +117,9 @@ def pcbmounts():
 def screwstuds():
     #s1 = screwstud(84.5, 25) + screwstud(-84.5, 25)
     s2 = screwstud(92, -5) + screwstud(-92, -5)
-    s3 = screwstud(67, 63) + screwstud(-67, 63)
-    s4 = screwstud(0, 63)
+    y = 67
+    s3 = screwstud2(67, y) + screwstud2(-67, y)
+    s4 = screwstud2(0, y)
     s5 = screwstud(30, -63) + screwstud(-30, -63)
     return s2 + s3 + s4 + s5
 
