@@ -116,7 +116,7 @@ def pcbmounts():
 
 def screwstuds():
     #s1 = screwstud(84.5, 25) + screwstud(-84.5, 25)
-    s2 = screwstud(92, -5) + screwstud(-92, -5)
+    s2 = screwstud(92, -5) + screwstud(-89, 10)
     y = 67
     s3 = screwstud2(67, y) + screwstud2(-67, y)
     s4 = screwstud2(0, y)
