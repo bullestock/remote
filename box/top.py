@@ -92,6 +92,11 @@ def map(y):
 def pcbsupport(x, y):
     return cylinder_at(x - pcb_x_offset, map(y), 4, 18)
 
+def screwstud(x, y):
+    o = translate([x, y, oah - th - 21])(cylinder(d = 8, h = 21))
+    i = translate([x, y, oah - th - 22])(cylinder(d = 2, h = 10))
+    return o - i
+
 def pcbmounts():
     p1 = pcbsupport(52, 217)
     p2 = pcbsupport(200, 217)
@@ -102,6 +107,14 @@ def pcbmounts():
     p7 = pcbsupport(86, 149)
     p8 = pcbsupport(162, 149)
     return p1+p2+p3+p4+p5+p6+p7+p8
+
+def screwstuds():
+    #s1 = screwstud(84.5, 25) + screwstud(-84.5, 25)
+    s2 = screwstud(92, -5) + screwstud(-92, -5)
+    s3 = screwstud(67, 63) + screwstud(-67, 63)
+    s4 = screwstud(0, 63)
+    s5 = screwstud(30, -63) + screwstud(-30, -63)
+    return s2 + s3 + s4 + s5
 
 def circle_p(num_points=10, rad=2):
     circle_pts = []
@@ -225,7 +238,7 @@ def assembly():
     outer = shell()
     hollow = void()
     jf = joystick_flange(-joystick_x, joystick_y) + joystick_flange(joystick_x, joystick_y)
-    return outer - hollow + slide_flange() + jf + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes) + slide_flange_cut())
+    return outer - hollow + translate([0, -5, 0])(jf + slide_flange() + pcbmounts()) - translate([0, -5, 0])(down(1)(allholes) + slide_flange_cut()) + screwstuds()
     #return pcbmounts()
 
 if __name__ == '__main__':
