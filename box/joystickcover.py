@@ -43,7 +43,7 @@ def assembly():
     hollow1 = joystick_hollow1(0, 0)
     hollow2 = joystick_hollow2(0, 0)
     hole = down(e)(cylinder(d = 28, h = 1.6*th+2*e))
-    flange = up(joystick_dep_h + .5*th)(cylinder(d = 55, h = th) - down(e)(cylinder(d = 50, h = th+2*e)))
+    flange = up(joystick_dep_h + .5*th)(cylinder(d = 54, h = th) - down(e)(cylinder(d = 50, h = th+2*e)))
 
     return hollow2 - hollow1 + joystick_cover(0, 0, -3) + bottom - hole + flange
 
