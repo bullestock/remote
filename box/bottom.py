@@ -14,10 +14,11 @@ from outline import *
 
 SEGMENTS = 32
 
+include_placeholders = False#True
+
 e = 0.001
 
-# TODO: determine proper height
-pcb_h = 5
+pcb_h = 8 + 4 - 1.2
 
 center_x = 107.500 + 2.5
 center_x_pcb = (159.766 + 90.424)/2
@@ -38,7 +39,7 @@ rr = 3
 th = 2
 
 # Overall height, minimum 12
-oah = 20
+oah = 19
 hole_h = 50
 pcb_z = 10
 
@@ -88,8 +89,10 @@ def pcbmounts():
     p3 = pcbsupport(202, 176)
     p4 = pcbsupport(203, 198)
     p5 = pcbsupport(54, 140)
-    p6 = pcbsupport(69, 130)
-    p7 = pcbsupport(87, 140)
+    # Left of charger
+    p6 = pcbsupport(66, 130)
+    # Right of charger
+    p7 = pcbsupport(88, 140)
     p8 = pcbsupport(80, 192)
     p9 = pcbsupport(86, 217)
     p10 = pcbsupport(126, 204)
@@ -212,11 +215,53 @@ def void():
     bot_brim = down(1)(extrude_along_path(shape_pts = bot_shape, path_pts = points))
     return hull()(bot_brim, top_brim)
 
+def lipo():
+    if include_placeholders:
+        return color([0.5, 0, 1, 0.2])(c2cube(60, 80, 6))
+    else:
+        return c2cube(e, e, e)
+
+def controller():
+    if include_placeholders:
+        return color([0, 0, 1, 0.2])(c2cube(70, 61.5, 15))
+    else:
+        return c2cube(e, e, e)
+    
+def charger():
+    ch = 29
+    c = color([0, 1, 1, 0.2])(c2cube(18, ch, 4))
+    hw = 12
+    hh = 7
+    ch = translate([-hw/2, ch/2, 0])(cube([hw, 10, hh]))
+    inner = translate([0, 1, -1])(c2cube(17.5, 28, 5))
+    outer = c2cube(20, 29.5, 4)
+    ridge = up(1)(outer - inner) + translate([0, 12, 3])(c2cube(15, 2, 2)) + translate([0, -5, 3])(c2cube(15, 2, 2))
+    a = ridge + up(-3)(hole()(ch))
+    if include_placeholders:
+        a = a + c
+    return a
+    
+def stepup():
+    if include_placeholders:
+        return color([1, .5, .5, 0.2])(c2cube(38, 18, 7))
+    else:
+        return c2cube(e, e, e)
+    
 def assembly():
     allholes = holes()
     outer = shell()
     hollow = void()
-    return outer - hollow + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds()
+    charger_x = 50
+    all = outer - hollow + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + \
+        translate([0, 30, -5])(controller()) + \
+        translate([0, 30, 12])(lipo()) + \
+        translate([55, 18, 12])(stepup()) + \
+        translate([charger_x, 55-4, 12])(charger())
+    # Charger submodule test
+    #allcube = down(2)(c2cube(250, 150, 50))
+    #chargercube = translate([charger_x, 55, 5])(c2cube(20, 38, 20))
+    #return all - (allcube - chargercube)
+    return all
 
 if __name__ == '__main__':
     a = assembly()
