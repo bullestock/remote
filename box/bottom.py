@@ -230,13 +230,17 @@ def controller():
 def charger():
     ch = 29
     c = color([0, 1, 1, 0.2])(c2cube(18, ch, 4))
-    hw = 12
+    hw = 13
     hh = 7
-    ch = translate([-hw/2, ch/2, 0])(cube([hw, 10, hh]))
+    chole = translate([-hw/2, ch/2, 0])(cube([hw, 10, hh]))
     inner = translate([0, 1, -1])(c2cube(17.5, 28, 5))
-    outer = c2cube(20, 29.5, 4)
+    iw = hw+7
+    outer = c2cube(iw, 29.5, 4)
     ridge = up(1)(outer - inner) + translate([0, 12, 3])(c2cube(15, 2, 2)) + translate([0, -5, 3])(c2cube(15, 2, 2))
-    a = ridge + up(-3)(hole()(ch))
+    pin = down(1)(c2cube(1.5, 4, 2))
+    pins = translate([iw/2-.5, ch/2-2])(pin) + translate([-iw/2+.5, ch/2-2])(pin) + \
+        translate([iw/2-.5, -(ch/2-9)])(pin) + translate([-iw/2+.5, -(ch/2-9)])(pin)
+    a = ridge + up(-3)(hole()(chole)) + pins
     if include_placeholders:
         a = a + c
     return a
