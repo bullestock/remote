@@ -60,7 +60,7 @@ def map_x(x):
     return -(x - pcb_x_offset)
 
 def pcbsupport(x, y):
-    return cylinder_at(map_x(x), map_y(y), th, pcb_h)
+    return cylinder_at(map_x(x), map_y(y), 3, pcb_h)
 
 # Recessed
 def screwstud(x, y):
