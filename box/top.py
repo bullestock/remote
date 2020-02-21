@@ -81,9 +81,13 @@ def holes():
     slide = translate([0, joystick_y - slide_offset, 0])(c2cube(slide_hole_w, slide_hole_h, hole_h))
     # 2 mm right of center
     display_w = 34
+    display_h = 16
     display_bottom_y = joystick_y + 25.9 + 37.85
-    display = translate([- display_w/2 + 2, display_bottom_y, 0])(cube([display_w, 16, hole_h]))
-    return holes1 + holes2 + slide + display
+    display = translate([- display_w/2 + 2, display_bottom_y, 0])(cube([display_w, display_h, hole_h]))
+    cw = 3
+    w = display_w + 2*cw
+    display2 = translate([-w/2 + 2, display_bottom_y - cw, -hole_h+oah+0.5])(cube([w, display_h + 2*cw, hole_h]))
+    return holes1 + holes2 + slide + display + display2
 
 def map(y):
     return 195.5 - y 
