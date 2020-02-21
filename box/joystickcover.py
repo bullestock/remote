@@ -5,6 +5,7 @@ import os
 import sys
 import re
 from math import cos, radians, sin
+from remotedefs import *
 
 # Assumes SolidPython is in site-packages or elsewhwere in sys.path
 from solid import *
@@ -12,42 +13,25 @@ from solid.utils import *
 
 SEGMENTS = 32
 
-e = 0.001
-
-joystick_dep_d = 45
-joystick_dep_h = 5
-th = 2
-
-def joystick_cover(x, y, z):
-    r1 = 16
+def joystick_opening(x, y, z):
     r2 = 15
-    outer_s = sphere(r = r1)
     inner_s = hole()(sphere(r = r2))
-    # Spherical shell
-    sph = outer_s - inner_s
-    # Top opening
-    hole1 = cylinder(r = 12, h = 20)
-    # Cube to cut off bottom
-    block = translate([-20, -20, -20])(cube([40, 40, 20]))
-    return translate([x, y, z])(sph) - block - down(1)(hole()(hole1))
+    return translate([x, y, z])(hole()(inner_s))
 
 def joystick_hollow1(x, y):
-    offset = 0
-    return translate([x, y, 1.5*th + 3*e + offset])(cylinder(d1 = 24, d2 = joystick_dep_d, h = joystick_dep_h-offset))
-
+    cyl = up(e)(cylinder(d = joystick_dep_d, h = joystick_dep_h))
+    cone = up(0)(cylinder(d2 = 24, d1 = joystick_dep_d, h = joystick_dep_h))
+    return translate([x, y, th+e])(cyl - cone)
 
 def joystick_hollow2(x, y):
-    d = 3
-    return translate([x, y, e])(cylinder(d1 = 35+d, d2 = 50+d, h = joystick_dep_h+d))
+    d = th-e
+    return translate([x, y, e])(cylinder(d = joystick_dep_d-e, h = joystick_dep_h+d))
 
 def assembly():
-    bottom = cylinder(d = 35, h = th)
     hollow1 = joystick_hollow1(0, 0)
     hollow2 = joystick_hollow2(0, 0)
-    hole = down(e)(cylinder(d = 28, h = 1.6*th+2*e))
-    flange = up(joystick_dep_h + .5*th)(cylinder(d = 54, h = th) - down(e)(cylinder(d = 50, h = th+2*e)))
-
-    return hollow2 - hollow1 + joystick_cover(0, 0, -2.5) + bottom - hole + flange
+    flange = cylinder(d = joystick_flange_d, h = th)
+    return hollow2 - hollow1 + joystick_opening(0, 0, -3) + flange - joystick_holes()
 
 if __name__ == '__main__':
     a = assembly()
