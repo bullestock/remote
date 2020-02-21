@@ -22,17 +22,19 @@ def joystick_cover(x, y, z):
     r1 = 16
     r2 = 15
     outer_s = sphere(r = r1)
-    inner_s = sphere(r = r2)
+    inner_s = hole()(sphere(r = r2))
     # Spherical shell
     sph = outer_s - inner_s
     # Top opening
     hole1 = cylinder(r = 12, h = 20)
     # Cube to cut off bottom
     block = translate([-20, -20, -20])(cube([40, 40, 20]))
-    return translate([x, y, z])(sph) - block - down(1)(hole1)
+    return translate([x, y, z])(sph) - block - down(1)(hole()(hole1))
 
 def joystick_hollow1(x, y):
-    return translate([x, y, 1.5*th + 3*e])(cylinder(d1 = 35, d2 = joystick_dep_d, h = joystick_dep_h))
+    offset = 0
+    return translate([x, y, 1.5*th + 3*e + offset])(cylinder(d1 = 24, d2 = joystick_dep_d, h = joystick_dep_h-offset))
+
 
 def joystick_hollow2(x, y):
     d = 3
