@@ -5,6 +5,7 @@ import os
 import sys
 import re
 from math import cos, radians, sin
+from remotedefs import *
 
 # Assumes SolidPython is in site-packages or elsewhwere in sys.path
 from solid import *
@@ -28,7 +29,7 @@ joystick_x_pcb = 166.624
 pcb_x_offset = joystick_x_pcb - joystick_x
 pcb_y_offset = joystick_y_pcb - joystick_y
 
-slide_offset = 1
+slide_offset = -5
 
 # Rounding radius
 rr = 3
@@ -57,7 +58,7 @@ def pushbutton(x, y):
     return translate([x, y, 0])(cylinder(d = 14.5, h = hole_h))
 
 def joystick_h(x, y):
-    return translate([x, y, 0])(cylinder(d = 50, h = hole_h))
+    return translate([x, y, 0])(hole()(cylinder(d = joystick_hole_d, h = hole_h)) + joystick_holes())
 
 def toggle(x, y):
     return translate([x, y, 0])(cylinder(d = 6.25, h = hole_h))
@@ -71,15 +72,13 @@ def holes():
     pb1r = pushbutton(76.619 - 12.5/2, 22.774 + 12.5/2)
     pb2r = pushbutton(82.690 - 12.5/2, 1.608 + 12.5/2)
     pb3r = pushbutton(89.273 - 12.5/2, -19.559 + 12.5/2)
-    jlh = joystick_h(-joystick_x, joystick_y)
-    jrh = joystick_h(joystick_x, joystick_y)
     toggle1 = toggle(-69.152 + 3, 51.603 + 3)
     toggle2 = toggle(-49.736 + 3, 51.603 + 3)
     toggle3 = toggle(49.736 - 3, 51.603 + 3)
     toggle4 = toggle(69.152 - 3, 51.603 + 3)
     holes1 = pot1 + pot2 + pb1l + pb2l + pb3l + pb1r + pb2r + pb3r
-    holes2 = jlh + jrh + toggle1 + toggle2 + toggle3 + toggle4
-    slide = translate([0, joystick_y - slide_offset, 0])(c2cube(18, 33, hole_h))
+    holes2 = toggle1 + toggle2 + toggle3 + toggle4
+    slide = translate([0, joystick_y - slide_offset, 0])(c2cube(slide_hole_w, slide_hole_h, hole_h))
     # 2 mm right of center
     display_w = 34
     display_bottom_y = joystick_y + 25.9 + 37.85
@@ -223,32 +222,22 @@ def void():
     bot_brim = down(1)(extrude_along_path(shape_pts = bot_shape, path_pts = points))
     return hull()(bot_brim, top_brim)
 
-def slide_flange():
-    inner = down(e)(c2cube(24, 42, th+2*e))
-    outer = c2cube(24+2*th, 42+2*th, th)
-    return translate([0, joystick_y - slide_offset, oah-2*th-e])(outer - inner)
-
-def slide_flange_cut():
-    cut = down(e)(c2cube(30, 32, th+2*e))
-    return translate([0, joystick_y - slide_offset, oah-2*th-e])(cut)
-
-def joystick_flange(x, y):
-    id = 55
-    inner = down(e)(cylinder(d = id, h = th + 2*e))
-    outer = cylinder(d = id+2*th, h = th)
-    return translate([x, y, oah - 2*th-e])(outer - inner)
-
 def assembly():
     allholes = holes()
     joystick_z = oah - joystick_dep_h
     jbz = oah - joystick_dep_h
     outer = shell()
     hollow = void()
-    jf = joystick_flange(-joystick_x, joystick_y) + joystick_flange(joystick_x, joystick_y)
-    return outer - hollow + translate([0, -5, 0])(jf + slide_flange() + pcbmounts()) - translate([0, -5, 0])(down(1)(allholes) + slide_flange_cut()) + screwstuds()
+    jlh = joystick_h(-joystick_x, joystick_y)
+    jrh = joystick_h(joystick_x, joystick_y)
+    studs = translate([0, joystick_y - slide_offset, -1])(slide_holes()) + pcbmounts()
+    return outer - hollow + translate([0, -5, 0])(studs) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + jlh + jrh
     #return pcbmounts()
 
 if __name__ == '__main__':
     a = assembly()
     scad_render_to_file(a, file_header='$fn = %s;' % SEGMENTS, include_orig_code=False)
 
+# Local Variables:
+# compile-command: "python top.py"
+# End:
