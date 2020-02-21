@@ -45,9 +45,12 @@ def assembly():
     hole = down(e)(cylinder(d = 28, h = 1.6*th+2*e))
     flange = up(joystick_dep_h + .5*th)(cylinder(d = 54, h = th) - down(e)(cylinder(d = 50, h = th+2*e)))
 
-    return hollow2 - hollow1 + joystick_cover(0, 0, -3) + bottom - hole + flange
+    return hollow2 - hollow1 + joystick_cover(0, 0, -2.5) + bottom - hole + flange
 
 if __name__ == '__main__':
     a = assembly()
     scad_render_to_file(a, file_header='$fn = %s;' % SEGMENTS, include_orig_code=False)
 
+# Local Variables:
+# compile-command: "python joystickcover.py"
+# End:
