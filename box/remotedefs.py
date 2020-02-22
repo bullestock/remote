@@ -13,7 +13,7 @@ joystick_dep_h = 5
 joystick_flange_d = 54
 joystick_hole_d = 45
 
-slide_hole_w = 18
+slide_hole_w = 20
 slide_hole_h = 33
 slide_ring_th1 = 2
 slide_ring_th2 = 5
