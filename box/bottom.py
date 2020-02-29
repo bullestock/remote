@@ -14,7 +14,7 @@ from outline import *
 
 SEGMENTS = 32
 
-include_placeholders = False#True
+include_placeholders = True
 
 e = 0.001
 
@@ -38,8 +38,8 @@ rr = 3
 # Shell thickness
 th = 2
 
-# Overall height, minimum 12
-oah = 19
+# Overall height
+oah = 22
 hole_h = 50
 pcb_z = 10
 
@@ -64,8 +64,10 @@ def pcbsupport(x, y):
 
 # Recessed
 def screwstud(x, y):
-    o = translate([x, y, oah - th - 7])(cylinder(d = 8, h = 8))
-    i = translate([x, y, oah - th - 8])(cylinder(d = 3, h = 12))
+    # Top extends 10.6
+    xh = 10.6
+    o = translate([x, y, xh])(cylinder(d = 8, h = oah - xh - th + e))
+    i = translate([x, y, xh - 1])(cylinder(d = 3, h = 12))
     recess = translate([x, y, oah - 3.5])(cylinder(d = 6, h = 10))
     return o - hole()(i + recess)
 
@@ -81,6 +83,12 @@ def screwstud2(x, y):
 def screwstud3(x, y):
     o = translate([map_x(x), map_y(y), oah - th - pcb_h])(cylinder(d = 8, h = pcb_h + 1))
     i = translate([map_x(x), map_y(y), -th])(cylinder(d = 2, h = oah))
+    return o + hole()(i)
+
+# for PCB, zero ref'd, variable height
+def screwstud4(x, y, h):
+    o = translate([x, y, oah - th - h])(cylinder(d = 8, h = h + 1))
+    i = translate([x, y, -th])(cylinder(d = 2, h = oah))
     return o + hole()(i)
 
 def pcbmounts():
@@ -222,10 +230,14 @@ def lipo():
         return c2cube(e, e, e)
 
 def controller():
+    w = 70
+    d = 61.5
+    h = 2
+    studs = screwstud4(w/2-5, d/2-6.4, h) + screwstud4(w/2-65, d/2-6.4, h) + screwstud4(w/2-5, d/2-54.1, h) + screwstud4(w/2-65, d/2-48.25, h)
     if include_placeholders:
-        return color([0, 0, 1, 0.2])(c2cube(70, 61.5, 15))
+        return studs + color([0, 0, 1, 0.2])(c2cube(w, d, 15))
     else:
-        return c2cube(e, e, e)
+        return studs
     
 def charger():
     ch = 29
@@ -271,3 +283,6 @@ if __name__ == '__main__':
     a = assembly()
     scad_render_to_file(a, file_header='$fn = %s;' % SEGMENTS, include_orig_code=False)
 
+# Local Variables:
+# compile-command: "python bottom.py"
+# End:
