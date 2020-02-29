@@ -106,14 +106,19 @@ def screwstud2(x, y):
     return o + hole()(i)
 
 def pcbmounts():
+    # Bottom left pushbutton
     p1 = pcbsupport(52, 217)
     p2 = pcbsupport(200, 217)
+    # Between top left and middle left pushbutton
     p3 = pcbsupport(61, 180)
     p4 = pcbsupport(193, 180)
+    # Above top left pushbutton
     p5 = pcbsupport(54, 153)
     p6 = pcbsupport(193, 153)
+    # Below toggle 2 from left
     p7 = pcbsupport(86, 149)
-    p8 = pcbsupport(162, 149)
+    # Toggle 3 from left
+    p8 = pcbsupport(162+5, 149-18)
     return p1+p2+p3+p4+p5+p6+p7+p8
 
 def screwstuds():
@@ -234,7 +239,9 @@ def assembly():
     jlh = joystick_h(-joystick_x, joystick_y)
     jrh = joystick_h(joystick_x, joystick_y)
     studs = translate([0, joystick_y - slide_offset, -1])(slide_holes()) + pcbmounts()
-    return outer - hollow + translate([0, -5, 0])(studs) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + jlh + jrh
+    antenna1 = translate([26, 80, 3.25])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
+    antenna2 = translate([26, 80, 0])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
+    return outer - hollow + translate([0, -5, 0])(studs) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + jlh + jrh - hull()(antenna1 + antenna2)
     #return pcbmounts()
 
 if __name__ == '__main__':
