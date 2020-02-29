@@ -20,7 +20,10 @@ th = 2
 
 def assembly():
     outer = c2cube(slide_hole_w + 2*slide_ring_th1, slide_hole_h + 2*slide_ring_th2, slide_ring_h)
-    hole = (c2cube(slide_hole_w, slide_hole_h, slide_ring_h+2*e))
+    h1 = c2cube(slide_hole_w, slide_hole_h, e)
+    d = slide_hole_h/3
+    h2 = c2cube(slide_hole_w-d, slide_hole_h-d, e)
+    hole = hull()(up(slide_ring_h+e)(h1) + h2)
     return outer - down(e)(hole) - slide_holes()
 
 if __name__ == '__main__':
