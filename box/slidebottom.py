@@ -19,7 +19,7 @@ e = 0.001
 th = 2
 
 def assembly():
-    lth = 1
+    lth = 2
     plate = c2cube(slide_hole_w + 2*slide_ring_th1, slide_hole_h + 2*slide_ring_th2, lth)
     hole = (c2cube(5, 12, lth+2*e))
     return plate - down(e)(hole) - slide_holes()
