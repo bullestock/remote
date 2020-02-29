@@ -19,6 +19,9 @@ slide_ring_th1 = 2
 slide_ring_th2 = 5
 slide_ring_h = 10 - th
 
+antenna_x = 26
+antenna_y = 69
+
 # Cube centered in x/y
 def c2cube(w, h, d):
     return translate([-w/2, -h/2, 0])(cube([w, h, d]))

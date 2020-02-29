@@ -5,6 +5,7 @@ import os
 import sys
 import re
 from math import cos, radians, sin
+from remotedefs import *
 
 # Assumes SolidPython is in site-packages or elsewhwere in sys.path
 from solid import *
@@ -227,7 +228,7 @@ def lipo():
     l = c2cube(48, 30, 8) - c2cube(44, 26, 10) - translate([22, 12, 0])(c2cube(10, 10, 10))
     if include_placeholders:
         l = l + color([0.5, 0, 1, 0.2])(c2cube(44, 26, 8))
-    return l
+    return up(oah - th - 8 + e)(l)
 
 def controller():
     w = 70
@@ -255,24 +256,26 @@ def charger():
     a = ridge + up(-3)(hole()(chole)) + pins
     if include_placeholders:
         a = a + c
-    return a
+    return up(oah - th - 4 + e)(a)
     
 def stepup():
+    s = c2cube(41, 21, 4) - c2cube(38, 18, 5)
     if include_placeholders:
-        return color([1, .5, .5, 0.2])(c2cube(38, 18, 7))
-    else:
-        return c2cube(e, e, e)
+        s = s + color([1, .5, .5, 0.2])(c2cube(38, 18, 7))
+    return up(oah - th - 4 + e)(s)
     
 def assembly():
     allholes = holes()
     outer = shell()
     hollow = void()
     charger_x = 50
+    antenna_tab = c2cube(10, 4.7, 10) - forward(10)(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
     all = outer - hollow + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + \
         translate([0, 30, -5])(controller()) + \
-        translate([35, -45, 12])(lipo()) + \
-        translate([55, 18, 12])(stepup()) + \
-        translate([charger_x, 55-4, 12])(charger())
+        translate([35, -45, 0])(lipo()) + \
+        translate([55, 18, 0])(stepup()) + \
+        translate([charger_x, 55-4, 0])(charger()) + \
+        translate([-antenna_x, antenna_y, -6])(antenna_tab)
     # Charger submodule test
     #allcube = down(2)(c2cube(250, 150, 50))
     #chargercube = translate([charger_x, 55, 5])(c2cube(20, 38, 20))

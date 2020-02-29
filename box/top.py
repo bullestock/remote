@@ -122,7 +122,6 @@ def pcbmounts():
     return p1+p2+p3+p4+p5+p6+p7+p8
 
 def screwstuds():
-    #s1 = screwstud(84.5, 25) + screwstud(-84.5, 25)
     s2 = screwstud(92, -5) + screwstud(-89, 10)
     y = 67
     s3 = screwstud2(67, y) + screwstud2(-67, y)
@@ -239,8 +238,8 @@ def assembly():
     jlh = joystick_h(-joystick_x, joystick_y)
     jrh = joystick_h(joystick_x, joystick_y)
     studs = translate([0, joystick_y - slide_offset, -1])(slide_holes()) + pcbmounts()
-    antenna1 = translate([26, 80, 3.25])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
-    antenna2 = translate([26, 80, 0])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
+    antenna1 = translate([antenna_x, antenna_y, 3.25])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
+    antenna2 = translate([antenna_x, antenna_y, 0])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
     return outer - hollow + translate([0, -5, 0])(studs) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + jlh + jrh - hull()(antenna1 + antenna2)
     #return pcbmounts()
 
