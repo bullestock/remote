@@ -14,7 +14,7 @@ from outline import *
 
 SEGMENTS = 32
 
-include_placeholders = True
+include_placeholders = False#True
 
 e = 0.001
 
@@ -224,10 +224,10 @@ def void():
     return hull()(bot_brim, top_brim)
 
 def lipo():
+    l = c2cube(48, 30, 8) - c2cube(44, 26, 10) - translate([22, 12, 0])(c2cube(10, 10, 10))
     if include_placeholders:
-        return color([0.5, 0, 1, 0.2])(c2cube(60, 80, 6))
-    else:
-        return c2cube(e, e, e)
+        l = l + color([0.5, 0, 1, 0.2])(c2cube(44, 26, 8))
+    return l
 
 def controller():
     w = 70
@@ -270,7 +270,7 @@ def assembly():
     charger_x = 50
     all = outer - hollow + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + \
         translate([0, 30, -5])(controller()) + \
-        translate([0, 30, 12])(lipo()) + \
+        translate([35, -45, 12])(lipo()) + \
         translate([55, 18, 12])(stepup()) + \
         translate([charger_x, 55-4, 12])(charger())
     # Charger submodule test
