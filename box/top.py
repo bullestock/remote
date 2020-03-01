@@ -35,7 +35,7 @@ slide_offset = 0
 rr = 3
 
 # Shell thickness
-th = 2
+th = 4
 
 joystick_dep_h = 8
 
@@ -82,7 +82,7 @@ def holes():
     display = translate([- display_w/2, display_bottom_y, 0])(cube([display_w, display_h, hole_h]))
     cw = 3
     w = display_w + 2*cw
-    display2 = translate([-w/2, display_bottom_y - cw, -hole_h+oah+0.5])(cube([w, display_h + 2*cw, hole_h]))
+    display2 = translate([-w/2, display_bottom_y - cw, oah-th-1])(cube([w, display_h + 2*cw, th]))
     return holes1 + holes2 + slide + display + display2
 
 def map(y):
@@ -238,11 +238,11 @@ def assembly():
     jlh = joystick_h(-joystick_x, joystick_y)
     jrh = joystick_h(joystick_x, joystick_y)
     studs = translate([0, joystick_y - slide_offset, -1])(slide_holes()) + pcbmounts()
-    antenna1 = translate([antenna_x, antenna_y, 3.25])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
-    antenna2 = translate([antenna_x, antenna_y, 0])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
+    ad = 10.5
+    antenna1 = translate([antenna_x, antenna_y, -1])(rotate([90, 0, 0])(cylinder(d = ad, h = 10)))
+    antenna2 = translate([antenna_x, antenna_y, oah-ad/2-th])(rotate([90, 0, 0])(cylinder(d = ad, h = 10)))
     return outer - hollow - back(5)(jlh - jrh) + translate([0, -5, 0])(studs) - \
         translate([0, -5, 0])(down(1)(allholes)) + screwstuds() - hull()(antenna1 + antenna2)
-    #return pcbmounts()
 
 if __name__ == '__main__':
     a = assembly()
