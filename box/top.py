@@ -95,8 +95,10 @@ def pcbsupport(x, y):
     return cylinder_at(x - pcb_x_offset, map(y), 4, 18)
 
 def screwstud(x, y):
-    o = translate([x, y, oah - th - 21])(cylinder(d = 8, h = 21))
-    i = translate([x, y, oah - th - 22])(cylinder(d = 2, h = 10))
+    # Extends 10 mm
+    ext = 10
+    o = translate([x, y, -ext])(cylinder(d = 8, h = ext + oah - th + e))
+    i = translate([x, y, -ext-1])(cylinder(d = insert_d, h = 6))
     return o - i
 
 def screwstud2(x, y):
