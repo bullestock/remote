@@ -89,8 +89,8 @@ def screwstud3(x, y):
 
 # for PCB, zero ref'd, variable height
 def screwstud4(x, y, h):
-    o = translate([x, y, oah - th - h])(cylinder(d = 8, h = h + 1))
-    i = translate([x, y, -th])(cylinder(d = 2, h = oah))
+    o = translate([x, y, oah - th + 1])(cylinder(d = 8, h = h + 1))
+    i = translate([x, y, oah - th])(cylinder(d = 2, h = h))
     return o + hole()(i)
 
 def pcbmounts():
