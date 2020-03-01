@@ -29,7 +29,7 @@ joystick_x_pcb = 166.624
 pcb_x_offset = joystick_x_pcb - joystick_x
 pcb_y_offset = joystick_y_pcb - joystick_y
 
-slide_offset = -5
+slide_offset = 0
 
 # Rounding radius
 rr = 3
@@ -240,7 +240,8 @@ def assembly():
     studs = translate([0, joystick_y - slide_offset, -1])(slide_holes()) + pcbmounts()
     antenna1 = translate([antenna_x, antenna_y, 3.25])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
     antenna2 = translate([antenna_x, antenna_y, 0])(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
-    return outer - hollow + translate([0, -5, 0])(studs) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + jlh + jrh - hull()(antenna1 + antenna2)
+    return outer - hollow - back(5)(jlh - jrh) + translate([0, -5, 0])(studs) - \
+        translate([0, -5, 0])(down(1)(allholes)) + screwstuds() - hull()(antenna1 + antenna2)
     #return pcbmounts()
 
 if __name__ == '__main__':
