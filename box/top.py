@@ -44,9 +44,6 @@ oah = 12
 hole_h = 50
 pcb_z = 10
 
-def cylinder_at(x, y, d, h):
-    return translate([x, y, oah - th - 17])(cylinder(d = d, h = h))
-
 # Cube centered in x/y
 def c2cube(w, h, d):
     return translate([-w/2, -h/2, 0])(cube([w, h, d]))
@@ -92,7 +89,8 @@ def map(y):
     return 195.5 - y 
 
 def pcbsupport(x, y):
-    return cylinder_at(x - pcb_x_offset, map(y), 4, 18)
+    z = -7
+    return translate([x - pcb_x_offset, map(y), z])(cylinder(d = 4, h = oah - z - e))
 
 def screwstud(x, y):
     # Extends 10 mm
