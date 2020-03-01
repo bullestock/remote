@@ -80,11 +80,12 @@ def screwstud2(x, y):
     recess = translate([x, y, oah - 3.5])(cylinder(d = 6, h = 10))
     return o + hole()(i + recess)
 
-# for PCB
+# for PCB, with insert
 def screwstud3(x, y):
     o = translate([map_x(x), map_y(y), oah - th - pcb_h])(cylinder(d = 8, h = pcb_h + 1))
     i = translate([map_x(x), map_y(y), -th])(cylinder(d = 2, h = oah))
-    return o + hole()(i)
+    i2 = translate([map_x(x), map_y(y), oah - th - pcb_h - 1])(cylinder(d = insert_d, h = 6))
+    return o + hole()(i + i2)
 
 # for PCB, zero ref'd, variable height
 def screwstud4(x, y, h):
