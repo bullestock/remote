@@ -55,7 +55,7 @@ def pushbutton(x, y):
     return translate([x, y, 0])(cylinder(d = 14.5, h = hole_h))
 
 def joystick_h(x, y):
-    return translate([x, y, 0])(hole()(cylinder(d = joystick_hole_d, h = hole_h)) + joystick_holes())
+    return translate([x, y, 0])(hole()(cylinder(d = joystick_hole_d, h = hole_h)))
 
 def toggle(x, y):
     return translate([x, y, 0])(cylinder(d = 6.25, h = hole_h))
@@ -237,7 +237,7 @@ def assembly():
     hollow = void()
     jlh = joystick_h(-joystick_x, joystick_y)
     jrh = joystick_h(joystick_x, joystick_y)
-    studs = translate([0, joystick_y - slide_offset, -1])(slide_holes()) + pcbmounts()
+    studs = pcbmounts()
     ad = 10.5
     antenna1 = translate([antenna_x, antenna_y, -1])(rotate([90, 0, 0])(cylinder(d = ad, h = 10)))
     antenna2 = translate([antenna_x, antenna_y, oah-ad/2-th])(rotate([90, 0, 0])(cylinder(d = ad, h = 10)))
