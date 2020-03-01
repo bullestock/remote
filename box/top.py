@@ -241,7 +241,7 @@ def assembly():
     ad = 10.5
     antenna1 = translate([antenna_x, antenna_y, -1])(rotate([90, 0, 0])(cylinder(d = ad, h = 10)))
     antenna2 = translate([antenna_x, antenna_y, oah-ad/2-th])(rotate([90, 0, 0])(cylinder(d = ad, h = 10)))
-    return outer - hollow - back(5)(jlh - jrh) + translate([0, -5, 0])(studs) - \
+    return outer - hollow + back(5)(jlh + jrh) + translate([0, -5, 0])(studs) - \
         translate([0, -5, 0])(down(1)(allholes)) + screwstuds() - hull()(antenna1 + antenna2)
 
 if __name__ == '__main__':
