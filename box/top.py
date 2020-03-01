@@ -64,8 +64,8 @@ def toggle(x, y):
     return translate([x, y, 0])(cylinder(d = 6.25, h = hole_h))
 
 def holes():
-    pot1 = pot(-48.630 + 6.552/2, 11 + 6.552/2)
-    pot2 = pot(49 - 6.552/2, 11 + 6.552/2)
+    pot1 = pot(-48.630 + 6.552/2, 12 + 6.552/2)
+    pot2 = pot(49 - 6.552/2, 12 + 6.552/2)
     pb1l = pushbutton(-76.619 + 12.5/2, 22.774 + 12.5/2)
     pb2l = pushbutton(-82.690 + 12.5/2, 1.608 + 12.5/2)
     pb3l = pushbutton(-89.273 + 12.5/2, -19.559 + 12.5/2)
