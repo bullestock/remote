@@ -89,8 +89,8 @@ def map(y):
     return 195.5 - y 
 
 def pcbsupport(x, y):
-    z = -7
-    return translate([x - pcb_x_offset, map(y), z])(cylinder(d = 4, h = oah - z - e))
+    z = -8
+    return translate([x - pcb_x_offset, map(y), z])(cylinder(d1 = 5, d2 = 8, h = oah - z - e))
 
 def screwstud(x, y):
     # Extends 10 mm
