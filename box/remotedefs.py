@@ -7,6 +7,7 @@ from solid.utils import *
 
 e = 0.001
 th = 2
+insert_d = 4.1
 
 joystick_dep_d = 45
 joystick_dep_h = 5
@@ -20,20 +21,11 @@ slide_ring_th2 = 5
 slide_ring_h = 10 - th
 
 antenna_x = 26
-antenna_y = 69
+antenna_y = 69.4
 
 # Cube centered in x/y
 def c2cube(w, h, d):
     return translate([-w/2, -h/2, 0])(cube([w, h, d]))
-
-def joystick_hole(a):
-    h = down(e)(cylinder(d = 3, h = 2*joystick_dep_h+2*e))
-    r = joystick_dep_d/2 + 2
-    ra = radians(a)
-    return translate([r*sin(ra), r*cos(ra), 0])(h)
-        
-def joystick_holes():
-    return joystick_hole(0) + joystick_hole(120) + joystick_hole(240)
 
 def slide_holes():
     h = down(e)(cylinder(d = 3, h = slide_ring_h+5))
