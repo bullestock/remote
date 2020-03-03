@@ -73,7 +73,7 @@ def pcbsupport2(x, y):
 def screwstud(x, y):
     # Top extends 10.6
     xh = 10.6
-    o = translate([x, y, xh])(cylinder(d = 8, h = oah - xh - th + e))
+    o = translate([x, y, xh])(cylinder(d1 = 8, d2 = 12, h = oah - xh - th + e))
     i = translate([x, y, xh - 1])(cylinder(d = 3, h = 12))
     recess = translate([x, y, oah - 3.5])(cylinder(d = 6, h = 10))
     return o - hole()(i + recess)
