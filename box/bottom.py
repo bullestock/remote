@@ -278,13 +278,13 @@ def assembly():
     outer = shell()
     hollow = void()
     charger_x = 50
-    antenna_tab = c2cube(10, 4, 10) - forward(10)(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
+    antenna_tab = c2cube(10, 4, 10) - hole()(forward(10)(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20))))
     all = outer - hollow + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + \
         translate([0, 30, 0])(controller()) + \
         translate([35, -45, 0])(lipo()) + \
         translate([55, 18, 0])(stepup()) + \
         translate([charger_x, 55-4, 0])(charger()) + \
-        translate([-antenna_x, antenna_y, -6])(antenna_tab)
+        translate([-antenna_x, antenna_y, -3])(antenna_tab)
     # Charger submodule test
     #allcube = down(2)(c2cube(250, 150, 50))
     #chargercube = translate([charger_x, 55, 5])(c2cube(20, 38, 20))
