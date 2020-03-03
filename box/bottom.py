@@ -61,7 +61,13 @@ def map_x(x):
     return -(x - pcb_x_offset)
 
 def pcbsupport(x, y):
-    return cylinder_at(map_x(x), map_y(y), 3, pcb_h)
+    z = 3
+    return translate([map_x(x), map_y(y), oah-pcb_h-th])(cylinder(d1 = 5, d2 = 8, h = pcb_h))
+
+def pcbsupport2(x, y):
+    z = 3
+    c1 = cylinder(d = 5, h = pcb_h)
+    return translate([map_x(x), map_y(y), oah-pcb_h-th])(hull()(c1 + forward(8)(c1)))
 
 # Recessed
 def screwstud(x, y):
@@ -94,15 +100,16 @@ def screwstud4(x, y, h):
     return o + hole()(i)
 
 def pcbmounts():
-    p1 = pcbsupport(50, 176)
+    # Left of stepup
+    p1 = pcbsupport(48, 176)
     p2 = pcbsupport(44, 198)
     p3 = pcbsupport(202, 176)
     p4 = pcbsupport(203, 198)
     p5 = pcbsupport(54, 140)
     # Left of charger
-    p6 = pcbsupport(66, 130)
+    p6 = pcbsupport(63, 130)
     # Right of charger
-    p7 = pcbsupport(88, 140)
+    p7 = pcbsupport2(89, 140)
     p8 = pcbsupport(80, 192)
     p9 = pcbsupport(86, 217)
     p10 = pcbsupport(126, 204)
