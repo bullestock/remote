@@ -118,11 +118,13 @@ def pcbmounts():
     p13 = pcbsupport(166, 135)
     p14 = pcbsupport(199, 140)
     p15 = pcbsupport(182, 132)
+    # Bottom right corner
+    p16 = pcbsupport(209.5, 218)
     s1 = screwstud3(60.452, 156.972)
     s2 = screwstud3(52.578, 225.552)
     s3 = screwstud3(176.53, 166.878)
     s4 = screwstud3(191.008, 225.552)
-    return s1 + s2 + s3 + s4 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15
+    return s1 + s2 + s3 + s4 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15 + p16
 
 def screwstuds():
     s2 = screwstud(-92, -5) + screwstud(89, 10)
