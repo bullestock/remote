@@ -226,7 +226,7 @@ def void():
     return hull()(bot_brim, top_brim)
 
 def lipo():
-    l = c2cube(48, 30, 8) - c2cube(44, 26, 10) - translate([22, 12, 0])(c2cube(10, 10, 10))
+    l = c2cube(49, 30, 8) - c2cube(45, 26, 10) - translate([22, 12, 0])(c2cube(10, 10, 10))
     if include_placeholders:
         l = l + color([0.5, 0, 1, 0.2])(c2cube(44, 26, 8))
     return up(oah - th - 8 + e)(l)
