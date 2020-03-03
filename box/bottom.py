@@ -244,9 +244,10 @@ def controller():
 def charger():
     ch = 29
     c = color([0, 1, 1, 0.2])(c2cube(18, ch, 4))
-    hw = 13
-    hh = 7
-    chole = translate([-hw/2, ch/2, 0])(cube([hw, 10, hh]))
+    hw = 15
+    hh = 8
+    c1 = cylinder(d = hh, h = 10)
+    chole = translate([-hh/2, ch - 5, -0.5])(hull()(rotate([90, 0, 0])(c1 + translate([hw-hh, 0])(c1))))
     inner = translate([0, 1, -1])(c2cube(17.5, 28, 5))
     iw = hw+7
     outer = c2cube(iw, 29.5, 4)
