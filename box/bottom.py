@@ -37,7 +37,7 @@ pcb_y_offset = joystick_y_pcb - joystick_y
 rr = 3
 
 # Shell thickness
-th = 2
+th = 4
 
 # Overall height
 oah = 22
@@ -89,8 +89,8 @@ def screwstud3(x, y):
 
 # for PCB, zero ref'd, variable height
 def screwstud4(x, y, h):
-    o = translate([x, y, oah - th + 1])(cylinder(d = 8, h = h + 1))
-    i = translate([x, y, oah - th])(cylinder(d = 2, h = h))
+    o = translate([x, y, oah - th - h])(cylinder(d = 8, h = h + 1))
+    i = translate([x, y, oah - th - h - 1])(cylinder(d = insert_d, h = 4))
     return o + hole()(i)
 
 def pcbmounts():
@@ -270,9 +270,9 @@ def assembly():
     outer = shell()
     hollow = void()
     charger_x = 50
-    antenna_tab = c2cube(10, 4.7, 10) - forward(10)(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
+    antenna_tab = c2cube(10, 4, 10) - forward(10)(rotate([90, 0, 0])(cylinder(d = 10.5, h = 20)))
     all = outer - hollow + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + \
-        translate([0, 30, -5])(controller()) + \
+        translate([0, 30, 0])(controller()) + \
         translate([35, -45, 0])(lipo()) + \
         translate([55, 18, 0])(stepup()) + \
         translate([charger_x, 55-4, 0])(charger()) + \
