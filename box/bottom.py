@@ -19,7 +19,7 @@ include_placeholders = False#True
 
 e = 0.001
 
-pcb_h = 8 + 4 - 1.2
+pcb_h = 15 - 1.2
 
 center_x = 107.500 + 2.5
 center_x_pcb = (159.766 + 90.424)/2
@@ -40,7 +40,7 @@ rr = 3
 th = 4
 
 # Overall height
-oah = 22
+oah = 27
 hole_h = 50
 pcb_z = 10
 
@@ -109,7 +109,7 @@ def pcbmounts():
     # Left of charger
     p6 = pcbsupport(63, 130)
     # Right of charger
-    p7 = pcbsupport2(89, 140)
+    p7 = pcbsupport2(88, 140)
     p8 = pcbsupport(80, 192)
     p9 = pcbsupport(86, 217)
     p10 = pcbsupport(126, 204)
@@ -256,21 +256,21 @@ def charger():
     hw = 15
     hh = 8
     c1 = cylinder(d = hh, h = 10)
-    chole = translate([-hh/2, ch - 5, -0.5])(hull()(rotate([90, 0, 0])(c1 + translate([hw-hh, 0])(c1))))
+    chole = translate([-hh/2, ch - 5, 0])(hull()(rotate([90, 0, 0])(c1 + translate([hw-hh, 0])(c1))))
     inner = translate([0, 1, -1])(c2cube(17.5, 28, 5))
     iw = hw+7
-    outer = c2cube(iw, 29.5, 4)
-    ridge = up(1)(outer - inner) + translate([0, 12, 3])(c2cube(15, 2, 2)) + translate([0, -5, 3])(c2cube(15, 2, 2))
-    pin = down(1)(c2cube(1.5, 4, 2))
-    pins = translate([iw/2-.5, ch/2-2])(pin) + translate([-iw/2+.5, ch/2-2])(pin) + \
-        translate([iw/2-.5, -(ch/2-9)])(pin) + translate([-iw/2+.5, -(ch/2-9)])(pin)
-    a = ridge + up(-3)(hole()(chole)) + pins
+    outer = c2cube(iw, 29.5, 6)
+    ridge = up(-1)(outer - inner) + translate([0, 12, 2])(c2cube(15, 2, 2)) + translate([0, -5, 2])(c2cube(15, 2, 2))
+    pin = down(3)(c2cube(2, 4, 2))
+    pins = translate([iw/2-1, ch/2-2])(pin) + translate([-iw/2+1, ch/2-2])(pin) + \
+        translate([iw/2-1, -(ch/2-9)])(pin) + translate([-iw/2+1, -(ch/2-9)])(pin)
+    a = ridge + up(-1)(hole()(chole)) + pins
     if include_placeholders:
         a = a + c
     return up(oah - th - 4 + e)(a)
     
 def stepup():
-    s = c2cube(41, 21, 4) - c2cube(38, 18, 5)
+    s = c2cube(41, 21, 4) - hole()(c2cube(38, 18, 5))
     if include_placeholders:
         s = s + color([1, .5, .5, 0.2])(c2cube(38, 18, 7))
     return up(oah - th - 4 + e)(s)
@@ -284,7 +284,7 @@ def assembly():
     all = outer - hollow + translate([0, -5, 0])(pcbmounts()) - translate([0, -5, 0])(down(1)(allholes)) + screwstuds() + \
         translate([0, 30, 0])(controller()) + \
         translate([35, -45, 0])(lipo()) + \
-        translate([55, 18, 0])(stepup()) + \
+        translate([55+1.5, 18, 0])(stepup()) + \
         translate([charger_x, 55-4, 0])(charger()) + \
         translate([-antenna_x, antenna_y, -3])(antenna_tab)
     # Charger submodule test
