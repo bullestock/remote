@@ -1,36 +1,39 @@
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_SH1106.h>
 #include <SPI.h>
+#include <Wire.h>
 #include <RF24.h>
 
 #include "protocol.h"
 
-const char* VERSION = "0.0.4";
+//#define NO_RADIO
 
-byte addresses[][6] = { "1BULL", "2BULL" };
+const char* const VERSION PROGMEM = "0.0.4";
 
+const byte addresses[][6] PROGMEM = { "1BULL", "2BULL" };
+
+#ifndef NO_RADIO
 // Set up nRF24L01 radio on SPI bus (11, 12, 13) plus pins 7 & 8
 RF24 radio(7, 8);
+#endif
 
-const int OLED_SDA = 5;
-const int OLED_SCK = 6;
-const int OLED_DC = 3;
-const int OLED_CS = 2;
-const int OLED_RESET = 4;
+const int OLED_RESET = -1;
 const int LEFT_X_PIN = A0;
 const int LEFT_Y_PIN = A1;
 const int RIGHT_X_PIN = A2;
 const int RIGHT_Y_PIN = A3;
 const int SHIFT_CLOCK = 9;
 const int SHIFT_OUT = 10;
-const int SHIFT_LOAD = A5;
-const int SWITCH_PIN = A4;
+const int SHIFT_LOAD = 2;
+const int AUX1_PIN = 3;
+const int AUX2_PIN = 4;
+const int AUX3_PIN = 5;
+const int AUX4_PIN = 6;
 const int POT1_PIN = A6;
 const int POT2_PIN = A7;
 
-Adafruit_SSD1306 display(OLED_SDA, OLED_SCK, OLED_DC, OLED_RESET, OLED_CS);
+Adafruit_SH1106 display(OLED_RESET);
 
-const int NOF_DELAY_SAMPLES = 100;
+const int NOF_DELAY_SAMPLES = 1;
 uint16_t delay_samples[NOF_DELAY_SAMPLES];
 int actual_delay_samples = 0;
 
@@ -44,13 +47,20 @@ void setup()
     pinMode(SHIFT_CLOCK, OUTPUT);
     pinMode(SHIFT_OUT, INPUT);
     pinMode(SHIFT_LOAD, OUTPUT);
-    pinMode(SWITCH_PIN, OUTPUT);
+    pinMode(AUX1_PIN, INPUT);
+    pinMode(AUX2_PIN, INPUT);
+    pinMode(AUX3_PIN, INPUT);
+    pinMode(AUX4_PIN, INPUT);
     pinMode(POT1_PIN, INPUT);
     pinMode(POT2_PIN, INPUT);
-            
+
     Serial.begin(115200);
-    Serial.println("Init");
-    display.begin(SSD1306_SWITCHCAPVCC);
+    if (!display.begin(SH1106_SWITCHCAPVCC, 0x3C))
+    {
+        Serial.println("No disp");
+        while (1)
+            ;
+    }
     display.display();
     delay(1000);
     display.clearDisplay();
@@ -61,6 +71,7 @@ void setup()
     display.display();
     delay(1000);
 
+#ifndef NO_RADIO
     if (!radio.begin())
     {
         display.clearDisplay();
@@ -70,7 +81,7 @@ void setup()
         display.display();
         while (1)
         {
-            Serial.println("FATAL ERROR: No radio found");
+            //Serial.println("FATAL ERROR: No radio found");
             delay(1000);
         }
     }
@@ -83,7 +94,7 @@ void setup()
     // Open a writing and reading pipe on each radio, with opposite addresses
     radio.openWritingPipe(addresses[0]);
     radio.openReadingPipe(1, addresses[1]);
-  
+#endif  
     display.clearDisplay();
     display.setCursor(0, 1);
     display.setTextSize(2);
@@ -94,39 +105,22 @@ void setup()
     for (int i = 0; i < NOF_DELAY_SAMPLES; ++i)
         delay_samples[i] = 0;
     
+#ifndef NO_RADIO
     // Start the radio listening for data
     radio.startListening();
+#endif
 }
 
 uint16_t read_switches()
 {
     uint16_t ret = 0;
 
-    // Read toggles, pass 1
-    digitalWrite(SWITCH_PIN, 0);
     digitalWrite(SHIFT_CLOCK, 1);
     digitalWrite(SHIFT_LOAD, 0);
     delayMicroseconds(5);
     digitalWrite(SHIFT_LOAD, 1);
     digitalWrite(SHIFT_CLOCK, 0);
-    for (int i = 0; i < 4; ++i)
-    {
-        auto val = digitalRead(SHIFT_OUT);
-        if (!val)
-            ret |= (1 << (8+2*i));
-        digitalWrite(SHIFT_CLOCK, 1);
-        delayMicroseconds(5);
-        digitalWrite(SHIFT_CLOCK, 0);
-    }
-
-    // Read toggles, pass 2
-    digitalWrite(SWITCH_PIN, 1);
-    digitalWrite(SHIFT_CLOCK, 1);
-    digitalWrite(SHIFT_LOAD, 0);
-    delayMicroseconds(5);
-    digitalWrite(SHIFT_LOAD, 1);
-    digitalWrite(SHIFT_CLOCK, 0);
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 16; ++i)
     {
         auto val = digitalRead(SHIFT_OUT);
         if (!val)
@@ -136,17 +130,6 @@ uint16_t read_switches()
         digitalWrite(SHIFT_CLOCK, 0);
     }
 
-    // Read pushbuttons
-    for (int i = 0; i < 4; ++i)
-    {
-        auto val = digitalRead(SHIFT_OUT);
-        if (!val)
-            ret |= (1 << i);
-        digitalWrite(SHIFT_CLOCK, 1);
-        delayMicroseconds(5);
-        digitalWrite(SHIFT_CLOCK, 0);
-    }
-    
     return ret;
 }
 
@@ -181,6 +164,7 @@ bool send_frame(unsigned long ticks, bool& timeout)
     Serial.println(buf);
 #endif
     
+#ifndef NO_RADIO
     radio.stopListening();
     if (!radio.write(&frame, sizeof(frame)))
     {
@@ -198,7 +182,8 @@ bool send_frame(unsigned long ticks, bool& timeout)
             timeout = true;
             return false;
         }
-
+#endif
+    
     return true;
 }
 
@@ -225,6 +210,7 @@ void loop()
         ++successes;
     
         ReturnAirFrame ret_frame;
+#ifndef NO_RADIO
         radio.read(&ret_frame, sizeof(ret_frame));
         if ((ret_frame.magic == ReturnAirFrame::MAGIC_VALUE) &&
             check_crc(ret_frame))
@@ -242,6 +228,7 @@ void loop()
             ++crc_errors;
             show_error = true;
         }
+#endif
     }
 
     uint32_t sum = 0;
