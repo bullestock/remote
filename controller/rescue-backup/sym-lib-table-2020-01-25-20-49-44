@@ -1,0 +1,9 @@
+(sym_lib_table
+  (lib (name remote-rescue)(type Legacy)(uri ${KIPRJMOD}/remote-rescue.lib)(options "")(descr ""))
+  (lib (name power)(type Legacy)(uri ${KICAD_SYMBOL_DIR}/power.lib)(options "")(descr ""))
+  (lib (name arduino)(type Legacy)(uri ${KIPRJMOD}/libs/arduino.lib)(options "")(descr ""))
+  (lib (name nRF24L01+)(type Legacy)(uri ${KIPRJMOD}/libs/nRF24L01+.lib)(options "")(descr ""))
+  (lib (name switches)(type Legacy)(uri ${KIPRJMOD}/libs/switches.lib)(options "")(descr ""))
+  (lib (name oled)(type Legacy)(uri ${KIPRJMOD}/libs/oled.lib)(options "")(descr ""))
+  (lib (name 74xx)(type Legacy)(uri ${KIPRJMOD}/libs/74xx.lib)(options "")(descr ""))
+)

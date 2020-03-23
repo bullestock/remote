@@ -4,27 +4,39 @@ from __future__ import division
 import os
 import sys
 import re
+from math import cos, radians, sin
+from remotedefs import *
 
 # Assumes SolidPython is in site-packages or elsewhwere in sys.path
 from solid import *
 from solid.utils import *
 
-SEGMENTS = 128
+SEGMENTS = 32
+
+def joystick_opening(x, y, z):
+    r2 = 15
+    inner_s = hole()(sphere(r = r2))
+    return translate([x, y, z])(hole()(inner_s))
+
+def joystick_hollow1(x, y):
+    cyl = up(e)(cylinder(d = joystick_dep_d, h = joystick_dep_h))
+    cone = up(0)(cylinder(d2 = 24, d1 = joystick_dep_d, h = joystick_dep_h))
+    return translate([x, y, th+e])(cyl - cone)
+
+def joystick_hollow2(x, y):
+    d = th-e
+    return translate([x, y, e])(cylinder(d = joystick_dep_d-e, h = joystick_dep_h+d))
 
 def assembly():
-    r1 = 16
-    r2 = 15
-    outer_s = sphere(r = r1)
-    inner_s = sphere(r = r2)
-    sph = outer_s - inner_s
-    tube_h = 3
-    hole1 = cylinder(r = 14, h = 25)
-    hole2 = cylinder(r = r2, h = 5)
-    tube = cylinder(r = 16, h = tube_h) - down(1)(cylinder(r = 14, h = tube_h+2))
-    block = translate([-20, -20, -20])(cube([40, 40, 20]))
-    flange = translate([0, 0, 0])(cylinder(r = 20, h = 2))
-    return flange + up(tube_h)(sph) + tube - block - down(1)(hole1) - down(1)(hole2)
+    hollow1 = joystick_hollow1(0, 0)
+    hollow2 = joystick_hollow2(0, 0)
+    flange = cylinder(d = joystick_flange_d, h = th)
+    return hollow2 - hollow1 + joystick_opening(0, 0, -3) + flange - joystick_holes()
 
 if __name__ == '__main__':
     a = assembly()
     scad_render_to_file(a, file_header='$fn = %s;' % SEGMENTS, include_orig_code=False)
+
+# Local Variables:
+# compile-command: "python joystickcover.py"
+# End:
