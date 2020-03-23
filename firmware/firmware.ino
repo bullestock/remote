@@ -55,15 +55,20 @@ void setup()
     pinMode(POT2_PIN, INPUT);
 
     Serial.begin(115200);
+
     if (!display.begin(SH1106_SWITCHCAPVCC, 0x3C))
     {
         Serial.println("No disp");
         while (1)
             ;
     }
-    display.display();
-    delay(1000);
+    //delay(1000);
+    display.setpage(1);
     display.clearDisplay();
+    display.display();
+    display.setpage(0);
+    display.clearDisplay();
+    display.display();
     display.setTextColor(WHITE);
     display.setCursor(0, 0);
     display.print("Version ");
@@ -234,6 +239,7 @@ void loop()
     uint32_t sum = 0;
     for (int i = 0; i < actual_delay_samples; ++i)
         sum += delay_samples[i];
+    display.setpage(0);
     display.clearDisplay();
     display.setCursor(0, 0);
     display.setTextSize(1);
@@ -241,23 +247,22 @@ void loop()
     sprintf(buf2, "%lu/%lu/%lu %d.%d V", failures, crc_errors, successes,
             battery / 1000, (battery % 1000)/100);
     display.println(buf2);
+    display.display();
     if (actual_delay_samples < NOF_DELAY_SAMPLES)
         ++actual_delay_samples;
     else
     {
-        // Serial.print("E ");
-        // Serial.print(show_error);
-        // Serial.print(" B ");
-        // Serial.println(blink_state);
+        display.setpage(1);
+        display.clearDisplay();
         if (!show_error || blink_state)
         {
             sprintf(buf2, "RTT %lu ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
             display.setTextSize(2);
-            display.setCursor(0, 16);
+            display.setCursor(0, 0);
             display.print(buf2);
         }
+        display.display();
     }
-    display.display();
 
     delay(10);
     if (++blink_count > 10)

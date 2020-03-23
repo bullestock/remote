@@ -49,49 +49,11 @@ All text above, and the splash screen must be included in any redistribution
 #define INVERSE 2
 
 #define SH1106_I2C_ADDRESS   0x3C  // 011110+SA0+RW - 0x3C or 0x3D
-// Address for 128x32 is 0x3C
-// Address for 128x64 is 0x3D (default) or 0x3C (if SA0 is grounded)
 
-/*=========================================================================
-    SH1106 Displays
-    -----------------------------------------------------------------------
-    The driver is used in multiple displays (128x64, 128x32, etc.).
-    Select the appropriate display below to create an appropriately
-    sized framebuffer, etc.
+#define SH1106_PAGESIZE 32
 
-    SH1106_128_64  128x64 pixel display
-
-    SH1106_128_32  128x32 pixel display
-
-    SH1106_96_16
-
-    -----------------------------------------------------------------------*/
-//   #define SH1106_128_32
-//   #define SH1106_96_16
-/*=========================================================================*/
-
-#define SH1106_128_32
-//#define SH1106_128_64 // not enough mem
-
-#if defined SH1106_128_64 && defined SH1106_128_32
-  #error "Only one SH1106 display can be specified at once in SH1106.h"
-#endif
-#if !defined SH1106_128_64 && !defined SH1106_128_32 && !defined SH1106_96_16
-  #error "At least one SH1106 display must be specified in SH1106.h"
-#endif
-
-#if defined SH1106_128_64
-  #define SH1106_LCDWIDTH                  128
-  #define SH1106_LCDHEIGHT                 64
-#endif
-#if defined SH1106_128_32
-  #define SH1106_LCDWIDTH                  128
-  #define SH1106_LCDHEIGHT                 32
-#endif
-#if defined SH1106_96_16
-  #define SH1106_LCDWIDTH                  96
-  #define SH1106_LCDHEIGHT                 16
-#endif
+#define SH1106_LCDWIDTH                  128
+#define SH1106_LCDHEIGHT                 64
 
 #define SH1106_SETCONTRAST 0x81
 #define SH1106_DISPLAYALLON_RESUME 0xA4
@@ -146,11 +108,12 @@ public:
   Adafruit_SH1106(int8_t RST = -1);
 
   bool begin(uint8_t switchvcc = SH1106_SWITCHCAPVCC, uint8_t i2caddr = SH1106_I2C_ADDRESS, bool reset=true);
-  void sh1106_command(uint8_t c);
 
   void clearDisplay(void);
   void invertDisplay(uint8_t i);
   void display();
+
+  void setpage(int8_t page);
 
   void dim(boolean dim);
 
@@ -163,12 +126,14 @@ private:
   uint8_t* buffer = nullptr;
   int8_t _i2caddr = 0;
   int8_t _vccstate = 0;
+  int8_t page = 0;
 
 #ifdef HAVE_PORTREG
   PortReg *mosiport, *clkport, *csport, *dcport;
   PortMask mosipinmask, clkpinmask, cspinmask, dcpinmask;
 #endif
 
+  void sh1106_command(uint8_t c);
   inline void drawFastVLineInternal(int16_t x, int16_t y, int16_t h, uint16_t color) __attribute__((always_inline));
   inline void drawFastHLineInternal(int16_t x, int16_t y, int16_t w, uint16_t color) __attribute__((always_inline));
 };

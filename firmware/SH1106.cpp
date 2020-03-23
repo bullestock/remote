@@ -68,14 +68,14 @@ void Adafruit_SH1106::drawPixel(int16_t x, int16_t y, uint16_t color) {
 
 }
 
-Adafruit_SH1106::Adafruit_SH1106(int8_t reset) :
-Adafruit_GFX(SH1106_LCDWIDTH, SH1106_LCDHEIGHT)
+Adafruit_SH1106::Adafruit_SH1106(int8_t reset)
+  : Adafruit_GFX(SH1106_LCDWIDTH, SH1106_PAGESIZE)
 {
 }
 
 
 bool Adafruit_SH1106::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
-  if((!buffer) && !(buffer = (uint8_t*) malloc(SH1106_LCDWIDTH * SH1106_LCDHEIGHT / 8)))
+  if((!buffer) && !(buffer = (uint8_t*) malloc(SH1106_LCDWIDTH * SH1106_PAGESIZE / 8)))
     return false;
 
   clearDisplay();
@@ -189,16 +189,21 @@ void Adafruit_SH1106::dim(boolean dim) {
   sh1106_command(contrast);
 }
 
+void Adafruit_SH1106::setpage(int8_t _page)
+{
+  page = _page;
+}
+
 void Adafruit_SH1106::display(void)
 {
   sh1106_command(SH1106_SETLOWCOLUMN | 0x0);  // low col = 0
   sh1106_command(SH1106_SETHIGHCOLUMN | 0x0);  // hi col = 0
   sh1106_command(SH1106_SETSTARTLINE | 0x0); // line #0
 
-  uint8_t height = SH1106_LCDHEIGHT >> 3;
+  uint8_t height = SH1106_PAGESIZE >> 3;
   uint8_t width = (SH1106_LCDWIDTH+4) >> 3;  // Real size of the screen is 132 pixel and not 128 
-  uint8_t m_row = 0;
-  uint8_t m_col = 2;
+  uint8_t row = page * SH1106_LCDHEIGHT/SH1106_PAGESIZE * 2;
+  uint8_t col = 2;
   uint16_t p = 0;
 
   // save I2C bitrate
@@ -209,9 +214,9 @@ void Adafruit_SH1106::display(void)
 
   for (uint8_t i = 0; i < height; i++)
   {
-    sh1106_command(SH1106_SETPAGESTARTADRESS + i + m_row);//set page address
-    sh1106_command(SH1106_SETLOWCOLUMN | (m_col & 0xf));//set lower column address
-    sh1106_command(SH1106_SETHIGHCOLUMN | (m_col >> 4));//set higher column address
+    sh1106_command(SH1106_SETPAGESTARTADRESS + i + row); // set page address
+    sh1106_command(SH1106_SETLOWCOLUMN | (col & 0xf));   // set lower column address
+    sh1106_command(SH1106_SETHIGHCOLUMN | (col >> 4));   // set higher column address
 
     for (uint8_t j = 0; j < 8; j++)
     {
@@ -229,7 +234,7 @@ void Adafruit_SH1106::display(void)
 
 // clear everything
 void Adafruit_SH1106::clearDisplay(void) {
-  memset(buffer, 0, (SH1106_LCDWIDTH*SH1106_LCDHEIGHT/8));
+  memset(buffer, 0, (SH1106_LCDWIDTH*SH1106_PAGESIZE/8));
 }
 
 
