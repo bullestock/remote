@@ -1,4 +1,4 @@
-update=Thu 17 Aug 2017 06:06:44 PM CEST
+update=Sun 30 Jun 2019 05:53:43 PM CEST
 version=1
 last_client=kicad
 [pcbnew]
@@ -25,31 +25,6 @@ version=1
 NetIExt=net
 [general]
 version=1
-[eeschema]
-version=1
-LibDir=
-[eeschema/libraries]
-LibName1=power
-LibName2=device
-LibName3=transistors
-LibName4=conn
-LibName5=linear
-LibName6=regul
-LibName7=interface
-LibName8=digital-audio
-LibName9=philips
-LibName10=display
-LibName11=cypress
-LibName12=siliconi
-LibName13=opto
-LibName14=atmel
-LibName15=contrib
-LibName16=valves
-LibName17=libs/arduino
-LibName18=libs/nRF24L01+
-LibName19=libs/switches
-LibName20=libs/oled
-LibName21=libs/74xx
 [schematic_editor]
 version=1
 PageLayoutDescrFile=
@@ -60,3 +35,6 @@ NetFmtName=
 SpiceForceRefPrefix=0
 SpiceUseNetNumbers=0
 LabSize=60
+[eeschema]
+version=1
+LibDir=
