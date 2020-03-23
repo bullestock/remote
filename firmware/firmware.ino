@@ -1,7 +1,8 @@
-#include <Adafruit_SH1106.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <RF24.h>
+
+#include "SH1106.h"
 
 #include "protocol.h"
 
