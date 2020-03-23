@@ -68,28 +68,9 @@ void Adafruit_SH1106::drawPixel(int16_t x, int16_t y, uint16_t color) {
 
 }
 
-Adafruit_SH1106::Adafruit_SH1106(int8_t SID, int8_t SCLK, int8_t DC, int8_t RST, int8_t CS) : Adafruit_GFX(SH1106_LCDWIDTH, SH1106_LCDHEIGHT) {
-  cs = CS;
-  rst = RST;
-  dc = DC;
-  sclk = SCLK;
-  sid = SID;
-  hwSPI = false;
-}
-
-// constructor for hardware SPI - we indicate DataCommand, ChipSelect, Reset
-Adafruit_SH1106::Adafruit_SH1106(int8_t DC, int8_t RST, int8_t CS) : Adafruit_GFX(SH1106_LCDWIDTH, SH1106_LCDHEIGHT) {
-  dc = DC;
-  rst = RST;
-  cs = CS;
-  hwSPI = true;
-}
-
-// initializer for I2C - we only indicate the reset pin!
 Adafruit_SH1106::Adafruit_SH1106(int8_t reset) :
-Adafruit_GFX(SH1106_LCDWIDTH, SH1106_LCDHEIGHT) {
-  sclk = dc = cs = sid = -1;
-  rst = reset;
+Adafruit_GFX(SH1106_LCDWIDTH, SH1106_LCDHEIGHT)
+{
 }
 
 
@@ -102,60 +83,8 @@ bool Adafruit_SH1106::begin(uint8_t vccstate, uint8_t i2caddr, bool reset) {
   _vccstate = vccstate;
   _i2caddr = i2caddr;
 
-  // set pin directions
-  if (sid != -1){
-    pinMode(dc, OUTPUT);
-    pinMode(cs, OUTPUT);
-#ifdef HAVE_PORTREG
-    csport      = portOutputRegister(digitalPinToPort(cs));
-    cspinmask   = digitalPinToBitMask(cs);
-    dcport      = portOutputRegister(digitalPinToPort(dc));
-    dcpinmask   = digitalPinToBitMask(dc);
-#endif
-    if (!hwSPI){
-      // set pins for software-SPI
-      pinMode(sid, OUTPUT);
-      pinMode(sclk, OUTPUT);
-#ifdef HAVE_PORTREG
-      clkport     = portOutputRegister(digitalPinToPort(sclk));
-      clkpinmask  = digitalPinToBitMask(sclk);
-      mosiport    = portOutputRegister(digitalPinToPort(sid));
-      mosipinmask = digitalPinToBitMask(sid);
-#endif
-      }
-    if (hwSPI){
-      SPI.begin();
-#ifdef SPI_HAS_TRANSACTION
-      SPI.beginTransaction(SPISettings(8000000, MSBFIRST, SPI_MODE0));
-#else
-      SPI.setClockDivider (4);
-#endif
-    }
-  }
-  else
-  {
-    // I2C Init
-    Wire.begin();
-#ifdef __SAM3X8E__
-    // Force 400 KHz I2C, rawr! (Uses pins 20, 21 for SDA, SCL)
-    TWI1->TWI_CWGR = 0;
-    TWI1->TWI_CWGR = ((VARIANT_MCK / (2 * 400000)) - 4) * 0x101;
-#endif
-  }
-  if ((reset) && (rst >= 0)) {
-    // Setup reset pin direction (used by both SPI and I2C)
-    pinMode(rst, OUTPUT);
-    digitalWrite(rst, HIGH);
-    // VDD (3.3V) goes high at start, lets just chill for a ms
-    delay(1);
-    // bring reset low
-    digitalWrite(rst, LOW);
-    // wait 10ms
-    delay(10);
-    // bring out of reset
-    digitalWrite(rst, HIGH);
-    // turn on VCC (9V?)
-  }
+  // I2C Init
+  Wire.begin();
 
   // Init sequence
   sh1106_command(SH1106_DISPLAYOFF);                    // 0xAE
@@ -230,35 +159,13 @@ void Adafruit_SH1106::invertDisplay(uint8_t i) {
   }
 }
 
-void Adafruit_SH1106::sh1106_command(uint8_t c) {
-  if (sid != -1)
-  {
-    // SPI
-#ifdef HAVE_PORTREG
-    *csport |= cspinmask;
-    *dcport &= ~dcpinmask;
-    *csport &= ~cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-    digitalWrite(dc, LOW);
-    digitalWrite(cs, LOW);
-#endif
-    fastSPIwrite(c);
-#ifdef HAVE_PORTREG
-    *csport |= cspinmask;
-#else
-    digitalWrite(cs, HIGH);
-#endif
-  }
-  else
-  {
-    // I2C
-    uint8_t control = 0x00;   // Co = 0, D/C = 0
-    Wire.beginTransmission(_i2caddr);
-    Wire.write(control);
-    Wire.write(c);
-    Wire.endTransmission();
-  }
+void Adafruit_SH1106::sh1106_command(uint8_t c)
+{
+  uint8_t control = 0x00;   // Co = 0, D/C = 0
+  Wire.beginTransmission(_i2caddr);
+  Wire.write(control);
+  Wire.write(c);
+  Wire.endTransmission();
 }
 
 // Dim the display
@@ -282,65 +189,42 @@ void Adafruit_SH1106::dim(boolean dim) {
   sh1106_command(contrast);
 }
 
-void Adafruit_SH1106::display(void) {
+void Adafruit_SH1106::display(void)
+{
   sh1106_command(SH1106_SETLOWCOLUMN | 0x0);  // low col = 0
   sh1106_command(SH1106_SETHIGHCOLUMN | 0x0);  // hi col = 0
   sh1106_command(SH1106_SETSTARTLINE | 0x0); // line #0
 
-  uint8_t height=SH1106_LCDHEIGHT >> 3;
-  uint8_t width=(SH1106_LCDWIDTH+4) >> 3;  // Real size of the screen is 132 pixel and not 128 
+  uint8_t height = SH1106_LCDHEIGHT >> 3;
+  uint8_t width = (SH1106_LCDWIDTH+4) >> 3;  // Real size of the screen is 132 pixel and not 128 
   uint8_t m_row = 0;
   uint8_t m_col = 2;
   uint16_t p = 0;
 
-  if (sid != -1){
-    for ( uint8_t i = 0; i < height; i++) {
-      sh1106_command(SH1106_SETPAGESTARTADRESS + i + m_row);//set page address
-      sh1106_command(SH1106_SETLOWCOLUMN | (m_col & 0xf));//set lower column address
-      sh1106_command(SH1106_SETHIGHCOLUMN | (m_col >> 4));//set higher column address
+  // save I2C bitrate
+#ifndef __SAM3X8E__
+  uint8_t twbrbackup = TWBR;
+  TWBR = 12; // upgrade to 400KHz!
+#endif
 
-      for( uint8_t j = 0; j < 8; j++){
-	  // SPI
-#ifdef HAVE_PORTREG
-        *csport |= cspinmask;
-        *dcport |= dcpinmask;
-        *csport &= ~cspinmask;
-#endif
-        for ( uint8_t k = 0; k < width; k++, p++) {
-          fastSPIwrite(buffer[p]);
-        }
-#ifdef HAVE_PORTREG
-        *csport |= cspinmask;
-#endif
-      }
+  for (uint8_t i = 0; i < height; i++)
+  {
+    sh1106_command(SH1106_SETPAGESTARTADRESS + i + m_row);//set page address
+    sh1106_command(SH1106_SETLOWCOLUMN | (m_col & 0xf));//set lower column address
+    sh1106_command(SH1106_SETHIGHCOLUMN | (m_col >> 4));//set higher column address
+
+    for (uint8_t j = 0; j < 8; j++)
+    {
+      Wire.beginTransmission(_i2caddr);
+      Wire.write(0x40);
+      for (uint8_t k = 0; k < width; k++, p++)
+        Wire.write(buffer[p]);
+      Wire.endTransmission();
     }
   }
-  else
-  {
-    // save I2C bitrate
 #ifndef __SAM3X8E__
-    uint8_t twbrbackup = TWBR;
-    TWBR = 12; // upgrade to 400KHz!
+  TWBR = twbrbackup;
 #endif
-
-	for (uint8_t i = 0; i < height; i++) {
-        sh1106_command(SH1106_SETPAGESTARTADRESS + i + m_row);//set page address
-        sh1106_command(SH1106_SETLOWCOLUMN | (m_col & 0xf));//set lower column address
-        sh1106_command(SH1106_SETHIGHCOLUMN | (m_col >> 4));//set higher column address
-
-        for (uint8_t j = 0; j < 8; j++) {
-			Wire.beginTransmission(_i2caddr);
-            Wire.write(0x40);
-            for (uint8_t k = 0; k < width; k++, p++) {
-				Wire.write(buffer[p]);
-            }
-            Wire.endTransmission();
-        }
-	}
-#ifndef __SAM3X8E__
-    TWBR = twbrbackup;
-#endif
-  }
 }
 
 // clear everything
@@ -348,27 +232,6 @@ void Adafruit_SH1106::clearDisplay(void) {
   memset(buffer, 0, (SH1106_LCDWIDTH*SH1106_LCDHEIGHT/8));
 }
 
-
-inline void Adafruit_SH1106::fastSPIwrite(uint8_t d) {
-
-  if(hwSPI) {
-    (void)SPI.transfer(d);
-  } else {
-    for(uint8_t bit = 0x80; bit; bit >>= 1) {
-#ifdef HAVE_PORTREG
-      *clkport &= ~clkpinmask;
-      if(d & bit) *mosiport |=  mosipinmask;
-      else        *mosiport &= ~mosipinmask;
-      *clkport |=  clkpinmask;
-#else
-      digitalWrite(sclk, LOW);
-      if(d & bit) digitalWrite(sid, HIGH);
-      else        digitalWrite(sid, LOW);
-      digitalWrite(sclk, HIGH);
-#endif
-    }
-  }
-}
 
 void Adafruit_SH1106::drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) {
   boolean bSwap = false;

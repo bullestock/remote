@@ -140,10 +140,9 @@ All text above, and the splash screen must be included in any redistribution
 #define SH1106_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL 0x29
 #define SH1106_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL 0x2A
 
-class Adafruit_SH1106 : public Adafruit_GFX {
- public:
-  Adafruit_SH1106(int8_t SID, int8_t SCLK, int8_t DC, int8_t RST, int8_t CS);
-  Adafruit_SH1106(int8_t DC, int8_t RST, int8_t CS);
+class Adafruit_SH1106 : public Adafruit_GFX
+{
+public:
   Adafruit_SH1106(int8_t RST = -1);
 
   bool begin(uint8_t switchvcc = SH1106_SWITCHCAPVCC, uint8_t i2caddr = SH1106_I2C_ADDRESS, bool reset=true);
@@ -157,15 +156,14 @@ class Adafruit_SH1106 : public Adafruit_GFX {
 
   void drawPixel(int16_t x, int16_t y, uint16_t color);
 
-  virtual void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
-  virtual void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+  void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color) override;
+  void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color) override;
 
- private:
+private:
   uint8_t* buffer = nullptr;
-  int8_t _i2caddr, _vccstate, sid, sclk, dc, rst, cs;
-  void fastSPIwrite(uint8_t c);
+  int8_t _i2caddr = 0;
+  int8_t _vccstate = 0;
 
-  boolean hwSPI;
 #ifdef HAVE_PORTREG
   PortReg *mosiport, *clkport, *csport, *dcport;
   PortMask mosipinmask, clkpinmask, cspinmask, dcpinmask;

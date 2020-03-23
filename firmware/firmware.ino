@@ -17,7 +17,6 @@ const byte addresses[][6] PROGMEM = { "1BULL", "2BULL" };
 RF24 radio(7, 8);
 #endif
 
-const int OLED_RESET = -1;
 const int LEFT_X_PIN = A0;
 const int LEFT_Y_PIN = A1;
 const int RIGHT_X_PIN = A3;
@@ -32,7 +31,7 @@ const int AUX4_PIN = 6;
 const int POT1_PIN = A6;
 const int POT2_PIN = A7;
 
-Adafruit_SH1106 display(OLED_RESET);
+Adafruit_SH1106 display;
 
 const int NOF_DELAY_SAMPLES = 1;
 uint16_t delay_samples[NOF_DELAY_SAMPLES];
@@ -254,6 +253,7 @@ void loop()
         {
             sprintf(buf2, "RTT %lu ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
             display.setTextSize(2);
+            display.setCursor(0, 16);
             display.print(buf2);
         }
     }
