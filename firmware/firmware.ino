@@ -37,6 +37,19 @@ const int NOF_DELAY_SAMPLES = 1;
 uint16_t delay_samples[NOF_DELAY_SAMPLES];
 int actual_delay_samples = 0;
 
+char* to_binary(uint16_t v)
+{
+    static char buf[17];
+    auto p = buf;
+    uint16_t mask = 0x8000;
+    for (int i = 0; i < 16; ++i)
+    {
+        *p++ = (v & mask) ? '1' : '0';
+        mask >>= 1;
+    }
+    *p = 0;
+    return buf;
+}
 
 void setup()
 {
@@ -128,8 +141,9 @@ uint16_t read_switches()
     for (int i = 0; i < 16; ++i)
     {
         auto val = digitalRead(SHIFT_OUT);
+        //Serial.print(i); Serial.print(": "); Serial.println(val);
         if (!val)
-            ret |= (2 << (8+2*i));
+            ret |= (1 << i);
         digitalWrite(SHIFT_CLOCK, 1);
         delayMicroseconds(5);
         digitalWrite(SHIFT_CLOCK, 0);
@@ -161,11 +175,11 @@ bool send_frame(unsigned long ticks, bool& timeout)
     frame.switches = read_switches();
     set_crc(frame);
     
-#if 0
+#if 1
     char buf[80];
-    sprintf(buf, "X %d Y %d X %d Y %d", frame.left_x, frame.left_y, frame.right_x, frame.right_y);
-    Serial.println(buf);
-    sprintf(buf, "S %04X P %02X %02X", frame.switches, frame.left_pot, frame.right_pot);
+    sprintf(buf, "X %3d Y %3d X %3d Y %3d S %s P %02X %02X",
+            frame.left_x, frame.left_y, frame.right_x, frame.right_y,
+            to_binary(frame.switches), frame.left_pot, frame.right_pot);
     Serial.println(buf);
 #endif
     
