@@ -5,7 +5,7 @@
 #pragma pack(push, 1)
 struct ForwardAirFrame
 {
-    static const uint16_t MAGIC_VALUE = 0xA5A5;
+    static const uint16_t MAGIC_VALUE = 0xA5A6;
 
     uint16_t magic;
     uint16_t ticks;
@@ -23,7 +23,7 @@ struct ForwardAirFrame
 
 struct ReturnAirFrame
 {
-    static const uint16_t MAGIC_VALUE = 0xA5A5;
+    static const uint16_t MAGIC_VALUE = 0xA5A6;
 
     uint16_t magic;
     uint16_t ticks;
