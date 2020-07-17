@@ -24,7 +24,7 @@ def assembly():
     d = slide_hole_h/3
     h2 = c2cube(slide_hole_w-d, slide_hole_h-d, e)
     hole = hull()(up(slide_ring_h+e)(h1) + h2)
-    return outer - down(e)(hole) - slide_holes()
+    return outer - down(e)(hole)
 
 if __name__ == '__main__':
     a = assembly()
