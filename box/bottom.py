@@ -74,7 +74,7 @@ def screwstud(x, y):
     # Top extends 10.6
     xh = 10.6
     o = translate([x, y, xh])(cylinder(d1 = 8, d2 = 12, h = oah - xh - th + e))
-    i = translate([x, y, xh - 1])(cylinder(d = 3, h = 12))
+    i = translate([x, y, xh - 1])(cylinder(d = 3.5, h = 12))
     recess = translate([x, y, oah - 3.5])(cylinder(d = 6, h = 10))
     return o - hole()(i + recess)
 
@@ -82,7 +82,7 @@ def screwstud(x, y):
 def screwstud2(x, y):
     d = 2
     o = translate([x, y, 0])(cylinder(d = 8, h = oah-d))
-    i = translate([x, y, -1])(cylinder(d = 3, h = oah + 2))
+    i = translate([x, y, -1])(cylinder(d = 3.5, h = oah + 2))
     recess = translate([x, y, oah - 3.5])(cylinder(d = 6, h = 10))
     return o + hole()(i + recess)
 
