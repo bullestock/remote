@@ -1,4 +1,4 @@
-3388028966877590
+3388028397612590
 Capacitor_SMD
 CP_Elec_3x5.3
 SMT capacitor, aluminium electrolytic, 3x5.3, Cornell Dubilier Electronics 
@@ -13167,12 +13167,12 @@ TO-264-5 Vertical RM 3.81mm
 5
 5
 Remote
-AnalogJoystick_ALPS_10k
-Analog 2-axis joystick with button
-joystick
+Display_OLED_4pin_I2C
+Through hole straight pin header, 1x07, 2.54mm pitch, single row
+Through hole pin header THT 1x07 2.54mm single row
 0
-14
-14
+4
+4
 Remote
 Display_OLED_7pin_4SPI
 Through hole straight pin header, 1x07, 2.54mm pitch, single row
