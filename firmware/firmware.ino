@@ -170,9 +170,10 @@ uint16_t battery = 0;
 bool blink_state = false;
 int blink_count = 0;
 
-bool send_frame(unsigned long ticks, bool& timeout)
+bool send_frame(unsigned long ticks,
+                ForwardAirFrame& frame,
+                bool& timeout)
 {
-    ForwardAirFrame frame;
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
     frame.ticks = ticks;
     frame.left_x = 1023 - analogRead(LEFT_X_PIN);
@@ -225,7 +226,8 @@ void loop()
 {
     const auto ticks = micros();
     bool timeout = false;
-    bool ok = send_frame(ticks, timeout);
+    ForwardAirFrame frame;
+    bool ok = send_frame(ticks, frame, timeout);
     if (ok)
         consecutive_errors = 0;
     else
@@ -272,23 +274,35 @@ void loop()
     char buf2[30];
     sprintf(buf2, "%lu/%lu/%lu %d.%d V", failures, crc_errors, successes,
             battery / 1000, (battery % 1000)/100);
-    display.println(buf2);
-    display.display();
     if (actual_delay_samples < NOF_DELAY_SAMPLES)
         ++actual_delay_samples;
-    else
+    else if (!show_error || blink_state)
+        sprintf(buf2 + strlen(buf2), " %lu ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
+
+    display.println(buf2);
+    display.display();
+
+    display.setpage(1);
+    display.clearDisplay();
+    display.setTextSize(2);
+    //display.setCursor(0, 0);
+
+    switch (frame.slide)
     {
-        display.setpage(1);
-        display.clearDisplay();
-        if (!show_error || blink_state)
-        {
-            sprintf(buf2, "RTT %lu ms", (sum/NOF_DELAY_SAMPLES+500)/1000);
-            display.setTextSize(2);
-            display.setCursor(0, 0);
-            display.print(buf2);
-        }
-        display.display();
+    case 2:
+        display.print("Drive");
+        break;
+    case 0:
+        display.print("Arm/Drive");
+        break;
+    case 1:
+        display.print("Arm");
+        break;
+    default:
+        display.print("Inconceivable!");
+        break;
     }
+    display.display();
 
     delay(10);
     if (++blink_count > 10)
