@@ -15,7 +15,7 @@ struct ForwardAirFrame
     int16_t right_y;
     uint8_t left_pot;
     uint8_t right_pot;
-    // Bits 0-3: Pushbuttons
+    // Bits 0-7: Pushbuttons, slide switch
     // Bits 8-15: Toggle switches (2 bits each)
     uint16_t switches;
     uint16_t crc;
