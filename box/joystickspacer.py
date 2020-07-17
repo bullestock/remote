@@ -14,7 +14,8 @@ from solid.utils import *
 SEGMENTS = 32
 
 def assembly():
-    return cylinder(d = joystick_flange_d, h = th) - down(e)(cylinder(d = joystick_dep_d, h = th+2*e)) - joystick_holes()
+    h = joystick_dep_h
+    return cylinder(d = joystick_flange_d, h = h) - down(e)(cylinder(d = joystick_dep_d, h = h+2*e))
 
 if __name__ == '__main__':
     a = assembly()
