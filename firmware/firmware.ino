@@ -33,23 +33,9 @@ const int POT2_PIN = A7;
 
 Adafruit_SH1106 display;
 
-const int NOF_DELAY_SAMPLES = 1;
+const int NOF_DELAY_SAMPLES = 10;
 uint16_t delay_samples[NOF_DELAY_SAMPLES];
 int actual_delay_samples = 0;
-
-char* to_binary(uint16_t v)
-{
-    static char buf[17];
-    auto p = buf;
-    uint16_t mask = 0x8000;
-    for (int i = 0; i < 16; ++i)
-    {
-        *p++ = (v & mask) ? '1' : '0';
-        mask >>= 1;
-    }
-    *p = 0;
-    return buf;
-}
 
 void setup()
 {
@@ -129,9 +115,9 @@ void setup()
 #endif
 }
 
-uint16_t read_switches()
+void read_switches(ForwardAirFrame& frame)
 {
-    uint16_t ret = 0;
+    uint16_t tmp = 0;
 
     digitalWrite(SHIFT_CLOCK, 1);
     digitalWrite(SHIFT_LOAD, 0);
@@ -143,13 +129,36 @@ uint16_t read_switches()
         auto val = digitalRead(SHIFT_OUT);
         //Serial.print(i); Serial.print(": "); Serial.println(val);
         if (!val)
-            ret |= (1 << i);
+            tmp |= (1 << i);
         digitalWrite(SHIFT_CLOCK, 1);
         delayMicroseconds(5);
         digitalWrite(SHIFT_CLOCK, 0);
     }
 
-    return ret;
+    // tmp now contains:
+    //
+    // 1111110000000000
+    // 5432109876543210
+    // T3T4T1T2PPPPPPS1
+    //         456123
+
+    // Swap P4 with P6 and P1 with P3
+    uint8_t pushbuttons = (tmp & 0xFC) >> 2;
+    frame.pushbuttons = (pushbuttons & 0x12)
+       + (pushbuttons & 0x20 ? 0x08 : 0)
+       + (pushbuttons & 0x08 ? 0x20 : 0)
+       + (pushbuttons & 0x04 ? 0x01 : 0)
+       + (pushbuttons & 0x01 ? 0x04 : 0);
+
+    // Swap T3 with T4 and T1 with T2
+    uint16_t toggles = (tmp & 0xFF00) >> 8;
+    frame.toggles =
+       ((toggles & 0xC0) >> 2) +
+       ((toggles & 0x30) << 2) +
+       ((toggles & 0x0C) >> 2) +
+       ((toggles & 0x03) << 2);
+    
+    frame.slide = tmp & 0x03;
 }
 
 unsigned long failures = 0;
@@ -166,20 +175,23 @@ bool send_frame(unsigned long ticks, bool& timeout)
     ForwardAirFrame frame;
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
     frame.ticks = ticks;
-    frame.left_x = analogRead(LEFT_X_PIN);
+    frame.left_x = 1023 - analogRead(LEFT_X_PIN);
     frame.left_y = analogRead(LEFT_Y_PIN);
-    frame.right_x = analogRead(RIGHT_X_PIN);
+    frame.right_x = 1023 - analogRead(RIGHT_X_PIN);
     frame.right_y = analogRead(RIGHT_Y_PIN);
     frame.left_pot = analogRead(POT1_PIN)/4;
     frame.right_pot = analogRead(POT2_PIN)/4;
-    frame.switches = read_switches();
+    read_switches(frame);
     set_crc(frame);
     
 #if 1
     char buf[80];
-    sprintf(buf, "X %3d Y %3d X %3d Y %3d S %s P %02X %02X",
+    sprintf(buf, "X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X",
             frame.left_x, frame.left_y, frame.right_x, frame.right_y,
-            to_binary(frame.switches), frame.left_pot, frame.right_pot);
+            frame.pushbuttons,
+            frame.toggles,
+            frame.slide,
+            frame.left_pot, frame.right_pot);
     Serial.println(buf);
 #endif
     
