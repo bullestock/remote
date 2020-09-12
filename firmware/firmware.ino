@@ -10,7 +10,7 @@
 
 const char* const VERSION PROGMEM = "0.0.4";
 
-const byte addresses[][6] PROGMEM = { "1BULL", "2BULL" };
+const byte addresses[][6] = { "1BULL", "2BULL" };
 
 #ifndef NO_RADIO
 // Set up nRF24L01 radio on SPI bus (11, 12, 13) plus pins 7 & 8
