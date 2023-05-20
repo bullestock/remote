@@ -15,4 +15,5 @@
   (lib (name "Analog_ADC")(type "KiCad")(uri "${KIPRJMOD}/libs/Analog_ADC.kicad_sym")(options "")(descr ""))
   (lib (name "RF_Module")(type "KiCad")(uri "${KIPRJMOD}/libs/RF_Module.kicad_sym")(options "")(descr ""))
   (lib (name "RF")(type "KiCad")(uri "${KIPRJMOD}/libs/RF.kicad_sym")(options "")(descr ""))
+  (lib (name "Transistor_BJT")(type "Legacy")(uri "${KIPRJMOD}/libs/Transistor_BJT.lib")(options "")(descr ""))
 )

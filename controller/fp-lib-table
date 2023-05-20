@@ -5,7 +5,6 @@
   (lib (name "Connector_PinHeader_2.54mm")(type "KiCad")(uri "${KIPRJMOD}/pretty/Connector_PinHeader_2.54mm.pretty")(options "")(descr ""))
   (lib (name "Module")(type "KiCad")(uri "${KIPRJMOD}/pretty/Module.pretty")(options "")(descr ""))
   (lib (name "MountingHole")(type "KiCad")(uri "${KIPRJMOD}/pretty/MountingHole.pretty")(options "")(descr ""))
-  (lib (name "Package_DIP")(type "KiCad")(uri "${KIPRJMOD}/pretty/Package_DIP.pretty")(options "")(descr ""))
   (lib (name "Resistor_SMD")(type "KiCad")(uri "${KIPRJMOD}/pretty/Resistor_SMD.pretty")(options "")(descr ""))
   (lib (name "SparkFun-Electromechanical")(type "KiCad")(uri "${KIPRJMOD}/pretty/SparkFun-Electromechanical.pretty")(options "")(descr ""))
   (lib (name "Remote")(type "KiCad")(uri "${KIPRJMOD}/pretty/Remote.pretty")(options "")(descr ""))
