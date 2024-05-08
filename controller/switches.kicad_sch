@@ -12,23 +12,23 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "U"
-				(at 3.81 -1.27 0)
+			(property "Reference" "U1"
+				(at 0 24.7904 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Value" "74LS165"
-				(at 3.81 -6.35 0)
+			(property "Value" "74HC165"
+				(at 0 22.479 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Footprint" ""
+			(property "Footprint" "Package_SO:SOP-16_3.9x9.9mm_P1.27mm"
 				(at 0 0 0)
 				(effects
 					(font
@@ -46,7 +46,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Shift Register 8 bits, parallel load"
+			(property "Description" ""
 				(at 0 0 0)
 				(effects
 					(font
@@ -83,9 +83,24 @@
 						)
 					)
 				)
+			)
+			(symbol "74LS165_0_1"
+				(rectangle
+					(start -10.16 16.51)
+					(end 10.16 -16.51)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "74LS165_1_0"
 				(pin power_in line
-					(at -7.62 -16.51 90)
-					(length 0)
+					(at 0 -19.05 90)
+					(length 2.54)
 					(name "GND"
 						(effects
 							(font
@@ -99,19 +114,6 @@
 								(size 1.27 1.27)
 							)
 						)
-					)
-				)
-			)
-			(symbol "74LS165_0_1"
-				(rectangle
-					(start -10.16 16.51)
-					(end 10.16 -16.51)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
 					)
 				)
 			)
@@ -1623,6 +1625,16 @@
 	)
 	(wire
 		(pts
+			(xy 162.56 73.66) (xy 162.56 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "457bb283-b2e5-4fba-b704-3f80813c0ebd")
+	)
+	(wire
+		(pts
 			(xy 137.16 53.34) (xy 144.78 55.88)
 		)
 		(stroke
@@ -1803,7 +1815,7 @@
 	)
 	(wire
 		(pts
-			(xy 154.94 73.66) (xy 140.97 73.66)
+			(xy 140.97 73.66) (xy 162.56 73.66)
 		)
 		(stroke
 			(width 0)
@@ -1850,16 +1862,6 @@
 			(type default)
 		)
 		(uuid "cd6df98e-1f18-45ee-ba3c-2e1c60543b0d")
-	)
-	(wire
-		(pts
-			(xy 154.94 69.85) (xy 154.94 73.66)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "d3ef5357-051d-447d-a798-e7864adc7b4c")
 	)
 	(wire
 		(pts

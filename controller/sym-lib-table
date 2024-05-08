@@ -13,4 +13,5 @@
   (lib (name "RF_Module")(type "KiCad")(uri "${KIPRJMOD}/libs/RF_Module.kicad_sym")(options "")(descr ""))
   (lib (name "RF")(type "KiCad")(uri "${KIPRJMOD}/libs/RF.kicad_sym")(options "")(descr ""))
   (lib (name "Transistor_BJT")(type "Legacy")(uri "${KIPRJMOD}/libs/Transistor_BJT.lib")(options "")(descr ""))
+  (lib (name "Connector")(type "KiCad")(uri "${KIPRJMOD}/libs/Connector.kicad_sym")(options "")(descr ""))
 )
