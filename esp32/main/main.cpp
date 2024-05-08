@@ -2,6 +2,7 @@
 #include "defs.h"
 #include "display.h"
 #include "hw.h"
+#include "radio.h"
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
@@ -12,19 +13,29 @@ void app_main(void)
     printf("Remote v %s\n", VERSION);
 
     init_hardware();
+    NRF24_t nrf24;
+    bool debug = false;
+    if (!init_radio(nrf24))
+    {
+        printf("nRF24 init failed!\n");
+        // TODO: Write to display
+        debug = true;
+    }
 
     Display display;
 
-    printf("\n\nPress a key to enter console\n");
-    bool debug = false;
-    for (int i = 0; i < 20; ++i)
+    if (!debug)
     {
-        if (getchar() != EOF)
+        printf("\n\nPress a key to enter console\n");
+        for (int i = 0; i < 20; ++i)
         {
-            debug = true;
-            break;
+            if (getchar() != EOF)
+            {
+                debug = true;
+                break;
+            }
+            vTaskDelay(100 / portTICK_PERIOD_MS);
         }
-        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
     if (debug)
         run_console(display);        // never returns

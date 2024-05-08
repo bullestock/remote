@@ -4,4 +4,5 @@ idf_component_register(SRCS
                        display.cpp
                        hw.cpp
                        main.cpp
+                       radio.cpp
                        INCLUDE_DIRS ".")
