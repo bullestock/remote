@@ -47,6 +47,10 @@ static int test_switches(int, char**)
     for (int n = 0; n < 10; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
+        ForwardAirFrame frame;
+        read_switches(frame);
+        printf("Toggles: %02X  Push: %02X  Slide: %01X\n",
+               frame.toggles, frame.pushbuttons, frame.slide);
     }
     
     return 0;

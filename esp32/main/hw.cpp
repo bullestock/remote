@@ -7,6 +7,8 @@
 #include <freertos/FreeRTOS.h>
 #include <driver/i2c_master.h>
 
+#include <unistd.h>
+
 // 1001000
 const int ADC_ADDRESS = 0x48;
 const int SINGLE_ENDED = 0x80;
@@ -76,6 +78,53 @@ int read_adc(int channel)
     //printf("i2c: %d\n", res);
     
     return value[0] + value[1] * 256;
+}
+
+void read_switches(ForwardAirFrame& frame)
+{
+    uint16_t tmp = 0;
+
+    gpio_set_level(PIN_CP, 1);
+    gpio_set_level(PIN_PL, 0);
+    usleep(5);
+    gpio_set_level(PIN_PL, 1);
+    gpio_set_level(PIN_CP, 0);
+    for (int i = 0; i < 16; ++i)
+    {
+        auto val = gpio_get_level(PIN_Q7);
+        if (!val)
+            tmp |= (1 << i);
+        gpio_set_level(PIN_CP, 1);
+        usleep(5);
+        gpio_set_level(PIN_CP, 0);
+        usleep(5);
+    }
+    printf("raw: %04X\n", tmp);
+    
+    // tmp now contains:
+    //
+    // 1111110000000000
+    // 5432109876543210
+    // T3T4T1T2PPPPPPS1
+    //         456123
+
+    // Swap P4 with P6 and P1 with P3
+    uint8_t pushbuttons = (tmp & 0xFC) >> 2;
+    frame.pushbuttons = (pushbuttons & 0x12)
+       + (pushbuttons & 0x20 ? 0x08 : 0)
+       + (pushbuttons & 0x08 ? 0x20 : 0)
+       + (pushbuttons & 0x04 ? 0x01 : 0)
+       + (pushbuttons & 0x01 ? 0x04 : 0);
+
+    // Swap T3 with T4 and T1 with T2
+    uint16_t toggles = (tmp & 0xFF00) >> 8;
+    frame.toggles =
+       ((toggles & 0xC0) >> 2) +
+       ((toggles & 0x30) << 2) +
+       ((toggles & 0x0C) >> 2) +
+       ((toggles & 0x03) << 2);
+    
+    frame.slide = tmp & 0x03;
 }
 
 // Local Variables:
