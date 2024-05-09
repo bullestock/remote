@@ -18,14 +18,6 @@
 
 static Display* the_display = nullptr;
 
-static int test_display(int, char**)
-{
-    printf("Running display test\n");
-
-
-    return 0;
-}
-
 static int test_adc(int, char**)
 {
     printf("Running ADC test\n");
@@ -37,6 +29,22 @@ static int test_adc(int, char**)
             printf("ADC channel %d: %d\n", chan, read_adc(chan));
     }
     
+    return 0;
+}
+
+static int test_display(int, char**)
+{
+    printf("Running display test\n");
+
+
+    return 0;
+}
+
+static int test_radio(int, char**)
+{
+    printf("Running radio test\n");
+
+
     return 0;
 }
 
@@ -117,6 +125,15 @@ void run_console(Display& display)
 
     esp_console_register_help_command();
 
+    const esp_console_cmd_t test_adc_cmd = {
+        .command = "test_adc",
+        .help = "Test ADC",
+        .hint = nullptr,
+        .func = &test_adc,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_adc_cmd));
+
     const esp_console_cmd_t test_display_cmd = {
         .command = "test_display",
         .help = "Test display",
@@ -126,14 +143,14 @@ void run_console(Display& display)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_display_cmd));
 
-    const esp_console_cmd_t test_adc_cmd = {
-        .command = "test_adc",
-        .help = "Test ADC",
+    const esp_console_cmd_t test_radio_cmd = {
+        .command = "test_radio",
+        .help = "Test radio",
         .hint = nullptr,
-        .func = &test_adc,
+        .func = &test_radio,
         .argtable = nullptr
     };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&test_adc_cmd));
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_radio_cmd));
 
     const esp_console_cmd_t test_switches_cmd = {
         .command = "test_switches",
