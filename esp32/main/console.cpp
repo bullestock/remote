@@ -36,7 +36,8 @@ static int test_display(int, char**)
 {
     printf("Running display test\n");
 
-
+    ssd1306_display_text_x3(the_display->device(), 0, "Hello", 5, false);
+    
     return 0;
 }
 

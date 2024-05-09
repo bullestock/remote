@@ -22,7 +22,8 @@ void app_main(void)
         debug = true;
     }
 
-    Display display;
+    SSD1306_t ssd;
+    Display display(ssd);
 
     if (!debug)
     {
