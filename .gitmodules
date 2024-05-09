@@ -1,3 +1,6 @@
 [submodule "esp32/components/mirf/esp-idf-mirf"]
 	path = esp32/components/mirf/esp-idf-mirf
 	url = https://github.com/bullestock/esp-idf-mirf
+[submodule "esp32/components/ssd1306/esp-idf-ssd1306"]
+	path = esp32/components/ssd1306/esp-idf-ssd1306
+	url = https://github.com/bullestock/esp-idf-ssd1306.git
