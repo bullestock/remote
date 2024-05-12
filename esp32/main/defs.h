@@ -16,5 +16,13 @@ constexpr const auto PIN_SDA = (gpio_num_t) 21;
 constexpr const auto PIN_SCL = (gpio_num_t) 22;
 constexpr const auto PIN_MISO = (gpio_num_t) 27;
 
+constexpr const auto LEFT_X_CHANNEL = 0;
+constexpr const auto LEFT_Y_CHANNEL = 1;
+constexpr const auto RIGHT_X_CHANNEL = 2;
+constexpr const auto RIGHT_Y_CHANNEL = 3;
+constexpr const auto POT1_CHANNEL = 4;
+constexpr const auto POT2_CHANNEL = 5;
+constexpr const auto BATTERY_CHANNEL = 6;
+
 constexpr const char* TAG = "REM";
 
