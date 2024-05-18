@@ -11,6 +11,8 @@
 #include "esp_console.h"
 #include "esp_vfs_dev.h"
 
+#include <driver/i2c.h>
+#include <driver/i2c_master.h>
 #include <driver/uart.h>
 
 #include "linenoise/linenoise.h"
@@ -44,6 +46,32 @@ static int test_display(int, char**)
     printf("Running display test\n");
 
     ssd1306_display_text_x3(the_display->device(), 0, "Hello", 5, false);
+    
+    return 0;
+}
+
+static int test_i2c(int, char**)
+{
+    printf("Scanning for I2C devices\n");
+    printf("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n");
+    printf("00:         ");
+    for (int i = 3; i < 0x78; ++i)
+    {
+        i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+        i2c_master_start(cmd);
+        i2c_master_write_byte(cmd, (i << 1) | I2C_MASTER_WRITE, 1 /* expect ack */);
+        i2c_master_stop(cmd);
+
+        const auto espRc = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
+        if (i%16 == 0)
+            printf("\n%.2x:", i);
+        if (espRc == 0)
+            printf(" %.2x", i);
+        else
+            printf(" --");
+        i2c_cmd_link_delete(cmd);
+    }
+    printf("\n");
     
     return 0;
 }
@@ -159,6 +187,15 @@ void run_console(Display& display)
         .argtable = nullptr
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_display_cmd));
+
+    const esp_console_cmd_t test_i2c_cmd = {
+        .command = "test_i2c",
+        .help = "Test I2C",
+        .hint = nullptr,
+        .func = &test_i2c,
+        .argtable = nullptr
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_i2c_cmd));
 
     const esp_console_cmd_t test_radio_cmd = {
         .command = "test_radio",

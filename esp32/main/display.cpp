@@ -5,6 +5,7 @@ Display::Display(SSD1306_t& d)
 {
     ssd1306_init(&display, 128, 64);
     ssd1306_contrast(&display, 0xff);
+    clear();
 }
 
 void Display::clear()

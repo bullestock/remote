@@ -16,6 +16,10 @@ void app_main(void)
     printf("Remote v %s\n", VERSION);
 
     init_hardware();
+
+    SSD1306_t ssd;
+    Display display(ssd);
+
     NRF24_t nrf24;
     bool debug = false;
     if (init_radio(nrf24))
@@ -26,9 +30,6 @@ void app_main(void)
         // TODO: Write to display
         debug = true;
     }
-
-    SSD1306_t ssd;
-    Display display(ssd);
 
     if (!debug)
     {
