@@ -5,16 +5,19 @@
 #include "esp_log.h"
 
 #include <freertos/FreeRTOS.h>
+
 #include <driver/i2c_master.h>
 
 #include <unistd.h>
 
 // 1001000
-const int ADC_ADDRESS = 0x48;
 const int SINGLE_ENDED = 0x80;
 const int IREF_ON_AD_ON = 0x0C; // Internal reference ON, A/D converter ON
+const int I2C_MASTER_FREQ_HZ = 400000; // I2C clock of SSD1306 can run at 400 kHz max.
 
 i2c_master_dev_handle_t adc_handle;
+
+extern i2c_master_dev_handle_t dev_handle;
 
 void init_hardware()
 {
@@ -58,13 +61,20 @@ void init_hardware()
     i2c_master_bus_handle_t i2c_bus_handle;
     ESP_ERROR_CHECK(i2c_new_master_bus(&i2c_mst_config, &i2c_bus_handle));
 
-    i2c_device_config_t dev_cfg = {
+    i2c_device_config_t adc_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = ADC_ADDRESS,
+        .device_address = ADC_I2C_ADDRESS,
         .scl_speed_hz = 100000,
     };
 
-    ESP_ERROR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &dev_cfg, &adc_handle));
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &adc_cfg, &adc_handle));
+
+    i2c_device_config_t display_cfg = {
+        .dev_addr_length = I2C_ADDR_BIT_LEN_7,
+        .device_address = I2C_ADDRESS,
+        .scl_speed_hz = I2C_MASTER_FREQ_HZ,
+    };
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &display_cfg, &dev_handle));
 }
 
 int read_adc(int channel)

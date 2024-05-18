@@ -24,5 +24,9 @@ constexpr const auto POT1_CHANNEL = 4;
 constexpr const auto POT2_CHANNEL = 5;
 constexpr const auto BATTERY_CHANNEL = 6;
 
+constexpr const auto DISPLAY_I2C_ADDRESS = 0x3C;
+constexpr const auto ADC_I2C_ADDRESS = 0x48;
+
+
 constexpr const char* TAG = "REM";
 

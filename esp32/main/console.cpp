@@ -11,8 +11,6 @@
 #include "esp_console.h"
 #include "esp_vfs_dev.h"
 
-#include <driver/i2c.h>
-#include <driver/i2c_master.h>
 #include <driver/uart.h>
 
 #include "linenoise/linenoise.h"
@@ -50,6 +48,8 @@ static int test_display(int, char**)
     return 0;
 }
 
+#if 0
+
 static int test_i2c(int, char**)
 {
     printf("Scanning for I2C devices\n");
@@ -75,6 +75,8 @@ static int test_i2c(int, char**)
     
     return 0;
 }
+
+#endif
 
 static int test_radio(int, char**)
 {
@@ -188,6 +190,7 @@ void run_console(Display& display)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_display_cmd));
 
+#if 0
     const esp_console_cmd_t test_i2c_cmd = {
         .command = "test_i2c",
         .help = "Test I2C",
@@ -196,6 +199,7 @@ void run_console(Display& display)
         .argtable = nullptr
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_i2c_cmd));
+#endif
 
     const esp_console_cmd_t test_radio_cmd = {
         .command = "test_radio",

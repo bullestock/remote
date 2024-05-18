@@ -1,8 +1,12 @@
 #include "display.h"
+#include "defs.h"
 
 Display::Display(SSD1306_t& d)
     : display(d)
 {
+    display._address = DISPLAY_I2C_ADDRESS;
+    display._flip = false;
+
     ssd1306_init(&display, 128, 64);
     ssd1306_contrast(&display, 0xff);
     clear();
