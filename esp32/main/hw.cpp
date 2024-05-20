@@ -80,14 +80,12 @@ void init_hardware()
 int read_adc(int channel)
 {
     channel = channel & 0x7;
-    //const uint8_t csel = (channel >> 1) | ((channel & 0x1) << 2);
     const uint8_t data = SINGLE_ENDED | channel << 4 | IREF_ON_AD_ON;
     uint8_t value[2];
     auto res = i2c_master_transmit_receive(adc_handle, &data, 1, value, 2, 100);
     ESP_ERROR_CHECK(res);
-    //printf("i2c: %d\n", res);
     
-    return value[0] + value[1] * 256;
+    return value[0] * 256 + value[1];
 }
 
 void read_switches(ForwardAirFrame& frame)

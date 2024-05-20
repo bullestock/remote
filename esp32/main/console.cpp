@@ -25,15 +25,27 @@ static int reboot(int, char**)
     return 0;
 }
 
-static int test_adc(int, char**)
+struct
 {
+    struct arg_int* channel;
+    struct arg_end* end;
+} test_adc_args;
+
+static int test_adc(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &test_adc_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, test_adc_args.end, argv[0]);
+        return 1;
+    }
     printf("Running ADC test\n");
 
-    for (int n = 0; n < 10; ++n)
+    const int chan = test_adc_args.channel->ival[0];
+    for (int n = 0; n < 200; ++n)
     {
-        vTaskDelay(500/portTICK_PERIOD_MS);
-        for (int chan = 0; chan < 8; ++chan)
-            printf("ADC channel %d: %d\n", chan, read_adc(chan));
+        vTaskDelay(50/portTICK_PERIOD_MS);
+        printf("ADC channel %d: %d\n", chan, read_adc(chan));
     }
     
     return 0;
@@ -43,7 +55,7 @@ static int test_display(int, char**)
 {
     printf("Running display test\n");
 
-    ssd1306_display_text_x3(the_display->device(), 0, "Hello", 5, false);
+    ssd1306_display_text(the_display->device(), 0, "Hello", 5, false);
     
     return 0;
 }
@@ -172,12 +184,14 @@ void run_console(Display& display)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&reboot_cmd));
     
+    test_adc_args.channel = arg_int1(NULL, NULL, "<channel>", "Channel");
+    test_adc_args.end = arg_end(2);
     const esp_console_cmd_t test_adc_cmd = {
         .command = "test_adc",
         .help = "Test ADC",
         .hint = nullptr,
         .func = &test_adc,
-        .argtable = nullptr
+        .argtable = &test_adc_args,
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_adc_cmd));
 
