@@ -1,5 +1,7 @@
 #pragma once
 
+#include "protocol.h"
+
 #include <stdint.h>
 
 #include "mirf.h"

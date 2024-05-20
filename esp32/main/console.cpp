@@ -9,6 +9,7 @@
 #include "esp_system.h"
 #include "esp_log.h"
 #include "esp_console.h"
+#include <esp_timer.h>
 #include "esp_vfs_dev.h"
 
 #include <driver/uart.h>
@@ -17,6 +18,7 @@
 #include "argtable3/argtable3.h"
 
 static Display* the_display = nullptr;
+static NRF24_t* the_radio = nullptr;
 
 static int reboot(int, char**)
 {
@@ -90,11 +92,37 @@ static int test_i2c(int, char**)
 
 #endif
 
+static const char* yes_no(bool b)
+{
+    return b ? "yes" : "no";
+}
+
 static int test_radio(int, char**)
 {
     printf("Running radio test\n");
 
+    ForwardAirFrame frame;
+    bool timeout = false;
+    const auto send_time = esp_timer_get_time();
+    bool ok = send_frame(*the_radio, send_time, frame, timeout);
+
+    if (!ok)
+    {
+        printf("send failed\n");
+        return 1;
+    }
     
+    uint8_t data[sizeof(ForwardAirFrame)];
+    memset(data, 0, sizeof(data));
+    Nrf24_getData(the_radio, data);
+    ReturnAirFrame ret_frame;
+    memcpy(data, &ret_frame, sizeof(ret_frame));
+    for (auto b : data)
+        printf("%02X ", b);
+    printf("\nReturn frame magic value OK: %s   CRC OK: %s\n",
+           yes_no(ret_frame.magic == ReturnAirFrame::MAGIC_VALUE),
+           yes_no(check_crc(ret_frame)));
+
     return 0;
 }
 
@@ -167,9 +195,11 @@ void initialize_console()
     linenoiseHistorySetMaxLen(100);
 }
 
-void run_console(Display& display)
+void run_console(Display& display,
+                 NRF24_t& radio)
 {
     the_display = &display;
+    the_radio = &radio;
     
     initialize_console();
 
@@ -187,7 +217,7 @@ void run_console(Display& display)
     test_adc_args.channel = arg_int1(NULL, NULL, "<channel>", "Channel");
     test_adc_args.end = arg_end(2);
     const esp_console_cmd_t test_adc_cmd = {
-        .command = "test_adc",
+        .command = "adc",
         .help = "Test ADC",
         .hint = nullptr,
         .func = &test_adc,
@@ -196,7 +226,7 @@ void run_console(Display& display)
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_adc_cmd));
 
     const esp_console_cmd_t test_display_cmd = {
-        .command = "test_display",
+        .command = "display",
         .help = "Test display",
         .hint = nullptr,
         .func = &test_display,
@@ -206,7 +236,7 @@ void run_console(Display& display)
 
 #if 0
     const esp_console_cmd_t test_i2c_cmd = {
-        .command = "test_i2c",
+        .command = "i2c",
         .help = "Test I2C",
         .hint = nullptr,
         .func = &test_i2c,
@@ -216,7 +246,7 @@ void run_console(Display& display)
 #endif
 
     const esp_console_cmd_t test_radio_cmd = {
-        .command = "test_radio",
+        .command = "radio",
         .help = "Test radio",
         .hint = nullptr,
         .func = &test_radio,
@@ -225,7 +255,7 @@ void run_console(Display& display)
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_radio_cmd));
 
     const esp_console_cmd_t test_switches_cmd = {
-        .command = "test_switches",
+        .command = "switches",
         .help = "Test switches",
         .hint = nullptr,
         .func = &test_switches,

@@ -107,7 +107,6 @@ void read_switches(ForwardAirFrame& frame)
         gpio_set_level(PIN_CP, 0);
         usleep(5);
     }
-    printf("raw: %04X\n", tmp);
     
     // tmp now contains:
     //

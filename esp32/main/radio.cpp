@@ -44,7 +44,7 @@ bool send_frame(NRF24_t& dev,
     set_crc(frame);
     
 #if 1
-    printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X",
+    printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X\n",
            frame.left_x, frame.left_y, frame.right_x, frame.right_y,
            frame.pushbuttons,
            frame.toggles,

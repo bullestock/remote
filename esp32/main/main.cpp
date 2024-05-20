@@ -45,7 +45,7 @@ void app_main(void)
         }
     }
     if (debug)
-        run_console(display);        // never returns
+        run_console(display, nrf24);        // never returns
 
     printf("\nStarting application\n");
 
