@@ -44,35 +44,42 @@ oah = 12
 hole_h = 50
 pcb_z = 10
 
+x_offset = 92.975
+y_offset = 66
+
+
 # Cube centered in x/y
 def c2cube(w, h, d):
     return translate([-w/2, -h/2, 0])(cube([w, h, d]))
 
-def pot(x, y):
+def pot(label, x, y):
+    print(f'{label}: {x + x_offset:.02f}, {y_offset - y:.02f}')
     return translate([x, y, 0])(cylinder(d = 8, h = hole_h))
 
-def pushbutton(x, y):
+def pushbutton(label, x, y):
+    print(f'{label}: {x + x_offset:.02f}, {y_offset - y:.02f}')
     return translate([x, y, 0])(cylinder(d = 14.5, h = hole_h))
 
 def joystick_h(x, y):
     return translate([x, y, 0])(hole()(cylinder(d = joystick_hole_d, h = hole_h)))
 
-def toggle(x, y):
+def toggle(label, x, y):
+    print(f'{label}: {x + x_offset:.02f}, {y_offset - y:.02f}')
     return translate([x, y, 0])(cylinder(d = 6.25, h = hole_h))
 
 def holes():
-    pot1 = pot(-48.630 + 6.552/2, 12 + 6.552/2)
-    pot2 = pot(49 - 6.552/2, 12 + 6.552/2)
-    pb1l = pushbutton(-76.619 + 12.5/2, 22.774 + 12.5/2)
-    pb2l = pushbutton(-82.690 + 12.5/2, 1.608 + 12.5/2)
-    pb3l = pushbutton(-89.273 + 12.5/2, -19.559 + 12.5/2)
-    pb1r = pushbutton(76.619 - 12.5/2, 22.774 + 12.5/2)
-    pb2r = pushbutton(82.690 - 12.5/2, 1.608 + 12.5/2)
-    pb3r = pushbutton(89.273 - 12.5/2, -19.559 + 12.5/2)
-    toggle1 = toggle(-69.152 + 3, 51.603 + 3)
-    toggle2 = toggle(-49.736 + 3, 51.603 + 3)
-    toggle3 = toggle(49.736 - 3, 51.603 + 3)
-    toggle4 = toggle(69.152 - 3, 51.603 + 3)
+    pot1 = pot('pot1', -48.630 + 6.552/2, 12 + 6.552/2)
+    pot2 = pot('pot2', 49 - 6.552/2 - 1, 12 + 6.552/2)
+    pb1l = pushbutton('pb1l', -76.619 + 12.5/2, 22.774 + 12.5/2)
+    pb2l = pushbutton('pb2l', -82.690 + 12.5/2, 1.608 + 12.5/2)
+    pb3l = pushbutton('pb3l', -89.273 + 12.5/2, -19.559 + 12.5/2)
+    pb1r = pushbutton('pb1r', 76.619 - 12.5/2, 22.774 + 12.5/2)
+    pb2r = pushbutton('pb2r', 82.690 - 12.5/2, 1.608 + 12.5/2)
+    pb3r = pushbutton('pb3r', 89.273 - 12.5/2, -19.559 + 12.5/2)
+    toggle1 = toggle('toggle1', -69.152 + 3, 51.603 + 3)
+    toggle2 = toggle('toggle2', -49.736 + 3, 51.603 + 3)
+    toggle3 = toggle('toggle3', 49.736 - 3, 51.603 + 3)
+    toggle4 = toggle('toggle4', 69.152 - 3, 51.603 + 3)
     holes1 = pot1 + pot2 + pb1l + pb2l + pb3l + pb1r + pb2r + pb3r
     holes2 = toggle1 + toggle2 + toggle3 + toggle4
     slide = translate([0, joystick_y - slide_offset, 0])(c2cube(slide_hole_w, slide_hole_h, hole_h))
