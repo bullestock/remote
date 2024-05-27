@@ -1,0 +1,11 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "remote-rescue")(type "Legacy")(uri "${KIPRJMOD}/remote-rescue.lib")(options "")(descr ""))
+  (lib (name "Connector_Generic")(type "Legacy")(uri "${KIPRJMOD}/libs/Connector_Generic.lib")(options "")(descr ""))
+  (lib (name "Device")(type "Legacy")(uri "${KIPRJMOD}/libs/Device.lib")(options "")(descr ""))
+  (lib (name "Mechanical")(type "Legacy")(uri "${KIPRJMOD}/libs/Mechanical.lib")(options "")(descr ""))
+  (lib (name "power")(type "Legacy")(uri "${KIPRJMOD}/libs/power.lib")(options "")(descr ""))
+  (lib (name "switches")(type "Legacy")(uri "${KIPRJMOD}/libs/switches.lib")(options "")(descr ""))
+  (lib (name "SparkFun-Electromechanical")(type "Legacy")(uri "${KIPRJMOD}/libs/SparkFun-Electromechanical.lib")(options "")(descr ""))
+  (lib (name "remote")(type "Legacy")(uri "${KIPRJMOD}/libs/remote.lib")(options "")(descr ""))
+)
