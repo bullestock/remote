@@ -167,11 +167,11 @@ X pwr 1 0 0 0 U 50 50 0 0 w
 ENDDRAW
 ENDDEF
 #
-# remote-rescue_+5V
+# mainboard-rescue_+5V
 #
-DEF remote-rescue_+5V #PWR 0 0 Y Y 1 F P
+DEF mainboard-rescue_+5V #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -150 50 H I C CNN
-F1 "remote-rescue_+5V" 0 140 50 H V C CNN
+F1 "mainboard-rescue_+5V" 0 140 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -182,11 +182,11 @@ X +5V 1 0 0 0 U 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# remote-rescue_GND
+# mainboard-rescue_GND
 #
-DEF remote-rescue_GND #PWR 0 0 Y Y 1 F P
+DEF mainboard-rescue_GND #PWR 0 0 Y Y 1 F P
 F0 "#PWR" 0 -250 50 H I C CNN
-F1 "remote-rescue_GND" 0 -150 50 H V C CNN
+F1 "mainboard-rescue_GND" 0 -150 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -195,11 +195,11 @@ X GND 1 0 0 0 D 50 50 1 1 W N
 ENDDRAW
 ENDDEF
 #
-# remote-rescue_POT
+# mainboard-rescue_POT
 #
-DEF remote-rescue_POT RV 0 40 N N 1 F N
+DEF mainboard-rescue_POT RV 0 40 N N 1 F N
 F0 "RV" -175 0 50 V V C CNN
-F1 "remote-rescue_POT" -100 0 50 V V C CNN
+F1 "mainboard-rescue_POT" -100 0 50 V V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -212,11 +212,11 @@ X 3 3 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# remote-rescue_R
+# mainboard-rescue_R
 #
-DEF remote-rescue_R R 0 0 N Y 1 F N
+DEF mainboard-rescue_R R 0 0 N Y 1 F N
 F0 "R" 80 0 50 V V C CNN
-F1 "remote-rescue_R" 0 0 50 V V C CNN
+F1 "mainboard-rescue_R" 0 0 50 V V C CNN
 F2 "" -70 0 50 V I C CNN
 F3 "" 0 0 50 H I C CNN
 $FPLIST
@@ -230,11 +230,11 @@ X ~ 2 0 -150 50 U 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# remote-rescue_SW_Push
+# mainboard-rescue_SW_Push
 #
-DEF remote-rescue_SW_Push SW 0 40 N N 1 F N
+DEF mainboard-rescue_SW_Push SW 0 40 N N 1 F N
 F0 "SW" 50 100 50 H V L CNN
-F1 "remote-rescue_SW_Push" 0 -60 50 H V C CNN
+F1 "mainboard-rescue_SW_Push" 0 -60 50 H V C CNN
 F2 "" 0 200 50 H I C CNN
 F3 "" 0 200 50 H I C CNN
 DRAW
@@ -247,11 +247,11 @@ X 2 2 200 0 100 L 50 50 0 1 P
 ENDDRAW
 ENDDEF
 #
-# remote-rescue_SW_SPDT_MSM
+# mainboard-rescue_SW_SPDT_MSM
 #
-DEF remote-rescue_SW_SPDT_MSM SW 0 0 Y N 1 F N
+DEF mainboard-rescue_SW_SPDT_MSM SW 0 0 Y N 1 F N
 F0 "SW" 0 200 50 H V C CNN
-F1 "remote-rescue_SW_SPDT_MSM" 0 -200 50 H V C CNN
+F1 "mainboard-rescue_SW_SPDT_MSM" 0 -200 50 H V C CNN
 F2 "" 0 0 50 H I C CNN
 F3 "" 0 0 50 H I C CNN
 DRAW
@@ -266,11 +266,11 @@ X 3 3 200 -100 100 L 50 50 1 1 P
 ENDDRAW
 ENDDEF
 #
-# remote_SW_DP3T
+# mainboard_SW_DP3T
 #
-DEF remote_SW_DP3T SW 0 0 Y N 1 F N
+DEF mainboard_SW_DP3T SW 0 0 Y N 1 F N
 F0 "SW" 0 200 50 H V C CNN
-F1 "remote_SW_DP3T" 0 -650 50 H V C CNN
+F1 "mainboard_SW_DP3T" 0 -650 50 H V C CNN
 F2 "" -625 175 50 H I C CNN
 F3 "" -625 175 50 H I C CNN
 $FPLIST

@@ -1519,7 +1519,7 @@
 				)
 			)
 		)
-		(symbol "remote-rescue:+5V"
+		(symbol "mainboard-rescue:+5V"
 			(power)
 			(pin_names
 				(offset 0)
@@ -1630,7 +1630,7 @@
 				)
 			)
 		)
-		(symbol "remote-rescue:GND"
+		(symbol "mainboard-rescue:GND"
 			(power)
 			(pin_names
 				(offset 0)
@@ -1717,7 +1717,7 @@
 				)
 			)
 		)
-		(symbol "remote-rescue:POT"
+		(symbol "mainboard-rescue:POT"
 			(pin_numbers hide)
 			(pin_names
 				(offset 1.016) hide)
@@ -1861,7 +1861,7 @@
 				)
 			)
 		)
-		(symbol "remote-rescue:R"
+		(symbol "mainboard-rescue:R"
 			(pin_numbers hide)
 			(pin_names
 				(offset 0)
@@ -1973,7 +1973,7 @@
 				)
 			)
 		)
-		(symbol "remote-rescue:SW_Push"
+		(symbol "mainboard-rescue:SW_Push"
 			(pin_numbers hide)
 			(pin_names
 				(offset 1.016) hide)
@@ -2109,7 +2109,7 @@
 				)
 			)
 		)
-		(symbol "remote-rescue:SW_SPDT_MSM"
+		(symbol "mainboard-rescue:SW_SPDT_MSM"
 			(pin_names
 				(offset 0) hide)
 			(exclude_from_sim no)
@@ -3209,7 +3209,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:POT")
+		(lib_id "mainboard-rescue:POT")
 		(at 196.85 35.56 0)
 		(mirror y)
 		(unit 1)
@@ -3270,7 +3270,7 @@
 			(uuid "947121b2-bda7-478a-90a3-62c470ec4f16")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "RV1")
 					(unit 1)
@@ -3279,7 +3279,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:GND")
+		(lib_id "mainboard-rescue:GND")
 		(at 196.85 48.26 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -3334,7 +3334,7 @@
 			(uuid "e1f9a302-404c-4ce7-9b2d-a78c408739dc")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR0104")
 					(unit 1)
@@ -3343,7 +3343,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:+5V")
+		(lib_id "mainboard-rescue:+5V")
 		(at 196.85 22.86 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -3398,7 +3398,7 @@
 			(uuid "584e9c36-b6a3-4864-b483-f9e8b9273304")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR0105")
 					(unit 1)
@@ -3462,7 +3462,7 @@
 			(uuid "718bc046-6849-4675-9ea5-d2faca204b96")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR0109")
 					(unit 1)
@@ -3526,7 +3526,7 @@
 			(uuid "8ec31a58-48cb-49ee-b564-0cd4c84c92a7")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR0111")
 					(unit 1)
@@ -3590,7 +3590,7 @@
 			(uuid "b89f9436-4d34-45b9-952c-5dc41fd4a0d5")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#FLG0101")
 					(unit 1)
@@ -3654,7 +3654,7 @@
 			(uuid "fed4735e-51ed-443b-8863-19e030877ef5")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR0127")
 					(unit 1)
@@ -3718,7 +3718,7 @@
 			(uuid "81142613-b536-4ab8-8ce7-73a5eef82183")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#FLG0102")
 					(unit 1)
@@ -3782,7 +3782,7 @@
 			(uuid "cf273363-4c36-4531-a3e3-9ebd9f019806")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR0128")
 					(unit 1)
@@ -3849,7 +3849,7 @@
 			(uuid "86f05128-0125-4070-a27a-5c580ada1531")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "J1")
 					(unit 1)
@@ -3917,7 +3917,7 @@
 			(uuid "2c9d27cf-429c-46ab-912d-4889456ae3d5")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "J4")
 					(unit 1)
@@ -3979,7 +3979,7 @@
 			)
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "H1")
 					(unit 1)
@@ -4041,7 +4041,7 @@
 			)
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "H2")
 					(unit 1)
@@ -4103,7 +4103,7 @@
 			)
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "H3")
 					(unit 1)
@@ -4165,7 +4165,7 @@
 			)
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "H4")
 					(unit 1)
@@ -4244,7 +4244,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:+5V")
+		(lib_id "mainboard-rescue:+5V")
 		(at 147.32 77.47 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4299,7 +4299,7 @@
 			(uuid "12cdd7a4-f851-4e3b-8f13-14eb841aadf6")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR05")
 					(unit 1)
@@ -4308,7 +4308,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:SW_Push")
+		(lib_id "mainboard-rescue:SW_Push")
 		(at 147.32 119.38 270)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4366,7 +4366,7 @@
 			(uuid "5eb33961-e00d-4374-8b56-3b635decb737")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "SW3")
 					(unit 1)
@@ -4375,7 +4375,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:SW_SPDT_MSM")
+		(lib_id "mainboard-rescue:SW_SPDT_MSM")
 		(at 52.07 114.3 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4435,7 +4435,7 @@
 			(uuid "8f0ad73b-7ca7-4d67-9e62-e0bb4d00729d")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "SW2")
 					(unit 1)
@@ -4444,7 +4444,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:SW_SPDT_MSM")
+		(lib_id "mainboard-rescue:SW_SPDT_MSM")
 		(at 39.37 114.3 90)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4504,7 +4504,7 @@
 			(uuid "27b3add2-e693-469a-b835-bf320d7298f3")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "SW1")
 					(unit 1)
@@ -4572,7 +4572,7 @@
 			(uuid "87974e5a-3bb1-422c-a047-14ba9a9baa10")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R1")
 					(unit 1)
@@ -4646,7 +4646,7 @@
 			(uuid "b0167b09-928c-4f9d-9dcb-ccebb0c3ec00")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "J2")
 					(unit 1)
@@ -4714,7 +4714,7 @@
 			(uuid "a3490856-ce0f-4fcd-b5e2-eebcee8e924e")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R2")
 					(unit 1)
@@ -4785,7 +4785,7 @@
 			(uuid "2c74d1cc-7c00-4e2b-b1bd-00cce04c2e66")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "J3")
 					(unit 1)
@@ -4864,7 +4864,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:GND")
+		(lib_id "mainboard-rescue:GND")
 		(at 147.32 129.54 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -4919,7 +4919,7 @@
 			(uuid "a49cc645-5da2-401e-99ca-1a487a66aa51")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR06")
 					(unit 1)
@@ -4987,7 +4987,7 @@
 			(uuid "c7118928-e313-45a8-a496-f56f03c9c242")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R3")
 					(unit 1)
@@ -5051,7 +5051,7 @@
 			(uuid "afdd940d-95a2-4f0b-8e33-1258b930e55c")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR04")
 					(unit 1)
@@ -5060,7 +5060,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:R")
+		(lib_id "mainboard-rescue:R")
 		(at 147.32 88.9 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5117,7 +5117,7 @@
 			(uuid "d9fb03c3-a352-46c1-b2ec-8ebfc5bc2fe3")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R5")
 					(unit 1)
@@ -5181,7 +5181,7 @@
 			(uuid "a0c969cf-78d7-4bae-8938-d81629a52090")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "#PWR03")
 					(unit 1)
@@ -5190,7 +5190,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:SW_Push")
+		(lib_id "mainboard-rescue:SW_Push")
 		(at 170.18 119.38 270)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5248,7 +5248,7 @@
 			(uuid "4e8c7fa9-f91f-441d-b547-4163ec9ca73e")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "SW5")
 					(unit 1)
@@ -5257,7 +5257,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:R")
+		(lib_id "mainboard-rescue:R")
 		(at 170.18 88.9 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5314,7 +5314,7 @@
 			(uuid "d66d244b-5d8a-4c31-9963-226aa6effdf6")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R7")
 					(unit 1)
@@ -5393,7 +5393,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:SW_Push")
+		(lib_id "mainboard-rescue:SW_Push")
 		(at 158.75 119.38 270)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5451,7 +5451,7 @@
 			(uuid "00843d45-2d7f-4a44-90fb-9052b5385aba")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "SW4")
 					(unit 1)
@@ -5519,7 +5519,7 @@
 			(uuid "f09ecf99-eab5-4b69-8d57-1d9a936ca343")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R4")
 					(unit 1)
@@ -5528,7 +5528,7 @@
 		)
 	)
 	(symbol
-		(lib_id "remote-rescue:R")
+		(lib_id "mainboard-rescue:R")
 		(at 158.75 88.9 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -5585,7 +5585,7 @@
 			(uuid "ac875b46-332e-48ce-9f21-09fcd97293ff")
 		)
 		(instances
-			(project "remote"
+			(project "mainboard"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R6")
 					(unit 1)

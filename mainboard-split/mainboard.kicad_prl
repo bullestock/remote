@@ -74,7 +74,7 @@
     "ssh_key": ""
   },
   "meta": {
-    "filename": "remote.kicad_prl",
+    "filename": "mainboard.kicad_prl",
     "version": 3
   },
   "net_inspector_panel": {

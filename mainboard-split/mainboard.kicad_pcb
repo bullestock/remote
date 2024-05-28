@@ -150,7 +150,7 @@
 		)
 		(path "/b8e6f1f8-2a36-4ab8-9fbf-ac7c2a1f8888")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -1.39 7.62)
@@ -384,7 +384,7 @@
 		)
 		(path "/1fa8d0be-fb34-4968-80c6-8be18b8acf78")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -1.39 7.62)
@@ -618,7 +618,7 @@
 		)
 		(path "/31d890e7-f095-4aec-8cb8-6aa580de603c")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -1.39 12.065)
@@ -892,7 +892,7 @@
 		)
 		(path "/3ed1f2e8-c670-4aca-a84c-651fe62f60fe")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -1.39 12.065)
@@ -1166,7 +1166,7 @@
 		)
 		(path "/8cfb34b3-e289-457e-93d1-7fe2525a23b4")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -1.39 7.62)
@@ -1401,7 +1401,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/45ee6a4d-4860-4d80-a2ca-4b4ed63f6a26")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.85 -2.75)
@@ -1878,7 +1878,7 @@
 		(property ki_fp_filters "MountingHole*")
 		(path "/00000000-0000-0000-0000-00005e42244b")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr exclude_from_pos_files)
 		(fp_circle
 			(center 0 0)
@@ -1988,7 +1988,7 @@
 		(property ki_fp_filters "MountingHole*")
 		(path "/00000000-0000-0000-0000-00005e421cf4")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr exclude_from_pos_files)
 		(fp_circle
 			(center 0 0)
@@ -2098,7 +2098,7 @@
 		(property ki_fp_filters "MountingHole*")
 		(path "/00000000-0000-0000-0000-00005e4229b7")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr exclude_from_pos_files)
 		(fp_circle
 			(center 0 0)
@@ -2208,7 +2208,7 @@
 		(property ki_fp_filters "MountingHole*")
 		(path "/00000000-0000-0000-0000-00005e422f37")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr exclude_from_pos_files)
 		(fp_circle
 			(center 0 0)
@@ -2317,7 +2317,7 @@
 		)
 		(path "/00000000-0000-0000-0000-00005967eb86")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start 1.39 1.27)
@@ -2617,7 +2617,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/00000000-0000-0000-0000-00005e3ec8b6")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.85 -2.75)
@@ -3072,7 +3072,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/4e2f0e33-8299-4a7c-b3fc-5b3ffaf02de5")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.56 3.51)
@@ -3538,7 +3538,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/aed658a0-ec95-456a-bf88-86882978951c")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.85 -2.75)
@@ -3993,7 +3993,7 @@
 		(property ki_fp_filters "C_*")
 		(path "/4e8fe012-a2c6-412b-ad35-6eb6ba2a9b8d")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start -0.162779 -0.51)
@@ -4203,7 +4203,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/1709963a-f267-4a25-8fb2-bc943ca8679e")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.85 -2.75)
@@ -4658,7 +4658,7 @@
 		(property ki_fp_filters "Connector*:*_1x??_*")
 		(path "/00000000-0000-0000-0000-00005e3f203b")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr through_hole)
 		(fp_line
 			(start -2.85 -2.75)
@@ -5118,7 +5118,7 @@
 		(property ki_fp_filters "R_* R_*")
 		(path "/a7feca21-a848-4b1c-a81c-5ee8988ac4a4")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.162779 -0.51)
@@ -5334,7 +5334,7 @@
 		(property ki_fp_filters "R_* R_*")
 		(path "/dd55ffff-2c13-4732-9b51-f8aadf4b5355")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.162779 0.51)
@@ -5550,7 +5550,7 @@
 		(property ki_fp_filters "R_* R_*")
 		(path "/7302583d-bf71-4e71-a5d0-ec531f070b04")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.162779 0.51)
@@ -5766,7 +5766,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/bd5dbc93-f008-40f8-84a1-046b518e37f3")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.162779 -0.51)
@@ -5982,7 +5982,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/5f7bba5c-3fb4-4b84-9c2c-68756366b629")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.162779 -0.51)
@@ -6198,7 +6198,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/4e22c558-b718-4c2d-b3bb-2af7537e03da")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.162779 0.51)
@@ -6414,7 +6414,7 @@
 		(property ki_fp_filters "R_*")
 		(path "/44ba2c12-a47e-4816-832d-485b9ab4b12a")
 		(sheetname "Root")
-		(sheetfile "remote.kicad_sch")
+		(sheetfile "mainboard.kicad_sch")
 		(attr smd)
 		(fp_line
 			(start 0.162779 0.51)
