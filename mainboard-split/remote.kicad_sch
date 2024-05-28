@@ -2329,6 +2329,12 @@
 		(uuid "7eecd0d8-5933-45a3-a786-e5956497bd08")
 	)
 	(junction
+		(at 53.34 31.75)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "81a4ad52-9250-44a1-ad66-8dfbc1504ec7")
+	)
+	(junction
 		(at 36.83 72.39)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2377,6 +2383,12 @@
 		(uuid "a4cb2b4e-f04e-4ba0-aae8-953707edf004")
 	)
 	(junction
+		(at 50.8 34.29)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "be384237-9ea9-4a11-9da0-09a1fff6a867")
+	)
+	(junction
 		(at 49.53 72.39)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2387,6 +2399,18 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "cf71b26c-7da1-4406-a644-78b4ab0b617e")
+	)
+	(junction
+		(at 43.18 34.29)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "eb024f3a-c146-4e78-a848-2b338e2df8fa")
+	)
+	(junction
+		(at 43.18 31.75)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "f07c3007-c8f4-4081-bf08-e6bf1e5619f4")
 	)
 	(junction
 		(at 158.75 127)
@@ -2656,6 +2680,16 @@
 	)
 	(wire
 		(pts
+			(xy 50.8 43.18) (xy 50.8 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "52bc7829-c38b-49bb-8776-b956fc9df82b")
+	)
+	(wire
+		(pts
 			(xy 24.13 125.73) (xy 24.13 121.92)
 		)
 		(stroke
@@ -2693,6 +2727,16 @@
 			(type default)
 		)
 		(uuid "6082892d-862c-460b-b6f9-a5368fd04cae")
+	)
+	(wire
+		(pts
+			(xy 55.88 40.64) (xy 53.34 40.64)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "65b1ccc5-f499-48bf-8cdd-60e806de6e72")
 	)
 	(wire
 		(pts
@@ -2836,6 +2880,16 @@
 	)
 	(wire
 		(pts
+			(xy 53.34 31.75) (xy 55.88 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "9efb1194-3958-473d-94f8-d2f2951dc42f")
+	)
+	(wire
+		(pts
 			(xy 36.83 82.55) (xy 36.83 83.82)
 		)
 		(stroke
@@ -2843,6 +2897,16 @@
 			(type default)
 		)
 		(uuid "a047cfad-ae80-4f02-b313-37445bfbda81")
+	)
+	(wire
+		(pts
+			(xy 50.8 34.29) (xy 55.88 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a25b2b5c-e06d-4954-bb7b-b70f8b7bfe83")
 	)
 	(wire
 		(pts
@@ -2863,6 +2927,16 @@
 			(type default)
 		)
 		(uuid "b55d3858-489b-44fb-8048-d242cf2f2c9c")
+	)
+	(wire
+		(pts
+			(xy 43.18 34.29) (xy 50.8 34.29)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b69bd28c-e94a-404e-b8d0-2fc5f1c8b39c")
 	)
 	(wire
 		(pts
@@ -2956,6 +3030,16 @@
 	)
 	(wire
 		(pts
+			(xy 43.18 31.75) (xy 53.34 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d45c82f3-131d-489d-a094-625fc0e8d804")
+	)
+	(wire
+		(pts
 			(xy 123.825 66.675) (xy 123.825 60.325)
 		)
 		(stroke
@@ -2973,6 +3057,16 @@
 			(type default)
 		)
 		(uuid "df4d480a-932e-46a7-8cb5-325028506c26")
+	)
+	(wire
+		(pts
+			(xy 55.88 43.18) (xy 50.8 43.18)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "df7ad807-2ae3-46d6-b8ef-8199f2fd460d")
 	)
 	(wire
 		(pts
@@ -3033,6 +3127,16 @@
 			(type default)
 		)
 		(uuid "e963b64a-8b2e-438b-8267-26b5fd08ecf6")
+	)
+	(wire
+		(pts
+			(xy 53.34 40.64) (xy 53.34 31.75)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "eb0c482b-2b02-414b-9965-30a014156150")
 	)
 	(wire
 		(pts
@@ -3704,7 +3808,7 @@
 				)
 			)
 		)
-		(property "Value" "Conn_01x02"
+		(property "Value" "3V3 IN"
 			(at 31.2928 28.5496 0)
 			(effects
 				(font
@@ -4064,6 +4168,76 @@
 			(project "remote"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "H4")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 60.96 31.75 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "1709963a-f267-4a25-8fb2-bc943ca8679e")
+		(property "Reference" "J5"
+			(at 63.5 31.7499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "3V3 OUT"
+			(at 63.5 34.2899 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical"
+			(at 60.96 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 60.96 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 60.96 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "e7b7fdf0-47f8-4fd0-8649-cc0c6d9eeb42")
+		)
+		(pin "1"
+			(uuid "da7a4468-af7c-4f17-9433-64e766ed7c0e")
+		)
+		(instances
+			(project ""
+				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
+					(reference "J5")
 					(unit 1)
 				)
 			)
@@ -5143,6 +5317,76 @@
 			(project "remote"
 				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
 					(reference "R7")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Connector_Generic:Conn_01x02")
+		(at 60.96 40.64 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "aed658a0-ec95-456a-bf88-86882978951c")
+		(property "Reference" "J6"
+			(at 63.5 40.6399 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "STICK POWER"
+			(at 63.5 43.1799 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Connector_JST:JST_XH_B02B-XH-A_1x02_P2.50mm_Vertical"
+			(at 60.96 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 60.96 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)"
+			(at 60.96 40.64 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "2"
+			(uuid "848b1b0b-2639-4b8d-a012-1b5e3cfae30c")
+		)
+		(pin "1"
+			(uuid "8d01f504-b76c-404a-b6d6-f9bf8649f950")
+		)
+		(instances
+			(project ""
+				(path "/1165cfa6-851c-4b44-8eb4-6a1ddaec09fb"
+					(reference "J6")
 					(unit 1)
 				)
 			)
