@@ -20,9 +20,9 @@ constexpr const auto LEFT_X_CHANNEL = 0;
 constexpr const auto LEFT_Y_CHANNEL = 1;
 constexpr const auto RIGHT_X_CHANNEL = 2;
 constexpr const auto RIGHT_Y_CHANNEL = 3;
-constexpr const auto POT1_CHANNEL = 4;
-constexpr const auto POT2_CHANNEL = 5;
-constexpr const auto BATTERY_CHANNEL = 6;
+constexpr const auto POT1_CHANNEL = 2;
+constexpr const auto POT2_CHANNEL = 6;
+constexpr const auto BATTERY_CHANNEL = 3;
 
 constexpr const auto DISPLAY_I2C_ADDRESS = 0x3C;
 constexpr const auto ADC_I2C_ADDRESS = 0x48;

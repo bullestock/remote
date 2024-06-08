@@ -7,6 +7,9 @@
 		(legacy_teardrops no)
 	)
 	(paper "A3")
+	(title_block
+		(comment 4 "AISLER Project ID: HQUNTAEP")
+	)
 	(layers
 		(0 "F.Cu" signal)
 		(31 "B.Cu" signal)
@@ -31,7 +34,6 @@
 	)
 	(setup
 		(pad_to_mask_clearance 0.051)
-		(solder_mask_min_width 0.25)
 		(allow_soldermask_bridges_in_footprints no)
 		(pcbplotparams
 			(layerselection 0x00010fc_ffffffff)
@@ -3965,18 +3967,20 @@
 				)
 			)
 		)
-		(pad "" np_thru_hole rect
+		(pad "" thru_hole rect
 			(at -6.8 -2.54 180)
 			(size 5 3)
 			(drill oval 2 0.5)
 			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
 			(uuid "24c80992-c11c-4cd7-8569-32441f0f93d2")
 		)
-		(pad "" np_thru_hole rect
+		(pad "" thru_hole rect
 			(at -6.8 7.62 180)
 			(size 5 3)
 			(drill oval 2 0.5)
 			(layers "*.Cu" "*.Mask")
+			(remove_unused_layers no)
 			(uuid "8f4d877e-8c38-46d4-ba7e-48f27252916d")
 		)
 		(pad "1" thru_hole rect
