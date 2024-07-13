@@ -47,7 +47,18 @@ static int test_adc(int argc, char** argv)
     for (int n = 0; n < 200; ++n)
     {
         vTaskDelay(50/portTICK_PERIOD_MS);
-        printf("ADC channel %d: %d\n", chan, read_adc(chan));
+        if (chan < 0)
+        {
+            for (int i = 0; i < 7; ++i)
+            {
+                for (int j = -1; j > chan; --j)
+                    read_adc(i);
+                printf("%04d ", read_adc(i));
+            }
+            printf("\n");
+        }
+        else
+            printf("ADC channel %d: %d\n", chan, read_adc(chan));
     }
     
     return 0;
@@ -130,7 +141,7 @@ static int test_switches(int, char**)
 {
     printf("Running switch test\n");
 
-    for (int n = 0; n < 10; ++n)
+    for (int n = 0; n < 25; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
         ForwardAirFrame frame;
@@ -214,7 +225,7 @@ void run_console(Display& display,
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&reboot_cmd));
     
-    test_adc_args.channel = arg_int1(NULL, NULL, "<channel>", "Channel");
+    test_adc_args.channel = arg_int1(NULL, NULL, "<channel>", "Channel (-1 for all)");
     test_adc_args.end = arg_end(2);
     const esp_console_cmd_t test_adc_cmd = {
         .command = "adc",
