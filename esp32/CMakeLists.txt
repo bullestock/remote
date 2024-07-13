@@ -9,4 +9,5 @@ set(EXTRA_COMPONENT_DIRS
     ./components/ssd1306/esp-idf-ssd1306/components/ssd1306/)
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
+add_compile_options(-Wno-missing-field-initializers)
 project(controller)
