@@ -2,10 +2,15 @@ from cadquery import exporters
 import copy, math
 
 # Overall height
-oah = 27
-hole_h = 50
-pcb_z = 10
+oah = 5 # 27
+# Shell thickness
 th = 3
+# Height of standoffs for mainboard
+mainboard_standoff_h = 5
+controller_standoff_h = 5
+standoff_d = 8
+insert_d = 3.5
+insert_l = 5
 
 controller_standoffs = [
     (266, 99),
@@ -28,6 +33,13 @@ mainboard_standoffs = [
     (5, 37),
     (20, 0),
 ]
+mainboard_offset = (70, 80)
+mainboard_standoffs_l = []
+for p in mainboard_standoffs:
+    mainboard_standoffs_l.append((p[0] - mainboard_offset[0], p[1] - mainboard_offset[1]))
+mainboard_standoffs_r = []
+for p in mainboard_standoffs:
+    mainboard_standoffs_r.append((-p[0] + mainboard_offset[0], p[1] - mainboard_offset[1]))
 
 def sign(x):
     return -1 if x < 0 else 1
@@ -82,14 +94,38 @@ result = outer.cut(inner)
 
 result = (result.faces("<Z").workplane(-th).
           pushPoints(controller_standoffs).
-          circle(3).
-          extrude(-5)
+          circle(standoff_d/2).
+          extrude(-controller_standoff_h)
           )
 
 result = (result.faces("<Z").workplane(-th).
           pushPoints(controller_standoffs).
-          circle(3/2).
-          cutBlind(-5)
+          circle(insert_d/2).
+          cutBlind(-insert_l)
+          )
+
+result = (result.faces("<Z").workplane(-th).
+          pushPoints(mainboard_standoffs_l).
+          circle(standoff_d/2).
+          extrude(-mainboard_standoff_h)
+          )
+
+result = (result.faces("<Z").workplane(-th).
+          pushPoints(mainboard_standoffs_l).
+          circle(insert_d/2).
+          cutBlind(-insert_l)
+          )
+
+result = (result.faces("<Z").workplane(-th).
+          pushPoints(mainboard_standoffs_r).
+          circle(standoff_d/2).
+          extrude(-mainboard_standoff_h)
+          )
+
+result = (result.faces("<Z").workplane(-th).
+          pushPoints(mainboard_standoffs_r).
+          circle(insert_d/2).
+          cutBlind(-insert_l)
           )
 
 show_object(result)
