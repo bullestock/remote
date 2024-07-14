@@ -7,6 +7,28 @@ hole_h = 50
 pcb_z = 10
 th = 3
 
+controller_standoffs = [
+    (266, 99),
+    (266, 146.812),
+    (326, 99),
+    (326, 140.97),
+]
+controller_offset = (
+    (controller_standoffs[0][0] + controller_standoffs[2][0])/2,
+    (controller_standoffs[0][1] + controller_standoffs[1][1])/2 + 75
+)
+controller_standoffs_new = []
+for p in controller_standoffs:
+    controller_standoffs_new.append((p[0] - controller_offset[0], p[1] - controller_offset[1]))
+controller_standoffs = controller_standoffs_new
+
+mainboard_standoffs = [
+    (20, 25),
+    (0, 60),
+    (5, 37),
+    (20, 0),
+]
+
 def sign(x):
     return -1 if x < 0 else 1
 
@@ -57,5 +79,17 @@ inner_spline = cq.Workplane("XY").workplane(th).spline(inner_points).close()
 inner = inner_spline.extrude(oah)
 
 result = outer.cut(inner)
+
+result = (result.faces("<Z").workplane(-th).
+          pushPoints(controller_standoffs).
+          circle(3).
+          extrude(-5)
+          )
+
+result = (result.faces("<Z").workplane(-th).
+          pushPoints(controller_standoffs).
+          circle(3/2).
+          cutBlind(-5)
+          )
 
 show_object(result)
