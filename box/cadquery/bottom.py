@@ -2,7 +2,7 @@ from cadquery import exporters
 import copy, math
 
 # Overall height
-oah = 5 # 27
+oah = 33.5
 # Shell thickness
 th = 3
 # Height of standoffs for mainboard
@@ -20,7 +20,7 @@ controller_standoffs = [
 ]
 controller_offset = (
     (controller_standoffs[0][0] + controller_standoffs[2][0])/2,
-    (controller_standoffs[0][1] + controller_standoffs[1][1])/2 + 75
+    (controller_standoffs[0][1] + controller_standoffs[1][1])/2 + 69
 )
 controller_standoffs_new = []
 for p in controller_standoffs:
@@ -33,7 +33,7 @@ mainboard_standoffs = [
     (5, 37),
     (20, 0),
 ]
-mainboard_offset = (70, 80)
+mainboard_offset = (76.3675, 85)
 mainboard_standoffs_l = []
 for p in mainboard_standoffs:
     mainboard_standoffs_l.append((p[0] - mainboard_offset[0], p[1] - mainboard_offset[1]))
@@ -90,7 +90,10 @@ inner_spline = cq.Workplane("XY").workplane(th).spline(inner_points).close()
 
 inner = inner_spline.extrude(oah)
 
+# Make shell
 result = outer.cut(inner)
+
+# Controller standoffs
 
 result = (result.faces("<Z").workplane(-th).
           pushPoints(controller_standoffs).
@@ -104,6 +107,8 @@ result = (result.faces("<Z").workplane(-th).
           cutBlind(-insert_l)
           )
 
+# Mainboard standoffs, L
+
 result = (result.faces("<Z").workplane(-th).
           pushPoints(mainboard_standoffs_l).
           circle(standoff_d/2).
@@ -116,6 +121,8 @@ result = (result.faces("<Z").workplane(-th).
           cutBlind(-insert_l)
           )
 
+# Mainboard standoffs, R
+
 result = (result.faces("<Z").workplane(-th).
           pushPoints(mainboard_standoffs_r).
           circle(standoff_d/2).
@@ -127,5 +134,17 @@ result = (result.faces("<Z").workplane(-th).
           circle(insert_d/2).
           cutBlind(-insert_l)
           )
+
+# Antenna cutout
+ant_d = 10.5
+ant_d2 = 2*ant_d
+result = (result.
+          faces("<Z").workplane().
+          transformed(rotate=(90, 0, 90), offset=(30 - 4.3, -100, -oah + ant_d - ant_d2/2)).
+          slot2D(ant_d2, ant_d).
+          cutBlind(10)
+          )
+
+# Charging port
 
 show_object(result)
