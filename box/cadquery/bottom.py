@@ -43,6 +43,27 @@ for p in mainboard_standoffs:
 def sign(x):
     return -1 if x < 0 else 1
 
+# Screwpost for corners of a box, with heat insert nut
+def square_screwpost_nut(d, h, r):
+    return (cq.Workplane()
+            .box(d, d, h)
+            .edges("|Z").fillet(r)
+            .faces(">Z")
+            # hole for insert
+            .circle(insert_r).cutBlind(-insert_l)
+            # hole for screw end
+            .faces(">Z")
+            .circle(insert_sr+.25).cutBlind(-3*insert_l)
+            )
+
+# Screwpost for corners of a box
+def square_screwpost_body(x, y):
+    return (cq.Workplane()
+            .transformed(offset=(x, y, th))
+            .box(10, 10, oah - th, centered=(True, True, False))
+            .edges("|Z").fillet(4)
+            )
+
 def make_inset(p):
     x, y = p[0], p[1]
     length = math.sqrt(x*x + y*y)
@@ -135,6 +156,33 @@ result = (result.workplaneFromTagged("main_s").workplane(-mainboard_standoff_h).
           cutBlind(insert_l)
           )
 
+# Screwposts
+
+screwpost_coords = [
+    (0, 101),
+    (71, 101),
+    (-71, 101),
+    (95, 20),
+    (-95, 20),
+    (40, -28),
+    (-40, -28),
+]
+
+for c in screwpost_coords:
+    result = result + square_screwpost_body(c[0], c[1])
+
+result = (result.faces(">Z").workplane().
+          pushPoints(screwpost_coords).
+          circle(3.5/2).
+          cutThruAll()
+          )
+
+result = (result.faces(">Z").workplane(-oah).
+          pushPoints(screwpost_coords).
+          circle(6.5/2).
+          cutBlind(3)
+          )
+
 # Antenna cutout
 ant_d = 10.5
 ant_d2 = 2*ant_d
@@ -155,27 +203,5 @@ result = (result.
           slot2D(chp_d2, chp_d1).
           cutBlind(10)
           )
-
-# Charger
-
-charger_d1 = 17.5
-charger_d2 = 27.8
-charger_d3 = 3
-charger_d4 = 1.5
-charger_x = 0
-charger_y = 55
-charger_z = 2
-
-result = (result.
-          faces("<Z").workplane(centerOption='CenterOfMass').
-          transformed(offset=(charger_x, charger_y, -th-charger_z)).
-          tag("charger").
-          box(charger_d1 + 2*charger_d4, charger_d2 + 2*charger_d4, charger_z + charger_d3)
-          )
-
-charger_inner = (cq.Workplane().
-          box(charger_d1, charger_d2, charger_d3, centered=(True, True, False)))
-
-result = result - (charger_inner.translate((charger_x, -charger_y + charger_d2 + 9, th + charger_z)))
 
 show_object(result)
