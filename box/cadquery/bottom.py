@@ -1,4 +1,3 @@
-from cadquery import exporters
 import copy, math
 
 # Overall height
@@ -6,7 +5,7 @@ oah = 33.5
 # Shell thickness
 th = 3
 # Height of standoffs for mainboard
-mainboard_standoff_h = 5
+mainboard_standoff_h = 11.6
 controller_standoff_h = 5
 standoff_d = 8
 insert_d = 3.5
@@ -33,7 +32,7 @@ mainboard_standoffs = [
     (5, 37),
     (20, 0),
 ]
-mainboard_offset = (76.3675, 85)
+mainboard_offset = (76.3675, 85 + 6.5)
 mainboard_standoffs_l = []
 for p in mainboard_standoffs:
     mainboard_standoffs_l.append((p[0] - mainboard_offset[0], p[1] - mainboard_offset[1]))
@@ -110,15 +109,16 @@ result = (result.faces("<Z").workplane(-th).
 # Mainboard standoffs, L
 
 result = (result.faces("<Z").workplane(-th).
+          tag("main_s").
           pushPoints(mainboard_standoffs_l).
           circle(standoff_d/2).
           extrude(-mainboard_standoff_h)
           )
 
-result = (result.faces("<Z").workplane(-th).
+result = (result.workplaneFromTagged("main_s").workplane(-mainboard_standoff_h).
           pushPoints(mainboard_standoffs_l).
           circle(insert_d/2).
-          cutBlind(-insert_l)
+          cutBlind(insert_l)
           )
 
 # Mainboard standoffs, R
@@ -129,10 +129,10 @@ result = (result.faces("<Z").workplane(-th).
           extrude(-mainboard_standoff_h)
           )
 
-result = (result.faces("<Z").workplane(-th).
+result = (result.workplaneFromTagged("main_s").workplane(-mainboard_standoff_h).
           pushPoints(mainboard_standoffs_r).
           circle(insert_d/2).
-          cutBlind(-insert_l)
+          cutBlind(insert_l)
           )
 
 # Antenna cutout
@@ -155,5 +155,27 @@ result = (result.
           slot2D(chp_d2, chp_d1).
           cutBlind(10)
           )
+
+# Charger
+
+charger_d1 = 17.5
+charger_d2 = 27.8
+charger_d3 = 3
+charger_d4 = 1.5
+charger_x = 0
+charger_y = 55
+charger_z = 2
+
+result = (result.
+          faces("<Z").workplane(centerOption='CenterOfMass').
+          transformed(offset=(charger_x, charger_y, -th-charger_z)).
+          tag("charger").
+          box(charger_d1 + 2*charger_d4, charger_d2 + 2*charger_d4, charger_z + charger_d3)
+          )
+
+charger_inner = (cq.Workplane().
+          box(charger_d1, charger_d2, charger_d3, centered=(True, True, False)))
+
+result = result - (charger_inner.translate((charger_x, -charger_y + charger_d2 + 9, th + charger_z)))
 
 show_object(result)
