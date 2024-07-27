@@ -11,6 +11,8 @@ standoff_d = 8
 insert_d = 3.5
 insert_l = 5
 
+lid_screwpost_h = 5
+
 controller_standoffs = [
     (266, 99),
     (266, 146.812),
@@ -43,24 +45,10 @@ for p in mainboard_standoffs:
 def sign(x):
     return -1 if x < 0 else 1
 
-# Screwpost for corners of a box, with heat insert nut
-def square_screwpost_nut(d, h, r):
-    return (cq.Workplane()
-            .box(d, d, h)
-            .edges("|Z").fillet(r)
-            .faces(">Z")
-            # hole for insert
-            .circle(insert_r).cutBlind(-insert_l)
-            # hole for screw end
-            .faces(">Z")
-            .circle(insert_sr+.25).cutBlind(-3*insert_l)
-            )
-
-# Screwpost for corners of a box
 def square_screwpost_body(x, y):
     return (cq.Workplane()
             .transformed(offset=(x, y, th))
-            .box(10, 10, oah - th, centered=(True, True, False))
+            .box(10, 10, oah - th - lid_screwpost_h, centered=(True, True, False))
             .edges("|Z").fillet(4)
             )
 
@@ -68,7 +56,7 @@ def make_inset(p):
     x, y = p[0], p[1]
     length = math.sqrt(x*x + y*y)
     if x == 0:
-        angle = math.pi/2 # if y > 0 else -math.pi/2
+        angle = math.pi/2
     else:
         angle = math.atan(abs(y/x))
     length -= th
