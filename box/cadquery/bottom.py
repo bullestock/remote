@@ -8,7 +8,7 @@ th = 3
 mainboard_standoff_h = 11.6
 controller_standoff_h = 5
 standoff_d = 8
-insert_d = 3.5
+insert_d = 3.5+0.25
 insert_l = 5
 
 lid_screwpost_h = 5
@@ -34,7 +34,7 @@ mainboard_standoffs = [
     (5, 37),
     (20, 0),
 ]
-mainboard_offset = (76.3675, 85 + 6.5)
+mainboard_offset = (76.3675, 85 + 6.5 - 5)
 mainboard_standoffs_l = []
 for p in mainboard_standoffs:
     mainboard_standoffs_l.append((p[0] - mainboard_offset[0], p[1] - mainboard_offset[1]))
@@ -46,10 +46,11 @@ def sign(x):
     return -1 if x < 0 else 1
 
 def square_screwpost_body(x, y):
+    w = 10
     return (cq.Workplane()
             .transformed(offset=(x, y, th))
-            .box(10, 10, oah - th - lid_screwpost_h, centered=(True, True, False))
-            .edges("|Z").fillet(4)
+            .box(w, w, oah - th - lid_screwpost_h, centered=(True, True, False))
+            .edges("|Z").fillet(w*0.49)
             )
 
 def make_inset(p):
@@ -147,9 +148,10 @@ result = (result.workplaneFromTagged("main_s").workplane(-mainboard_standoff_h).
 # Screwposts
 
 screwpost_coords = [
-    (0, 101),
-    (71, 101),
-    (-71, 101),
+    (38, 101),
+    (-38, 101),
+    (69, 101),
+    (-69, 101),
     (95, 20),
     (-95, 20),
     (40, -28),
