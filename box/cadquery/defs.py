@@ -4,12 +4,12 @@ import copy, math
 def sign(x):
     return -1 if x < 0 else 1
 
-def square_screwpost_body(x, y, th, h, oah):
+def screwpost_body(x, y, h, offset):
     w = 10
     return (cq.Workplane()
-            .transformed(offset=(x, y, th))
-            .box(w, w, oah - th - h, centered=(True, True, False))
-            .edges("|Z").fillet(w*0.49)
+            .transformed(offset=(x, y, offset))
+            .circle(w/2)
+            .extrude(h)
             )
 
 def make_inset(p, th):
@@ -43,3 +43,13 @@ outer_points = copy.copy(points) # break reference
 for i in range(len(points) - 2, 0, -1):
     outer_points.append((-points[i][0], points[i][1]))
 
+screwpost_coords = [
+    (38, 101),
+    (-38, 101),
+    (69, 101),
+    (-69, 101),
+    (95, 20),
+    (-95, 20),
+    (40, -28),
+    (-40, -28),
+]

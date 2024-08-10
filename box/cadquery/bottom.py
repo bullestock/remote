@@ -105,19 +105,8 @@ result = (result.workplaneFromTagged("main_s").workplane(-mainboard_standoff_h).
 
 # Screwposts
 
-screwpost_coords = [
-    (38, 101),
-    (-38, 101),
-    (69, 101),
-    (-69, 101),
-    (95, 20),
-    (-95, 20),
-    (40, -28),
-    (-40, -28),
-]
-
 for c in screwpost_coords:
-    result = result + square_screwpost_body(c[0], c[1], th, lid_screwpost_h, oah)
+    result = result + screwpost_body(c[0], c[1], oah - th - lid_screwpost_h, th)
 
 result = (result.faces(">Z").workplane().
           pushPoints(screwpost_coords).
