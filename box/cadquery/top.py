@@ -112,5 +112,25 @@ result = (result
           .cutThruAll()
           )
 
+# Joystick screw hole
+
+stick_s_d = 2
+sticks_s_c = [ (44.75 + 1, 76.6 + 1),
+               (44.75 + 1, 118.6 + 1),
+               (79.75 + 1, 76.6 + 1),
+               (79.75 + 1, 118.6 + 1),
+              ]
+sticks_s = []
+for c in sticks_s_c:
+    sticks_s.append(((c[0] - ox), -c[1] + oy))
+    sticks_s.append((-(c[0] - ox), -c[1] + oy))
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .pushPoints(sticks_s)
+          .circle(stick_s_d/2)
+          .cutThruAll()
+          )
+
 
 show_object(result)
