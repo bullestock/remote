@@ -4,8 +4,7 @@ import copy, math
 def sign(x):
     return -1 if x < 0 else 1
 
-def screwpost_body(x, y, h, offset):
-    w = 10
+def screwpost_body(x, y, w, h, offset):
     return (cq.Workplane()
             .transformed(offset=(x, y, offset))
             .circle(w/2)

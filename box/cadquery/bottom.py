@@ -106,7 +106,7 @@ result = (result.workplaneFromTagged("main_s").workplane(-mainboard_standoff_h).
 # Screwposts
 
 for c in screwpost_coords:
-    result = result + screwpost_body(c[0], c[1], oah - th - lid_screwpost_h, th)
+    result = result + screwpost_body(c[0], c[1], 10, oah - th - lid_screwpost_h, th)
 
 result = (result.faces(">Z").workplane().
           pushPoints(screwpost_coords).
