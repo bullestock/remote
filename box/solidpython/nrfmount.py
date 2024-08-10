@@ -17,11 +17,15 @@ l1 = 15
 h2 = 3
 l2 = 14
 
+e = 0.001
+
 def block():
     return translate([-w1/2, 0, 0])(cube([w1, l1, h1]) -
-                                    translate([w1/2 - 0, l1/2 - 0, -1])(cylinder(h = 20, d = 2.9)))
+                                    # hole for magnet
+                                    translate([w1/2 - 0, l1/2 - 0, -1])(cylinder(h = 3, d = 10.5)))
 
 def tab():
+    # screw holes for 1 mm screws
     s = hole()(cylinder(h = 5, d = 1))
     d2 = 12
     sw = 8
@@ -37,3 +41,7 @@ def assembly():
 if __name__ == '__main__':
     a = assembly()
     scad_render_to_file(a, file_header='$fn = %s;' % SEGMENTS, include_orig_code=False)
+
+# Local Variables:
+# compile-command: "python nrfmount.py"
+# End:
