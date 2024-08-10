@@ -3,7 +3,7 @@ import cadquery as cq
 res = (cq.Workplane("XY")
        .rarray(1, 5*2.54, 1, 2)
        .rect(2.54*3, 3)
-       .extrude(5)
+       .extrude(1.5)
        .edges(">Z")
        .fillet(0.23)
        .faces(">Z")
