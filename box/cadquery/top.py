@@ -80,5 +80,37 @@ result = (result
           .cutThruAll()
           )
 
+# Pots
+
+pot_d = 7
+pots_c = [ (54.85 + 7/2, 58.75 + 7/2) ]
+pots = []
+for c in pots_c:
+    pots.append(((c[0] - ox), -c[1] + oy))
+    pots.append((-(c[0] - ox), -c[1] + oy))
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .pushPoints(pots)
+          .circle(pot_d/2)
+          .cutThruAll()
+          )
+
+# Joystick large hole
+
+stick_d = 37.5
+sticks_c = [ (44.5 + 37.5/2, 80 + 37.5/2) ]
+sticks = []
+for c in sticks_c:
+    sticks.append(((c[0] - ox), -c[1] + oy))
+    sticks.append((-(c[0] - ox), -c[1] + oy))
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .pushPoints(sticks)
+          .circle(stick_d/2)
+          .cutThruAll()
+          )
+
 
 show_object(result)
