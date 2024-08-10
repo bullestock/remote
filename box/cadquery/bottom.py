@@ -8,8 +8,6 @@ th = 3
 mainboard_standoff_h = 11.6
 controller_standoff_h = 5
 standoff_d = 8
-insert_d = 3.5+0.25
-insert_l = 5
 
 lid_screwpost_h = 5
 

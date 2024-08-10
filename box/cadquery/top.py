@@ -34,16 +34,33 @@ result = outer.cut(inner)
 for c in screwpost_coords:
     result = result + screwpost_body(c[0], c[1], 8, screwpost_h, 0)
 
-result = (result.faces(">Z").workplane().
-          pushPoints(screwpost_coords).
-          circle(3.5/2).
-          cutThruAll()
+result = (result.faces(">Z").workplane()
+          .tag("main_s")
+          .pushPoints(screwpost_coords)
+          .circle(3.5/2)
+          .cutBlind(-insert_l)
           )
 
-result = (result.faces(">Z").workplane(-oah).
-          pushPoints(screwpost_coords).
-          circle(6.5/2).
-          cutBlind(3)
+# Pushbutton holes
+
+pushbutton_d = 14.5
+pushbuttons_c = [ (24.6 + 14.5/2, 40 + 14.5/2),
+                  (18.6 + 14.5/2, 61 + 14.5/2),
+                  (12.6 + 14.5/2, 81 + 14.5/2),
+                ]
+pushbuttons = []
+ox = 205.65/2
+oy = 108
+for c in pushbuttons_c:
+    pushbuttons.append(((c[0] - ox), -c[1] + oy))
+    pushbuttons.append((-(c[0] - ox), -c[1] + oy))
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .pushPoints(pushbuttons)
+          .circle(pushbutton_d/2)
+          .cutThruAll()
           )
+
 
 show_object(result)

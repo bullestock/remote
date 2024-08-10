@@ -1,6 +1,9 @@
 import cadquery as cq
 import copy, math
 
+insert_d = 3.5+0.25
+insert_l = 5
+
 def sign(x):
     return -1 if x < 0 else 1
 
