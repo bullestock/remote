@@ -43,7 +43,7 @@ result = (result.faces(">Z").workplane()
 
 # Pushbutton holes
 
-pushbutton_d = 14.5
+pushbutton_d = 14.75
 pushbuttons_c = [ (24.6 + 14.5/2, 40 + 14.5/2),
                   (18.6 + 14.5/2, 61 + 14.5/2),
                   (12.6 + 14.5/2, 81 + 14.5/2),
@@ -64,7 +64,7 @@ result = (result
 
 # Toggle switch
 
-toggle_d = 6
+toggle_d = 6.5
 toggles_c = [ (33.85 + 3, 18.35 + 3),
               (53.85 + 3, 18.35 + 3),
              ]
@@ -82,7 +82,7 @@ result = (result
 
 # Pots
 
-pot_d = 7
+pot_d = 12
 pots_c = [ (54.85 + 7/2, 58.75 + 7/2) ]
 pots = []
 for c in pots_c:
@@ -98,7 +98,7 @@ result = (result
 
 # Joystick large hole
 
-stick_d = 37.5
+stick_d = 37.75
 sticks_c = [ (44.5 + 37.5/2, 80 + 37.5/2) ]
 sticks = []
 for c in sticks_c:
@@ -114,7 +114,7 @@ result = (result
 
 # Joystick screw hole
 
-stick_s_d = 2
+stick_s_d = 2.5
 sticks_s_c = [ (44.75 + 1, 76.6 + 1),
                (44.75 + 1, 118.6 + 1),
                (79.75 + 1, 76.6 + 1),
@@ -132,5 +132,49 @@ result = (result
           .cutThruAll()
           )
 
+# Joystick rectangular holes
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .transformed(offset=(84.25 + 2.5 - ox, -85 - 29/2 + oy, 0))
+          .rect(5, 29)
+          .cutThruAll()
+          )
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .transformed(offset=(116.35 + 2.5 - ox, -85 - 29/2 + oy, 0))
+          .rect(5, 29)
+          .cutThruAll()
+          )
+
+# Slide switch
+
+stick_y = sticks[0][1]
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .transformed(offset=(0, stick_y, 0))
+          .rect(5, 11.5)
+          .cutThruAll()
+          )
+ss_d = 2
+ssh = 19
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .pushPoints([(0, stick_y - ssh/2), (0, stick_y + ssh/2)])
+          .circle(ss_d/2)
+          .cutThruAll()
+          )
+
+# Display hole
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .transformed(offset=(86 - ox + 16, -16 + oy - 8, 0))
+          .rect(32, 16)
+          .cutThruAll()
+          )
 
 show_object(result)
