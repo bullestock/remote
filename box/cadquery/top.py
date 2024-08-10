@@ -62,5 +62,23 @@ result = (result
           .cutThruAll()
           )
 
+# Toggle switch
+
+toggle_d = 6
+toggles_c = [ (33.85 + 3, 18.35 + 3),
+              (53.85 + 3, 18.35 + 3),
+             ]
+toggles = []
+for c in toggles_c:
+    toggles.append(((c[0] - ox), -c[1] + oy))
+    toggles.append((-(c[0] - ox), -c[1] + oy))
+
+result = (result
+          .workplaneFromTagged("main_s")
+          .pushPoints(toggles)
+          .circle(toggle_d/2)
+          .cutThruAll()
+          )
+
 
 show_object(result)
