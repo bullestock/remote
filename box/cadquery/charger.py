@@ -2,10 +2,7 @@ charger_d1 = 17.5
 charger_d2 = 27.8
 charger_d3 = 3
 charger_d4 = 1.5
-charger_x = 0
-charger_y = 55
 charger_z = 4
-th = 3
 
 result = (cq.Workplane("XY")
           .box(charger_d1 + 2*charger_d4,
