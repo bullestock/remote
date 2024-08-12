@@ -1,7 +1,7 @@
 import cadquery as cq
 import copy, math
 
-insert_d = 3.5+0.25
+insert_d = 3.5+0.5
 insert_l = 5
 
 def sign(x):
