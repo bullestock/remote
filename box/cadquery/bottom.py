@@ -5,7 +5,7 @@ oah = 33.5
 # Shell thickness
 th = 3
 # Height of standoffs for mainboard
-mainboard_standoff_h = 11.6
+mainboard_standoff_h = 11.6 + 2.75
 controller_standoff_h = 5
 standoff_d = 8
 
