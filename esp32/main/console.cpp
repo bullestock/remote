@@ -1,6 +1,7 @@
 #include "console.h"
 #include "defs.h"
 #include "display.h"
+#include "format.h"
 #include "hw.h"
 #include "nvs.h"
 
@@ -68,7 +69,12 @@ static int test_display(int, char**)
 {
     printf("Running display test\n");
 
-    ssd1306_display_text(the_display->device(), 0, "Hello", 5, false);
+    the_display->clear();
+    for (int i = 0; i < 20; ++i)
+    {
+        the_display->add_progress(format("Line %d", i+1));
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+    }
     
     return 0;
 }
@@ -115,7 +121,8 @@ static int test_radio(int, char**)
     ForwardAirFrame frame;
     bool timeout = false;
     const auto send_time = esp_timer_get_time();
-    bool ok = send_frame(*the_radio, send_time, frame, timeout);
+    fill_frame(frame, send_time);
+    bool ok = send_frame(*the_radio, frame, timeout);
 
     if (!ok)
     {

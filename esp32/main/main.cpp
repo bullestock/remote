@@ -1,6 +1,7 @@
 #include "console.h"
 #include "defs.h"
 #include "display.h"
+#include "format.h"
 #include "hw.h"
 #include "radio.h"
 
@@ -62,13 +63,32 @@ void app_main(void)
 
     while (1)
     {
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-
         const auto send_time = esp_timer_get_time();
-        
         ForwardAirFrame frame;
+        fill_frame(frame, send_time);
+
+        const auto my_battery = get_my_battery();
+
+#ifdef LIVE_VIEW
+        display.clear();
+        display.add_progress(format("L %3d %3d",
+                                    frame.left_x, frame.left_y));
+        display.add_progress(format("R %3d %3d",
+                                    frame.right_x, frame.right_y));
+        display.add_progress(format("B %02X T %02X S %d",
+                                    frame.pushbuttons,
+                                    frame.toggles,
+                                    frame.slide));
+        display.add_progress(format("P %02X %02X",
+                                    frame.left_pot, frame.right_pot));
+        display.add_progress(format("B %.2f", my_battery));
+        vTaskDelay(500 / portTICK_PERIOD_MS);
+#else
+        // Normal operation
+        //display.add_progress(format("%d %d", successes, failures));
+        
         bool timeout = false;
-        bool ok = send_frame(nrf24, send_time, frame, timeout);
+        bool ok = send_frame(nrf24, frame, timeout);
         if (ok)
             consecutive_errors = 0;
         else
@@ -106,6 +126,6 @@ void app_main(void)
         }
 
         const auto my_battery = read_adc(BATTERY_CHANNEL);
-        
+#endif        
     }
 }

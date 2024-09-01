@@ -28,21 +28,9 @@ bool init_radio(NRF24_t& dev)
 }
 
 bool send_frame(NRF24_t& dev,
-                int64_t ticks,
                 ForwardAirFrame& frame,
                 bool& timeout)
 {
-    frame.magic = ForwardAirFrame::MAGIC_VALUE;
-    frame.ticks = ticks;
-    frame.left_x = 1023 - read_adc(LEFT_X_CHANNEL);
-    frame.left_y = read_adc(LEFT_Y_CHANNEL);
-    frame.right_x = 1023 - read_adc(RIGHT_X_CHANNEL);
-    frame.right_y = read_adc(RIGHT_Y_CHANNEL);
-    frame.left_pot = read_adc(POT1_CHANNEL);
-    frame.right_pot = read_adc(POT2_CHANNEL);
-    read_switches(frame);
-    set_crc(frame);
-    
 #if 1
     printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X\n",
            frame.left_x, frame.left_y, frame.right_x, frame.right_y,

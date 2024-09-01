@@ -84,7 +84,10 @@ int read_adc(int channel)
     uint8_t value[2];
     auto res = i2c_master_transmit_receive(adc_handle, &data, 1, value, 2, 100);
     ESP_ERROR_CHECK(res);
-    
+#if 0
+    printf("chan %d data %02X value %02X %02X\n",
+           channel, data, value[0], value[1]);
+#endif
     return value[0] * 256 + value[1];
 }
 
@@ -125,6 +128,50 @@ void read_switches(ForwardAirFrame& frame)
     frame.toggles = (tmp & 0x7F80) >> 7;
 
     frame.slide = 0;
+}
+
+void fill_frame(ForwardAirFrame& frame,
+                int64_t ticks)
+{
+    frame.magic = ForwardAirFrame::MAGIC_VALUE;
+    frame.ticks = ticks;
+    frame.left_x = 1023 - read_adc(LEFT_X_CHANNEL);
+    frame.left_y = read_adc(LEFT_Y_CHANNEL);
+    frame.right_x = 1023 - read_adc(RIGHT_X_CHANNEL);
+    frame.right_y = read_adc(RIGHT_Y_CHANNEL);
+    frame.left_pot = read_adc(POT1_CHANNEL);
+    frame.right_pot = read_adc(POT2_CHANNEL);
+    read_switches(frame);
+    set_crc(frame);
+}
+
+float get_my_battery()
+{
+    const int N = 10;
+    static int samples[N];
+    static int nof_samples = 0;
+
+    // Initial fill
+    while (nof_samples < N)
+        samples[nof_samples++] = read_adc(BATTERY_CHANNEL);
+
+    // Shift
+    for (int i = 1; i < N; ++i)
+        samples[i - 1] = samples[i];
+
+    // Add new sample
+    samples[N - 1] = read_adc(BATTERY_CHANNEL);
+
+    // Compute average
+    int64_t my_battery = 0;
+    for (int i = 1; i < N; ++i)
+        my_battery += samples[i];
+
+    // Full scale is 2^12
+    // Resistors divide by 2
+    // Reference voltage is 2.5 V
+    const auto fudge = 3.54/3.18;
+    return my_battery/(N * 4096.0/2.0/2.5) * fudge;
 }
 
 // Local Variables:

@@ -14,6 +14,12 @@ public:
 
     SSD1306_t* device();
 
+    /// Add progress message (used during boot).
+    void add_progress(const std::string& status);
+
 private:
     SSD1306_t& display;
+    // Used by add_progress()
+    int row = 0;
+    std::vector<std::string> lines;
 };
