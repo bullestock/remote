@@ -1,5 +1,5 @@
 (kicad_sch
-	(version 20240417)
+	(version 20240812)
 	(generator "eeschema")
 	(generator_version "8.99")
 	(uuid "0776e334-fbf5-4a46-a47e-c7e0521e2a6b")
@@ -106,6 +106,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "Connector_Generic:Conn_01x03"
 			(pin_names
@@ -274,6 +275,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "Connector_Generic:Conn_01x04"
 			(pin_names
@@ -471,6 +473,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "Device:R"
 			(pin_numbers hide)
@@ -592,6 +595,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "Mechanical:MountingHole"
 			(pin_names
@@ -674,6 +678,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "power:+3V3"
 			(power)
@@ -794,6 +799,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "power:+BATT"
 			(power)
@@ -914,6 +920,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "power:GND"
 			(power)
@@ -1010,6 +1017,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "power:PWR_FLAG"
 			(power)
@@ -1106,6 +1114,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "remote-rescue:C"
 			(pin_numbers hide)
@@ -1233,6 +1242,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 		(symbol "remote-rescue:GND"
 			(power)
@@ -1320,6 +1330,7 @@
 					)
 				)
 			)
+			(embedded_fonts no)
 		)
 	)
 	(junction
@@ -3445,6 +3456,10 @@
 	(sheet
 		(at 144.78 24.765)
 		(size 21.59 16.51)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(stroke
 			(width 0)
@@ -3483,6 +3498,10 @@
 	(sheet
 		(at 182.88 25.4)
 		(size 22.86 15.24)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
 		(fields_autoplaced yes)
 		(stroke
 			(width 0.1524)
@@ -3523,4 +3542,5 @@
 			(page "1")
 		)
 	)
+	(embedded_fonts no)
 )
