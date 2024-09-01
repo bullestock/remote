@@ -28,7 +28,8 @@ void app_main(void)
     else
     {
         printf("nRF24 init failed!\n");
-        // TODO: Write to display
+        display.add_progress("ERROR: No radio");
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
         debug = true;
     }
 

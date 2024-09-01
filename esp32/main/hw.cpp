@@ -119,15 +119,17 @@ void read_switches(ForwardAirFrame& frame)
     //
     // 1111110000000000
     // 5432109876543210
-    //  T3T4T1T2PPP PPP
-    //          654 321
+    // ST3T4T1T2PPP PPP
+    // 0        654 321
 
+    //printf("RAW %04X\n", tmp);
+    
     const uint8_t pushbuttons = tmp & 0x77;
     frame.pushbuttons = ((pushbuttons & 0x70) >> 1) + (pushbuttons & 0x07);
 
     frame.toggles = (tmp & 0x7F80) >> 7;
 
-    frame.slide = 0;
+    frame.slide = (tmp & 0x0008) >> 3;
 }
 
 void fill_frame(ForwardAirFrame& frame,
