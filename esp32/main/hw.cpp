@@ -133,12 +133,21 @@ void read_switches(ForwardAirFrame& frame)
     frame.slide = (tmp & 0x0008) >> 3;
 }
 
+static int clamped(int value)
+{
+    if (value < 0)
+        return 0;
+    if (value > 4095)
+        return 4095;
+    return value;
+}
+
 static int calibrated(int stick, int value)
 {
     const auto cal = get_stick_calibration(stick);
     if (cal[1] == 0)
-        return value;
-    return (value - cal[0]) * 4095 / (cal[1] - cal[0]);
+        return clamped(value);
+    return clamped((value - cal[0]) * 4095 / (cal[1] - cal[0]));
 }
 
 void fill_frame(ForwardAirFrame& frame,
