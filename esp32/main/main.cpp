@@ -3,6 +3,7 @@
 #include "display.h"
 #include "format.h"
 #include "hw.h"
+#include "nvs.h"
 #include "radio.h"
 
 #include <string.h>
@@ -33,9 +34,12 @@ void app_main(void)
         debug = true;
     }
 
+    init_nvs();
+    
     if (!debug)
     {
         printf("\n\nPress a key to enter console\n");
+        display.add_progress("Console wait");
         for (int i = 0; i < 20; ++i)
         {
             if (getchar() != EOF)
@@ -125,8 +129,6 @@ void app_main(void)
                 show_error = true;
             }
         }
-
-        const auto my_battery = read_adc(BATTERY_CHANNEL);
 #endif        
     }
 }

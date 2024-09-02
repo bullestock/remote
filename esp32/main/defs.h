@@ -4,6 +4,9 @@
 
 constexpr const char* VERSION = "0.0.1";
 
+// NVS keys
+constexpr const char* STICK_KEY = "stk";
+
 // Pin definitions
 constexpr const auto PIN_MOSI = (gpio_num_t) 2;
 constexpr const auto PIN_SCK = (gpio_num_t) 4;

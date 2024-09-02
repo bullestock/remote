@@ -79,35 +79,36 @@ static int test_display(int, char**)
     return 0;
 }
 
-#if 0
-
-static int test_i2c(int, char**)
+struct
 {
-    printf("Scanning for I2C devices\n");
-    printf("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n");
-    printf("00:         ");
-    for (int i = 3; i < 0x78; ++i)
-    {
-        i2c_cmd_handle_t cmd = i2c_cmd_link_create();
-        i2c_master_start(cmd);
-        i2c_master_write_byte(cmd, (i << 1) | I2C_MASTER_WRITE, 1 /* expect ack */);
-        i2c_master_stop(cmd);
+    struct arg_int* stick;
+    struct arg_int* min_val;
+    struct arg_int* max_val;
+    struct arg_end* end;
+} calibrate_args;
 
-        const auto espRc = i2c_master_cmd_begin(I2C_NUM_0, cmd, 10/portTICK_PERIOD_MS);
-        if (i%16 == 0)
-            printf("\n%.2x:", i);
-        if (espRc == 0)
-            printf(" %.2x", i);
-        else
-            printf(" --");
-        i2c_cmd_link_delete(cmd);
+static int calibrate(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &calibrate_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, calibrate_args.end, argv[0]);
+        return 1;
     }
-    printf("\n");
-    
+
+    if (calibrate_args.stick->ival[0] < 0 || calibrate_args.stick->ival[0] > 3 ||
+        calibrate_args.min_val->ival[0] < 0 || calibrate_args.min_val->ival[0] > 4096 ||
+        calibrate_args.max_val->ival[0] < 0 || calibrate_args.max_val->ival[0] > 4096)
+    {
+        printf("Invalid arguments\n");
+        return 1;
+    }
+
+    set_stick_calibration(calibrate_args.stick->ival[0],
+                          calibrate_args.min_val->ival[0],
+                          calibrate_args.max_val->ival[0]);    
     return 0;
 }
-
-#endif
 
 static const char* yes_no(bool b)
 {
@@ -252,16 +253,18 @@ void run_console(Display& display,
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_display_cmd));
 
-#if 0
-    const esp_console_cmd_t test_i2c_cmd = {
-        .command = "i2c",
-        .help = "Test I2C",
+    calibrate_args.stick = arg_int1(NULL, NULL, "<stick>", "Stick (0: LX, 1: LY, 2: RX, 3: RY)");
+    calibrate_args.min_val = arg_int1(NULL, NULL, "<min>", "Minimum value (0-4095)");
+    calibrate_args.max_val = arg_int1(NULL, NULL, "<min>", "Minimum value (0-4095)");
+    calibrate_args.end = arg_end(2);
+    const esp_console_cmd_t calibrate_cmd = {
+        .command = "cal",
+        .help = "Calibrate sticks",
         .hint = nullptr,
-        .func = &test_i2c,
-        .argtable = nullptr
+        .func = &calibrate,
+        .argtable = &calibrate_args
     };
-    ESP_ERROR_CHECK(esp_console_cmd_register(&test_i2c_cmd));
-#endif
+    ESP_ERROR_CHECK(esp_console_cmd_register(&calibrate_cmd));
 
     const esp_console_cmd_t test_radio_cmd = {
         .command = "radio",

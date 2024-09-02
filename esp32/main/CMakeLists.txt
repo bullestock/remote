@@ -5,5 +5,6 @@ idf_component_register(SRCS
                        format.cpp
                        hw.cpp
                        main.cpp
+                       nvs.cpp
                        radio.cpp
                        INCLUDE_DIRS ".")

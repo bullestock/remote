@@ -1,8 +1,9 @@
 #include "hw.h"
 #include "defs.h"
 #include "display.h"
+#include "nvs.h"
 
-#include "esp_log.h"
+#include <esp_log.h>
 
 #include <freertos/FreeRTOS.h>
 
@@ -132,15 +133,23 @@ void read_switches(ForwardAirFrame& frame)
     frame.slide = (tmp & 0x0008) >> 3;
 }
 
+static int calibrated(int stick, int value)
+{
+    const auto cal = get_stick_calibration(stick);
+    if (cal[1] == 0)
+        return value;
+    return (value - cal[0]) * 4095 / (cal[1] - cal[0]);
+}
+
 void fill_frame(ForwardAirFrame& frame,
                 int64_t ticks)
 {
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
     frame.ticks = ticks;
-    frame.left_x = 1023 - read_adc(LEFT_X_CHANNEL);
-    frame.left_y = read_adc(LEFT_Y_CHANNEL);
-    frame.right_x = 1023 - read_adc(RIGHT_X_CHANNEL);
-    frame.right_y = read_adc(RIGHT_Y_CHANNEL);
+    frame.left_x = calibrated(0, read_adc(LEFT_X_CHANNEL));
+    frame.left_y = calibrated(1, read_adc(LEFT_Y_CHANNEL));
+    frame.right_x = calibrated(2, read_adc(RIGHT_X_CHANNEL));
+    frame.right_y = calibrated(3, read_adc(RIGHT_Y_CHANNEL));
     frame.left_pot = read_adc(POT1_CHANNEL);
     frame.right_pot = read_adc(POT2_CHANNEL);
     read_switches(frame);
