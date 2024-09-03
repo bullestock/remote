@@ -190,8 +190,8 @@ float get_my_battery()
     // Full scale is 2^12
     // Resistors divide by 2
     // Reference voltage is 2.5 V
-    const auto fudge = 3.54/3.18;
-    return my_battery/(N * 4096.0/2.0/2.5) * fudge;
+    const auto fudge = 1.125;
+    return static_cast<float>(my_battery)/(N * 4096.0/2.0/2.5) * fudge;
 }
 
 // Local Variables:

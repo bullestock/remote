@@ -25,7 +25,10 @@ void app_main(void)
     NRF24_t nrf24;
     bool debug = false;
     if (init_radio(nrf24))
+    {
+        display.add_progress("Radio OK");
         printf("nRF24 init OK\n");
+    }
     else
     {
         printf("nRF24 init failed!\n");
@@ -39,19 +42,28 @@ void app_main(void)
     if (!debug)
     {
         printf("\n\nPress a key to enter console\n");
+        int keypresses = 0;
         display.add_progress("Console wait");
         for (int i = 0; i < 20; ++i)
         {
             if (getchar() != EOF)
             {
-                debug = true;
-                break;
+                ++keypresses;
+                display.add_progress("<key>");
+                if (keypresses > 3)
+                {
+                    debug = true;
+                    break;
+                }
             }
             vTaskDelay(100 / portTICK_PERIOD_MS);
         }
     }
     if (debug)
+    {
+        display.add_progress("Start console");
         run_console(display, nrf24);        // never returns
+    }
 
     printf("\nStarting application\n");
 
@@ -86,7 +98,7 @@ void app_main(void)
                                     frame.slide));
         display.add_progress(format("P %02X %02X",
                                     frame.left_pot, frame.right_pot));
-        display.add_progress(format("B %.2f", my_battery));
+        display.add_progress(format("B %.3f", my_battery));
         vTaskDelay(500 / portTICK_PERIOD_MS);
 #else
         // Normal operation
