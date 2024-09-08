@@ -73,13 +73,14 @@ void app_main(void)
     unsigned long successes = 0;
     float their_battery = 0.0;
 
+    // Round trip delay in microseconds
     const int NOF_DELAY_SAMPLES = 10;
     int64_t delay_samples[NOF_DELAY_SAMPLES];
     int actual_delay_samples = 0;
 
     display.clear();
-    display.add_progress("Ready");
-    int count = 0;
+    display.set_status("Ready");
+    int count = 90;
     while (1)
     {
         const auto send_time = esp_timer_get_time();
@@ -106,7 +107,6 @@ void app_main(void)
                                         frame.left_pot, frame.right_pot));
             display.add_progress(format("B %.3f", my_battery));
 #else
-            display.clear_status();
 #endif
             int delay = 0;
             if (actual_delay_samples > 0)
@@ -116,10 +116,10 @@ void app_main(void)
                     sum += delay_samples[i];
                 delay = sum/actual_delay_samples;
             }
-            display.add_progress(format("OK %d F %d", successes, failures));
-            display.add_progress(format("Bad CRC %d", crc_errors));
-            display.add_progress(format("Delay %d", delay));
-            display.add_progress(format("Bat %.3f/%.2f", my_battery, their_battery));
+            display.set_info(0, format("OK %d F %d", successes, failures));
+            display.set_info(1, format("Bad CRC %d", crc_errors));
+            display.set_info(2, format("Delay %d ms", delay/1000));
+            display.set_info(3, format("Bat %.2f/%.2f", my_battery, their_battery));
         }
         
         bool ok = send_frame(nrf24, frame);
@@ -128,7 +128,10 @@ void app_main(void)
         else
             ++consecutive_errors;
 
-        //bool show_error = (consecutive_errors > 10);
+        if (consecutive_errors > 10)
+            display.set_status("-----");
+        else
+            display.set_status("Ready");
 
         if (ok)
         {
@@ -145,7 +148,10 @@ void app_main(void)
                 vTaskDelay(1);
             }
             if (!ready)
+            {
+                printf("Not ready\n");
                 ++failures;
+            }
             else
             {
                 uint8_t data[sizeof(ForwardAirFrame)];
@@ -169,7 +175,6 @@ void app_main(void)
                     for (int i = actual_delay_samples-1; i > 0; --i)
                         delay_samples[i] = delay_samples[i-1];
                     delay_samples[0] = end_time - send_time;
-                    printf("DELAY %lld\n", delay_samples[0]);
                     if (actual_delay_samples < NOF_DELAY_SAMPLES)
                         ++actual_delay_samples;
 

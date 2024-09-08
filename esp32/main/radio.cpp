@@ -35,7 +35,7 @@ bool init_radio(NRF24_t& dev)
 bool send_frame(NRF24_t& dev,
                 ForwardAirFrame& frame)
 {
-#if 1
+#if 0
     printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X\n",
            frame.left_x, frame.left_y, frame.right_x, frame.right_y,
            frame.pushbuttons,

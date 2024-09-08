@@ -1,6 +1,8 @@
 #include "display.h"
 #include "defs.h"
 
+static constexpr const int STATUS_START = 4;
+
 Display::Display(SSD1306_t& d)
     : display(d)
 {
@@ -17,6 +19,21 @@ void Display::clear()
     ssd1306_clear_screen(&display, false);
     lines.clear();
     row = 0;
+}
+
+void Display::set_status(const std::string& txt)
+{
+    if (!last_status.empty() && txt == last_status)
+        return;
+    ssd1306_clear_line(device(), 0, false);
+    ssd1306_display_text_x3(device(), 0, txt.c_str(), txt.size(), false);
+    last_status = txt;
+}
+
+void Display::set_info(int line, const std::string& txt)
+{
+    ssd1306_clear_line(device(), STATUS_START + line, false);
+    ssd1306_display_text(device(), STATUS_START + line, txt.c_str(), txt.size(), false);
 }
 
 SSD1306_t* Display::device()
