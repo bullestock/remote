@@ -296,8 +296,8 @@ void run_console(Display& display,
         /* Since the terminal doesn't support escape sequences,
          * don't use color codes in the prompt.
          */
-        prompt = "esp32> ";
-#endif //CONFIG_LOG_COLORS
+        prompt = "remote> ";
+#endif // CONFIG_LOG_COLORS
     }
 
     while (true)

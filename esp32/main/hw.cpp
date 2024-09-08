@@ -85,10 +85,7 @@ int read_adc(int channel)
     uint8_t value[2];
     auto res = i2c_master_transmit_receive(adc_handle, &data, 1, value, 2, 100);
     ESP_ERROR_CHECK(res);
-#if 0
-    printf("chan %d data %02X value %02X %02X\n",
-           channel, data, value[0], value[1]);
-#endif
+
     return value[0] * 256 + value[1];
 }
 
@@ -123,8 +120,6 @@ void read_switches(ForwardAirFrame& frame)
     // ST3T4T1T2PPP PPP
     // 0        654 321
 
-    //printf("RAW %04X\n", tmp);
-    
     const uint8_t pushbuttons = tmp & 0x77;
     frame.pushbuttons = ((pushbuttons & 0x70) >> 1) + (pushbuttons & 0x07);
 
