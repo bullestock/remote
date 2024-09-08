@@ -2,7 +2,7 @@
 
 #include <driver/gpio.h>
 
-constexpr const char* VERSION = "0.0.1";
+constexpr const char* VERSION = "0.1.0";
 
 // NVS keys
 constexpr const char* STICK_KEY = "stk";
