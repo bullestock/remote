@@ -24,12 +24,16 @@ bool init_radio(NRF24_t& dev)
         return false;
 
     // Set destination address using 5 characters
-    return Nrf24_setTADDR(&dev, pipes[1]) == ESP_OK;
+    if (Nrf24_setTADDR(&dev, pipes[1]) != ESP_OK)
+        return false;
+
+    Nrf24_printDetails(&dev);
+
+    return true;
 }
 
 bool send_frame(NRF24_t& dev,
-                ForwardAirFrame& frame,
-                bool& timeout)
+                ForwardAirFrame& frame)
 {
 #if 1
     printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X\n",
@@ -42,5 +46,10 @@ bool send_frame(NRF24_t& dev,
     
     Nrf24_send(&dev, reinterpret_cast<uint8_t*>(&frame));
 
-    return true;
+    return Nrf24_isSend(&dev, 1000);
+}
+
+bool data_ready(NRF24_t& dev)
+{
+    return Nrf24_dataReady(&dev);
 }

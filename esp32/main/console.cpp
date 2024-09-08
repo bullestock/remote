@@ -120,10 +120,9 @@ static int test_radio(int, char**)
     printf("Running radio test\n");
 
     ForwardAirFrame frame;
-    bool timeout = false;
     const auto send_time = esp_timer_get_time();
     fill_frame(frame, send_time);
-    bool ok = send_frame(*the_radio, frame, timeout);
+    bool ok = send_frame(*the_radio, frame);
 
     if (!ok)
     {

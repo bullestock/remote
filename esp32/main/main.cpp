@@ -86,7 +86,8 @@ void app_main(void)
 
         const auto my_battery = get_my_battery();
 
-#ifdef LIVE_VIEW
+#if 1
+        vTaskDelay(500 / portTICK_PERIOD_MS);
         display.clear();
         display.add_progress(format("L %3d %3d",
                                     frame.left_x, frame.left_y));
@@ -99,20 +100,17 @@ void app_main(void)
         display.add_progress(format("P %02X %02X",
                                     frame.left_pot, frame.right_pot));
         display.add_progress(format("B %.3f", my_battery));
-        vTaskDelay(500 / portTICK_PERIOD_MS);
-#else
+#endif
         // Normal operation
         //display.add_progress(format("%d %d", successes, failures));
         
-        bool timeout = false;
-        bool ok = send_frame(nrf24, frame, timeout);
+        bool ok = send_frame(nrf24, frame);
         if (ok)
             consecutive_errors = 0;
         else
             ++consecutive_errors;
 
-        if (timeout)
-            ++failures;
+        display.add_progress(format("Send %d", ok));
 
         bool show_error = (consecutive_errors > 10);
 
@@ -120,27 +118,41 @@ void app_main(void)
         {
             ++successes;
 
-            uint8_t data[sizeof(ForwardAirFrame)];
-            Nrf24_getData(&nrf24, data);
-            ReturnAirFrame ret_frame;
-            memcpy(data, &ret_frame, sizeof(ret_frame));
-            if ((ret_frame.magic == ReturnAirFrame::MAGIC_VALUE) &&
-                check_crc(ret_frame))
+            bool ready = false;
+            for (int i = 0; i < 100; ++i)
             {
-                const auto end_time = esp_timer_get_time();
-
-                for (int i = actual_delay_samples-1; i > 0; --i)
-                    delay_samples[i] = delay_samples[i-1];
-                delay_samples[0] = end_time - send_time;
-
-                their_battery = ret_frame.battery;
+                if (data_ready(nrf24))
+                {
+                    ready = true;
+                    break;
+                }
+                vTaskDelay(1);
             }
+            if (!ready)
+                ++failures;
             else
             {
-                ++crc_errors;
-                show_error = true;
+                uint8_t data[sizeof(ForwardAirFrame)];
+                Nrf24_getData(&nrf24, data);
+                ReturnAirFrame ret_frame;
+                memcpy(data, &ret_frame, sizeof(ret_frame));
+                if ((ret_frame.magic == ReturnAirFrame::MAGIC_VALUE) &&
+                    check_crc(ret_frame))
+                {
+                    const auto end_time = esp_timer_get_time();
+
+                    for (int i = actual_delay_samples-1; i > 0; --i)
+                        delay_samples[i] = delay_samples[i-1];
+                    delay_samples[0] = end_time - send_time;
+
+                    their_battery = ret_frame.battery;
+                }
+                else
+                {
+                    ++crc_errors;
+                    show_error = true;
+                }
             }
         }
-#endif        
     }
 }
