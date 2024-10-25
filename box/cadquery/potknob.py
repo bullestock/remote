@@ -50,7 +50,7 @@ res = res - cut
 
 res = (res
        .faces(">Z")
-       .fillet(0.1)
+       .fillet(2)
 )
 
 # knurling
@@ -72,3 +72,4 @@ res = (res
        )
 
 show_object(res)
+
