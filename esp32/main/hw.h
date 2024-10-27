@@ -1,8 +1,8 @@
 #pragma once
 
-#include <stdint.h>
+class ForwardAirFrame;
 
-#include "protocol.h"
+#include <stdint.h>
 
 void init_hardware();
 

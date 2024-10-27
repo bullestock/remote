@@ -2,6 +2,7 @@
 #include "defs.h"
 #include "display.h"
 #include "nvs.h"
+#include "protocol.h"
 
 #include <esp_log.h>
 

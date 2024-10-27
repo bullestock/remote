@@ -12,6 +12,8 @@
 #include <freertos/task.h>
 #include <esp_timer.h>
 
+#include "protocol.h"
+
 extern "C"
 void app_main(void)
 {
@@ -127,22 +129,23 @@ void app_main(void)
         else
             ++consecutive_errors;
 
-        if (consecutive_errors > 10)
-            display.set_status("-----");
-        else
-            display.set_status("Ready");
-
+        bool ready = false;
         if (ok)
         {
             ++successes;
 
-            bool ready = false;
-            for (int i = 0; i < 1000; ++i)
+            ReturnAirFrame ret_frame;
+            for (int i = 0; !ready && (i < 100); ++i)
             {
-                if (data_ready())
+                if (xSemaphoreTake(receive_mutex, portMAX_DELAY) == pdTRUE)
                 {
-                    ready = true;
-                    break;
+                    if (data_ready)
+                    {
+                        data_ready = false;
+                        memcpy(&ret_frame, &received_frame, sizeof(ReturnAirFrame));
+                        ready = true;
+                    }
+                    xSemaphoreGive(receive_mutex);
                 }
                 vTaskDelay(1);
             }
@@ -153,10 +156,7 @@ void app_main(void)
             }
             else
             {
-                uint8_t data[sizeof(ForwardAirFrame)];
-                //Nrf24_getData(&nrf24, data);
-                ReturnAirFrame ret_frame;
-                memcpy(&ret_frame, data, sizeof(ret_frame));
+                display.set_status("Ready");
                 if (ret_frame.magic != ReturnAirFrame::MAGIC_VALUE)
                 {
                     printf("Bad magic: %04X\n", ret_frame.magic);
@@ -181,6 +181,12 @@ void app_main(void)
                 }
             }
         }
+        if (consecutive_errors > 10)
+            display.set_status("-----");
+        else if (!ready)
+            display.set_status("!!!!!");
+        else
+            display.set_status("Ready");
     }
 }
 

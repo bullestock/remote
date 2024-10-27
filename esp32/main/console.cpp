@@ -4,6 +4,7 @@
 #include "format.h"
 #include "hw.h"
 #include "nvs.h"
+#include "protocol.h"
 
 #include <string>
 
@@ -109,37 +110,9 @@ static int calibrate(int argc, char** argv)
     return 0;
 }
 
-static const char* yes_no(bool b)
-{
-    return b ? "yes" : "no";
-}
-
 static int test_radio(int, char**)
 {
-    printf("Running radio test\n");
-
-    ForwardAirFrame frame;
-    const auto send_time = esp_timer_get_time();
-    fill_frame(frame, send_time);
-    bool ok = send_frame(frame);
-
-    if (!ok)
-    {
-        printf("send failed\n");
-        return 1;
-    }
-    
-    uint8_t data[sizeof(ForwardAirFrame)];
-    memset(data, 0, sizeof(data));
-    //Nrf24_getData(the_radio, data);
-    ReturnAirFrame ret_frame;
-    memcpy(data, &ret_frame, sizeof(ret_frame));
-    for (auto b : data)
-        printf("%02X ", b);
-    printf("\nReturn frame magic value OK: %s   CRC OK: %s\n",
-           yes_no(ret_frame.magic == ReturnAirFrame::MAGIC_VALUE),
-           yes_no(check_crc(ret_frame)));
-
+    printf("Radio test N/A\n");
     return 0;
 }
 

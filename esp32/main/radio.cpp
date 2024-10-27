@@ -18,13 +18,19 @@
 // Ticks to wait for queue to become available
 #define ESPNOW_MAXDELAY 512
 
+static SemaphoreHandle_t send_mutex;
+static bool send_pending = false; // protected by send_mutex
+
+SemaphoreHandle_t receive_mutex;
+bool data_ready = false;       // protected by receive_mutex
+ReturnAirFrame received_frame; // protected by receive_mutex
+
 static QueueHandle_t s_espnow_queue;
 
 static uint8_t s_other_mac[ESP_NOW_ETH_ALEN] = { 0xc4, 0xde, 0xe2, 0x19, 0x37, 0x3c };
 
 static void espnow_send_cb(const uint8_t* mac_addr, esp_now_send_status_t status);
 static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len);
-static void espnow_data_prepare(ForwardAirFrame& frame);
 static void espnow_task(void *pvParameter);
 
 void fatal_error(const char* why)
@@ -52,7 +58,7 @@ bool init_radio()
 
     s_espnow_queue = xQueueCreate(ESPNOW_QUEUE_SIZE, sizeof(espnow_event_t));
     if (s_espnow_queue == NULL) {
-        ESP_LOGE(TAG, "Create mutex fail");
+        ESP_LOGE(TAG, "Create queue fail");
         return false;
     }
 
@@ -79,14 +85,17 @@ bool init_radio()
     ESP_ERROR_CHECK(esp_now_add_peer(peer));
     free(peer);
 
+    send_mutex = xSemaphoreCreateMutex();
+    receive_mutex = xSemaphoreCreateMutex();
+    
     /* Initialize sending parameters. */
     auto frame = reinterpret_cast<ForwardAirFrame*>(malloc(sizeof(ForwardAirFrame)));
     if (!frame)
         fatal_error("Malloc send parameter fail");
 
-    espnow_data_prepare(*frame);
+    set_crc(*frame);
 
-    xTaskCreate(espnow_task, "espnow_task", 2048, frame, 4, NULL);
+    xTaskCreate(espnow_task, "espnow_task", 4096, frame, 4, NULL);
     
     return true;
 }
@@ -115,7 +124,6 @@ static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *
     }
 
     evt.id = ESPNOW_RECV_CB;
-    memcpy(recv_cb->mac_addr, mac_addr, ESP_NOW_ETH_ALEN);
     recv_cb->data = reinterpret_cast<uint8_t*>(malloc(len));
     if (!recv_cb->data)
     {
@@ -129,25 +137,6 @@ static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *
         ESP_LOGW(TAG, "Send receive queue fail");
         free(recv_cb->data);
     }
-}
-
-/* Parse received ESPNOW data. */
-bool espnow_data_check(uint8_t *data, uint16_t data_len)
-{
-    const auto buf = (ForwardAirFrame*) data;
-
-    if (data_len < sizeof(ForwardAirFrame)) {
-        ESP_LOGE(TAG, "Receive ESPNOW data too short, len:%d", data_len);
-        return false;
-    }
-
-    return check_crc(*buf);
-}
-
-/* Prepare ESPNOW data to be sent. */
-static void espnow_data_prepare(ForwardAirFrame& frame)
-{
-    set_crc(frame);
 }
 
 static void espnow_task(void *pvParameter)
@@ -170,26 +159,35 @@ static void espnow_task(void *pvParameter)
 
                 ESP_LOGD(TAG, "Sent data, status: %d", send_status);
 
-                vTaskDelay(100/portTICK_PERIOD_MS);
-
-                espnow_data_prepare(*frame);
-
-                /* Send the next data after the previous data is sent. */
-                ESP_ERROR_CHECK(esp_now_send(s_other_mac, (uint8_t*) frame, sizeof(ForwardAirFrame)));
+                if (xSemaphoreTake(send_mutex, portMAX_DELAY) == pdTRUE)
+                {
+                    send_pending = false;
+                    xSemaphoreGive(send_mutex);
+                }
                 break;
             }
             case ESPNOW_RECV_CB:
             {
-                espnow_event_recv_cb_t *recv_cb = &evt.info.recv_cb;
+                const auto recv_cb = &evt.info.recv_cb;
 
-                auto ret = espnow_data_check(recv_cb->data, recv_cb->data_len);
+                if (recv_cb->data_len < sizeof(ReturnAirFrame))
+                {
+                    ESP_LOGE(TAG, "Received ESPNOW data too short, len:%d", recv_cb->data_len);
+                }
+                else
+                {
+                    auto frame = reinterpret_cast<const ReturnAirFrame*>(recv_cb->data);
+                    if (xSemaphoreTake(receive_mutex, portMAX_DELAY) == pdTRUE)
+                    {
+                        if (!data_ready)
+                        {
+                            data_ready = true;
+                            memcpy(&received_frame, frame, sizeof(ReturnAirFrame));
+                        }
+                        xSemaphoreGive(receive_mutex);
+                    }
+                }
                 free(recv_cb->data);
-                if (ret) {
-                    ESP_LOGI(TAG, "Receive unicast data from: " MACSTR ", len: %d", MAC2STR(recv_cb->mac_addr), recv_cb->data_len);
-                }
-                else {
-                    ESP_LOGI(TAG, "Receive error data from: " MACSTR "", MAC2STR(recv_cb->mac_addr));
-                }
                 break;
             }
             default:
@@ -209,15 +207,19 @@ bool send_frame(ForwardAirFrame& frame)
            frame.slide,
            frame.left_pot, frame.right_pot);
 #endif
-    
-    //Nrf24_send(&dev, reinterpret_cast<uint8_t*>(&frame));
 
-    return false;// Nrf24_isSend(&dev, 1000);
-}
-
-bool data_ready()
-{
-    return false; //Nrf24_dataReady(&dev);
+    if (xSemaphoreTake(send_mutex, portMAX_DELAY) == pdTRUE)
+    {
+        if (send_pending)
+        {
+            // A frame is already pending.
+            xSemaphoreGive(send_mutex);
+            return true; //false;
+        }
+        send_pending = true;
+        xSemaphoreGive(send_mutex);
+    }
+    return esp_now_send(s_other_mac, (uint8_t*) &frame, sizeof(ForwardAirFrame)) == ESP_OK;
 }
 
 // Local Variables:

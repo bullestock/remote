@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include <esp_log.h>
+
 #pragma pack(push, 1)
 struct ForwardAirFrame
 {
@@ -32,11 +34,11 @@ struct ReturnAirFrame
 {
     static const uint16_t MAGIC_VALUE = 0xA5A6;
 
-    uint16_t magic;
-    int64_t ticks;
+    uint16_t magic;     // 2
+    int64_t ticks;      // 8
     // mV
-    uint16_t battery;
-    uint16_t crc;
+    uint16_t battery;   // 2
+    uint16_t crc;       // 2
 };
 
 #pragma pack(pop)
@@ -52,7 +54,8 @@ void set_crc(T& frame)
 template<typename T>
 bool check_crc(const T& frame)
 {
-    const auto crc = crc_16(reinterpret_cast<const unsigned char*>(&frame), sizeof(frame) - sizeof(frame.crc));
+    const size_t len = sizeof(frame) - sizeof(frame.crc);
+    const auto crc = crc_16(reinterpret_cast<const unsigned char*>(&frame), len);
     return crc == frame.crc;
 }
 

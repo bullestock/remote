@@ -7,11 +7,8 @@
    CONDITIONS OF ANY KIND, either express or implied.
 */
 
-/*
-   This example shows how to use ESPNOW.
-   Prepare two device, one for sending ESPNOW data and another for receiving
-   ESPNOW data.
-*/
+static const char *TAG = "espnow_example";
+
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
@@ -34,13 +31,10 @@
 
 #define ESPNOW_MAXDELAY 512
 
-static const char *TAG = "espnow_example";
-
 static QueueHandle_t s_example_espnow_queue;
 
-static uint8_t s_example_broadcast_mac[ESP_NOW_ETH_ALEN] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+static uint8_t s_other_mac[ESP_NOW_ETH_ALEN] = { 0x08, 0xf9, 0xe0, 0x3e, 0x88, 0xc4 };
 
-/* WiFi should start before using ESPNOW */
 static void example_wifi_init(void)
 {
     ESP_ERROR_CHECK(esp_netif_init());
@@ -63,7 +57,6 @@ static void example_wifi_init(void)
 static void example_espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_t status)
 {
     example_espnow_event_t evt;
-    example_espnow_event_send_cb_t *send_cb = &evt.info.send_cb;
 
     if (mac_addr == NULL) {
         ESP_LOGE(TAG, "Send cb arg error");
@@ -71,8 +64,7 @@ static void example_espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_
     }
 
     evt.id = EXAMPLE_ESPNOW_SEND_CB;
-    memcpy(send_cb->mac_addr, mac_addr, ESP_NOW_ETH_ALEN);
-    send_cb->status = status;
+    evt.info.send_status = status;
     if (xQueueSend(s_example_espnow_queue, &evt, ESPNOW_MAXDELAY) != pdTRUE) {
         ESP_LOGW(TAG, "Send send queue fail");
     }
@@ -116,22 +108,19 @@ bool espnow_data_check(uint8_t *data, uint16_t data_len)
     return check_crc(*buf);
 }
 
-/* Prepare ESPNOW data to be sent. */
-void example_espnow_data_prepare(example_espnow_send_param_t *send_param)
-{
-    auto buf = (ForwardAirFrame*) send_param->buffer;
-
-    set_crc(*buf);
-}
-
-static void example_espnow_task(void *pvParameter)
+static void example_espnow_task(void* p)
 {
     example_espnow_event_t evt;
+    int count = 0;
 
     while (xQueueReceive(s_example_espnow_queue, &evt, portMAX_DELAY) == pdTRUE) {
         switch (evt.id) {
             case EXAMPLE_ESPNOW_SEND_CB:
             {
+                const auto send_status = evt.info.send_status;
+
+                ESP_LOGD(TAG, "Sent data, status: %d", send_status);
+
                 break;
             }
             case EXAMPLE_ESPNOW_RECV_CB:
@@ -141,14 +130,30 @@ static void example_espnow_task(void *pvParameter)
                 auto ret = espnow_data_check(recv_cb->data, recv_cb->data_len);
                 free(recv_cb->data);
                 if (ret) {
-                    ESP_LOGI(TAG, "Receive data from: " MACSTR ", len: %d", MAC2STR(recv_cb->mac_addr), recv_cb->data_len);
+                    ESP_LOGD(TAG, "Receive data from: " MACSTR ", len: %d", MAC2STR(recv_cb->mac_addr), recv_cb->data_len);
                     auto frame = (const ForwardAirFrame*) recv_cb->data;
-                    printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X\n",
-                           frame->left_x, frame->left_y, frame->right_x, frame->right_y,
-                           frame->pushbuttons,
-                           frame->toggles,
-                           frame->slide,
-                           frame->left_pot, frame->right_pot);
+                    if (count == 0)
+                    {
+                        printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X\n",
+                               frame->left_x, frame->left_y, frame->right_x, frame->right_y,
+                               frame->pushbuttons,
+                               frame->toggles,
+                               frame->slide,
+                               frame->left_pot, frame->right_pot);
+                    }
+                    ++count;
+                    if (count > 100)
+                        count = 0;
+
+                    auto return_frame = (ReturnAirFrame*) p;
+                    return_frame->magic = ReturnAirFrame::MAGIC_VALUE;
+                    return_frame->ticks = frame->ticks;
+                    return_frame->battery = 12345;
+                    set_crc(*return_frame);
+                    if (esp_now_send(s_other_mac, (uint8_t*) return_frame, sizeof(ReturnAirFrame)) != ESP_OK)
+                        ESP_LOGE(TAG, "Send error");
+                    else
+                        ESP_LOGD(TAG, "Sent return frame");
                 }
                 else {
                     ESP_LOGI(TAG, "Receive error data from: " MACSTR "", MAC2STR(recv_cb->mac_addr));
@@ -164,8 +169,6 @@ static void example_espnow_task(void *pvParameter)
 
 static esp_err_t example_espnow_init(void)
 {
-    example_espnow_send_param_t *send_param;
-
     s_example_espnow_queue = xQueueCreate(ESPNOW_QUEUE_SIZE, sizeof(example_espnow_event_t));
     if (s_example_espnow_queue == NULL) {
         ESP_LOGE(TAG, "Create mutex fail");
@@ -183,7 +186,7 @@ static esp_err_t example_espnow_init(void)
     /* Set primary master key. */
     ESP_ERROR_CHECK( esp_now_set_pmk((uint8_t *)CONFIG_ESPNOW_PMK) );
 
-    /* Add broadcast peer information to peer list. */
+    /* Add peer information to peer list. */
     auto peer = (esp_now_peer_info_t *) malloc(sizeof(esp_now_peer_info_t));
     if (peer == NULL) {
         ESP_LOGE(TAG, "Malloc peer information fail");
@@ -195,35 +198,20 @@ static esp_err_t example_espnow_init(void)
     peer->channel = CONFIG_ESPNOW_CHANNEL;
     peer->ifidx = ESPNOW_WIFI_IF;
     peer->encrypt = false;
-    memcpy(peer->peer_addr, s_example_broadcast_mac, ESP_NOW_ETH_ALEN);
+    memcpy(peer->peer_addr, s_other_mac, ESP_NOW_ETH_ALEN);
     ESP_ERROR_CHECK( esp_now_add_peer(peer) );
     free(peer);
 
     /* Initialize sending parameters. */
-    send_param = (example_espnow_send_param_t*) malloc(sizeof(example_espnow_send_param_t));
-    if (send_param == NULL) {
+    auto return_frame = (ReturnAirFrame*) malloc(sizeof(ReturnAirFrame));
+    if (return_frame == NULL) {
         ESP_LOGE(TAG, "Malloc send parameter fail");
         vSemaphoreDelete(s_example_espnow_queue);
         esp_now_deinit();
         return ESP_FAIL;
     }
-    memset(send_param, 0, sizeof(example_espnow_send_param_t));
-    send_param->unicast = false;
-    send_param->broadcast = true;
-    send_param->state = 0;
-    send_param->magic = esp_random();
-    send_param->buffer = (ForwardAirFrame*) malloc(sizeof(ForwardAirFrame));
-    if (send_param->buffer == NULL) {
-        ESP_LOGE(TAG, "Malloc send buffer fail");
-        free(send_param);
-        vSemaphoreDelete(s_example_espnow_queue);
-        esp_now_deinit();
-        return ESP_FAIL;
-    }
-    memcpy(send_param->dest_mac, s_example_broadcast_mac, ESP_NOW_ETH_ALEN);
-    example_espnow_data_prepare(send_param);
 
-    xTaskCreate(example_espnow_task, "example_espnow_task", 2048, send_param, 4, NULL);
+    xTaskCreate(example_espnow_task, "example_espnow_task", 2048, return_frame, 4, NULL);
 
     return ESP_OK;
 }
