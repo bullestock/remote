@@ -167,3 +167,7 @@ static void init_crc16_tab( void ) {
 	crc_tab16_init = true;
 
 }  /* init_crc16_tab */
+
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:

@@ -84,7 +84,11 @@ int read_adc(int channel)
     const uint8_t data = SINGLE_ENDED | channel << 4 | IREF_ON_AD_ON;
     uint8_t value[2];
     auto res = i2c_master_transmit_receive(adc_handle, &data, 1, value, 2, 100);
-    ESP_ERROR_CHECK(res);
+    if (res != ESP_OK)
+    {
+        ESP_LOGE(TAG, "Error reading ADC: %d", res);
+        return 0;
+    }
 
     return value[0] * 256 + value[1];
 }

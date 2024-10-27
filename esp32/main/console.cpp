@@ -19,7 +19,6 @@
 #include "argtable3/argtable3.h"
 
 static Display* the_display = nullptr;
-static NRF24_t* the_radio = nullptr;
 
 static int reboot(int, char**)
 {
@@ -122,7 +121,7 @@ static int test_radio(int, char**)
     ForwardAirFrame frame;
     const auto send_time = esp_timer_get_time();
     fill_frame(frame, send_time);
-    bool ok = send_frame(*the_radio, frame);
+    bool ok = send_frame(frame);
 
     if (!ok)
     {
@@ -132,7 +131,7 @@ static int test_radio(int, char**)
     
     uint8_t data[sizeof(ForwardAirFrame)];
     memset(data, 0, sizeof(data));
-    Nrf24_getData(the_radio, data);
+    //Nrf24_getData(the_radio, data);
     ReturnAirFrame ret_frame;
     memcpy(data, &ret_frame, sizeof(ret_frame));
     for (auto b : data)
@@ -213,11 +212,9 @@ void initialize_console()
     linenoiseHistorySetMaxLen(100);
 }
 
-void run_console(Display& display,
-                 NRF24_t& radio)
+void run_console(Display& display)
 {
     the_display = &display;
-    the_radio = &radio;
     
     initialize_console();
 

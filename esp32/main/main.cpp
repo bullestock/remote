@@ -22,23 +22,22 @@ void app_main(void)
     SSD1306_t ssd;
     Display display(ssd);
 
-    NRF24_t nrf24;
+    init_nvs();
+    
     bool debug = false;
-    if (init_radio(nrf24))
+    if (init_radio())
     {
         display.add_progress("Radio OK");
-        printf("nRF24 init OK\n");
+        printf("ESP-NOW init OK\n");
     }
     else
     {
-        printf("nRF24 init failed!\n");
+        printf("ESP-NOW init failed!\n");
         display.add_progress("ERROR: No radio");
         vTaskDelay(1000 / portTICK_PERIOD_MS);
         debug = true;
     }
 
-    init_nvs();
-    
     if (!debug)
     {
         printf("\n\nPress a key to enter console\n");
@@ -62,7 +61,7 @@ void app_main(void)
     if (debug)
     {
         display.add_progress("Start console");
-        run_console(display, nrf24);        // never returns
+        run_console(display);        // never returns
     }
 
     printf("\nStarting application\n");
@@ -122,7 +121,7 @@ void app_main(void)
             display.set_info(3, format("Bat %.2f/%.2f", my_battery, their_battery));
         }
         
-        bool ok = send_frame(nrf24, frame);
+        bool ok = send_frame(frame);
         if (ok)
             consecutive_errors = 0;
         else
@@ -140,7 +139,7 @@ void app_main(void)
             bool ready = false;
             for (int i = 0; i < 1000; ++i)
             {
-                if (data_ready(nrf24))
+                if (data_ready())
                 {
                     ready = true;
                     break;
@@ -155,7 +154,7 @@ void app_main(void)
             else
             {
                 uint8_t data[sizeof(ForwardAirFrame)];
-                Nrf24_getData(&nrf24, data);
+                //Nrf24_getData(&nrf24, data);
                 ReturnAirFrame ret_frame;
                 memcpy(&ret_frame, data, sizeof(ret_frame));
                 if (ret_frame.magic != ReturnAirFrame::MAGIC_VALUE)
