@@ -183,3 +183,7 @@ void app_main(void)
         }
     }
 }
+
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:

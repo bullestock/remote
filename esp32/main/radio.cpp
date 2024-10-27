@@ -20,7 +20,6 @@
 static QueueHandle_t s_espnow_queue;
 
 static uint8_t s_other_mac[ESP_NOW_ETH_ALEN] = { 0xc4, 0xde, 0xe2, 0x19, 0x37, 0x3c };
-static uint16_t s_espnow_seq = 0;
 
 static void espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_t status);
 static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len);
@@ -85,8 +84,7 @@ bool init_radio()
         fatal_error("Malloc send parameter fail");
 
     memset(send_param, 0, sizeof(espnow_send_param_t));
-    send_param->len = CONFIG_ESPNOW_SEND_LEN;
-    send_param->buffer = (uint8_t*) malloc(CONFIG_ESPNOW_SEND_LEN);
+    send_param->buffer = (ForwardAirFrame*) malloc(sizeof(ForwardAirFrame));
     memcpy(send_param->dest_mac, s_other_mac, ESP_NOW_ETH_ALEN);
     espnow_data_prepare(send_param);
 
@@ -145,55 +143,36 @@ static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *
 }
 
 /* Parse received ESPNOW data. */
-int espnow_data_parse(uint8_t *data, uint16_t data_len, uint16_t *seq, uint32_t *magic)
+bool espnow_data_check(uint8_t *data, uint16_t data_len)
 {
-    espnow_data_t *buf = (espnow_data_t *)data;
-    uint16_t crc, crc_cal = 0;
+    const auto buf = (ForwardAirFrame*) data;
 
-    if (data_len < sizeof(espnow_data_t)) {
+    if (data_len < sizeof(ForwardAirFrame)) {
         ESP_LOGE(TAG, "Receive ESPNOW data too short, len:%d", data_len);
-        return -1;
+        return false;
     }
 
-    *seq = buf->seq_num;
-    *magic = buf->magic;
-    crc = buf->crc;
-    buf->crc = 0;
-    crc_cal = esp_crc16_le(UINT16_MAX, (uint8_t const *)buf, data_len);
-
-    if (crc_cal == crc) {
-        return 0;
-    }
-
-    return -1;
+    return check_crc(*buf);
 }
 
 /* Prepare ESPNOW data to be sent. */
 static void espnow_data_prepare(espnow_send_param_t *send_param)
 {
-    auto buf = (espnow_data_t *)send_param->buffer;
+    auto buf = (ForwardAirFrame*) send_param->buffer;
 
-    buf->seq_num = s_espnow_seq++;
-    buf->crc = 0;
-    buf->magic = 0;
-    // Fill all remaining bytes after the data with random values
-    esp_fill_random(buf->payload, send_param->len - sizeof(espnow_data_t));
-    buf->crc = esp_crc16_le(UINT16_MAX, (uint8_t const *)buf, send_param->len);
+    set_crc(*buf);
 }
 
 static void espnow_task(void *pvParameter)
 {
     espnow_event_t evt;
-    uint16_t recv_seq = 0;
-    uint32_t recv_magic = 0;
-    int ret;
 
-    vTaskDelay(5000 / portTICK_PERIOD_MS);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
     ESP_LOGI(TAG, "Start sending broadcast data");
 
     /* Start sending ESPNOW data. */
     espnow_send_param_t *send_param = (espnow_send_param_t *)pvParameter;
-    ESP_ERROR_CHECK(esp_now_send(send_param->dest_mac, send_param->buffer, send_param->len));
+    ESP_ERROR_CHECK(esp_now_send(send_param->dest_mac, (uint8_t*) send_param->buffer, sizeof(ForwardAirFrame)));
 
     while (xQueueReceive(s_espnow_queue, &evt, portMAX_DELAY) == pdTRUE)
     {
@@ -212,17 +191,17 @@ static void espnow_task(void *pvParameter)
                 espnow_data_prepare(send_param);
 
                 /* Send the next data after the previous data is sent. */
-                ESP_ERROR_CHECK(esp_now_send(send_param->dest_mac, send_param->buffer, send_param->len));
+                ESP_ERROR_CHECK(esp_now_send(send_param->dest_mac, (uint8_t*) send_param->buffer, sizeof(ForwardAirFrame)));
                 break;
             }
             case ESPNOW_RECV_CB:
             {
                 espnow_event_recv_cb_t *recv_cb = &evt.info.recv_cb;
 
-                ret = espnow_data_parse(recv_cb->data, recv_cb->data_len, &recv_seq, &recv_magic);
+                auto ret = espnow_data_check(recv_cb->data, recv_cb->data_len);
                 free(recv_cb->data);
-                if (ret == 0) {
-                    ESP_LOGI(TAG, "Receive %dth unicast data from: " MACSTR ", len: %d", recv_seq, MAC2STR(recv_cb->mac_addr), recv_cb->data_len);
+                if (ret) {
+                    ESP_LOGI(TAG, "Receive unicast data from: " MACSTR ", len: %d", MAC2STR(recv_cb->mac_addr), recv_cb->data_len);
                 }
                 else {
                     ESP_LOGI(TAG, "Receive error data from: " MACSTR "", MAC2STR(recv_cb->mac_addr));
