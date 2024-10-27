@@ -13,7 +13,7 @@
 /* ESPNOW can work in both station and softap mode. It is configured in menuconfig. */
 #if CONFIG_ESPNOW_WIFI_MODE_STATION
 #define ESPNOW_WIFI_MODE WIFI_MODE_STA
-#define ESPNOW_WIFI_IF   ESP_IF_WIFI_STA
+#define ESPNOW_WIFI_IF   (wifi_interface_t) ESP_IF_WIFI_STA
 #else
 #define ESPNOW_WIFI_MODE WIFI_MODE_AP
 #define ESPNOW_WIFI_IF   ESP_IF_WIFI_AP
@@ -50,22 +50,13 @@ typedef struct {
     example_espnow_event_info_t info;
 } example_espnow_event_t;
 
-/* User defined field of ESPNOW data in this example. */
-typedef struct {
-    uint16_t seq_num;                     //Sequence number of ESPNOW data.
-    uint16_t crc;                         //CRC16 value of ESPNOW data.
-    uint32_t magic;                       //Magic number which is used to determine which device to send unicast ESPNOW data.
-    uint8_t payload[0];                   //Real payload of ESPNOW data.
-} __attribute__((packed)) example_espnow_data_t;
-
 /* Parameters of sending ESPNOW data. */
 typedef struct {
     bool unicast;                         //Send unicast ESPNOW data.
     bool broadcast;                       //Send broadcast ESPNOW data.
     uint8_t state;                        //Indicate that if has received broadcast ESPNOW data or not.
     uint32_t magic;                       //Magic number which is used to determine which device to send unicast ESPNOW data.
-    int len;                              //Length of ESPNOW data to be sent, unit: byte.
-    uint8_t *buffer;                      //Buffer pointing to ESPNOW data.
+    class ForwardAirFrame *buffer;                      //Buffer pointing to ESPNOW data.
     uint8_t dest_mac[ESP_NOW_ETH_ALEN];   //MAC address of destination device.
 } example_espnow_send_param_t;
 

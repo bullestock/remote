@@ -9,15 +9,10 @@
 
 #define ESPNOW_QUEUE_SIZE           6
 
-typedef enum {
+enum espnow_event_id_t {
     ESPNOW_SEND_CB,
     ESPNOW_RECV_CB,
-} espnow_event_id_t;
-
-typedef struct {
-    uint8_t mac_addr[ESP_NOW_ETH_ALEN];
-    esp_now_send_status_t status;
-} espnow_event_send_cb_t;
+};
 
 typedef struct {
     uint8_t mac_addr[ESP_NOW_ETH_ALEN];
@@ -25,22 +20,16 @@ typedef struct {
     int data_len;
 } espnow_event_recv_cb_t;
 
-typedef union {
-    espnow_event_send_cb_t send_cb;
+union espnow_event_info_t {
+    esp_now_send_status_t send_status;
     espnow_event_recv_cb_t recv_cb;
-} espnow_event_info_t;
+};
 
 /* When ESPNOW sending or receiving callback function is called, post event to ESPNOW task. */
-typedef struct {
+struct espnow_event_t {
     espnow_event_id_t id;
     espnow_event_info_t info;
-} espnow_event_t;
-
-/* Parameters of sending ESPNOW data. */
-typedef struct {
-    class ForwardAirFrame *buffer;                      //Buffer pointing to ESPNOW data.
-    uint8_t dest_mac[ESP_NOW_ETH_ALEN];   //MAC address of destination device.
-} espnow_send_param_t;
+};
 
 class ForwardAirFrame;
 

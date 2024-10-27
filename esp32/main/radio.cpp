@@ -15,15 +15,16 @@
 // - keys in NVS
 // - other MAC in NVS
 
+// Ticks to wait for queue to become available
 #define ESPNOW_MAXDELAY 512
 
 static QueueHandle_t s_espnow_queue;
 
 static uint8_t s_other_mac[ESP_NOW_ETH_ALEN] = { 0xc4, 0xde, 0xe2, 0x19, 0x37, 0x3c };
 
-static void espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_t status);
+static void espnow_send_cb(const uint8_t* mac_addr, esp_now_send_status_t status);
 static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len);
-static void espnow_data_prepare(espnow_send_param_t *send_param);
+static void espnow_data_prepare(ForwardAirFrame& frame);
 static void espnow_task(void *pvParameter);
 
 void fatal_error(const char* why)
@@ -79,16 +80,13 @@ bool init_radio()
     free(peer);
 
     /* Initialize sending parameters. */
-    auto send_param = reinterpret_cast<espnow_send_param_t*>(malloc(sizeof(espnow_send_param_t)));
-    if (!send_param)
+    auto frame = reinterpret_cast<ForwardAirFrame*>(malloc(sizeof(ForwardAirFrame)));
+    if (!frame)
         fatal_error("Malloc send parameter fail");
 
-    memset(send_param, 0, sizeof(espnow_send_param_t));
-    send_param->buffer = (ForwardAirFrame*) malloc(sizeof(ForwardAirFrame));
-    memcpy(send_param->dest_mac, s_other_mac, ESP_NOW_ETH_ALEN);
-    espnow_data_prepare(send_param);
+    espnow_data_prepare(*frame);
 
-    xTaskCreate(espnow_task, "espnow_task", 2048, send_param, 4, NULL);
+    xTaskCreate(espnow_task, "espnow_task", 2048, frame, 4, NULL);
     
     return true;
 }
@@ -96,22 +94,13 @@ bool init_radio()
 /* ESPNOW sending or receiving callback function is called in WiFi task.
  * Users should not do lengthy operations from this task. Instead, post
  * necessary data to a queue and handle it from a lower priority task. */
-static void espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_t status)
+static void espnow_send_cb(const uint8_t*, esp_now_send_status_t status)
 {
     espnow_event_t evt;
-    espnow_event_send_cb_t *send_cb = &evt.info.send_cb;
-
-    if (mac_addr == NULL) {
-        ESP_LOGE(TAG, "Send cb arg error");
-        return;
-    }
-
     evt.id = ESPNOW_SEND_CB;
-    memcpy(send_cb->mac_addr, mac_addr, ESP_NOW_ETH_ALEN);
-    send_cb->status = status;
-    if (xQueueSend(s_espnow_queue, &evt, ESPNOW_MAXDELAY) != pdTRUE) {
+    evt.info.send_status = status;
+    if (xQueueSend(s_espnow_queue, &evt, ESPNOW_MAXDELAY) != pdTRUE)
         ESP_LOGW(TAG, "Send send queue fail");
-    }
 }
 
 static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len)
@@ -156,11 +145,9 @@ bool espnow_data_check(uint8_t *data, uint16_t data_len)
 }
 
 /* Prepare ESPNOW data to be sent. */
-static void espnow_data_prepare(espnow_send_param_t *send_param)
+static void espnow_data_prepare(ForwardAirFrame& frame)
 {
-    auto buf = (ForwardAirFrame*) send_param->buffer;
-
-    set_crc(*buf);
+    set_crc(frame);
 }
 
 static void espnow_task(void *pvParameter)
@@ -171,27 +158,24 @@ static void espnow_task(void *pvParameter)
     ESP_LOGI(TAG, "Start sending broadcast data");
 
     /* Start sending ESPNOW data. */
-    espnow_send_param_t *send_param = (espnow_send_param_t *)pvParameter;
-    ESP_ERROR_CHECK(esp_now_send(send_param->dest_mac, (uint8_t*) send_param->buffer, sizeof(ForwardAirFrame)));
+    auto frame = (ForwardAirFrame*) pvParameter;
+    ESP_ERROR_CHECK(esp_now_send(s_other_mac, (uint8_t*) frame, sizeof(ForwardAirFrame)));
 
     while (xQueueReceive(s_espnow_queue, &evt, portMAX_DELAY) == pdTRUE)
     {
         switch (evt.id) {
             case ESPNOW_SEND_CB:
             {
-                espnow_event_send_cb_t *send_cb = &evt.info.send_cb;
+                const auto send_status = evt.info.send_status;
 
-                ESP_LOGD(TAG, "Send data to " MACSTR ", status1: %d", MAC2STR(send_cb->mac_addr), send_cb->status);
+                ESP_LOGD(TAG, "Sent data, status: %d", send_status);
 
                 vTaskDelay(100/portTICK_PERIOD_MS);
 
-                ESP_LOGI(TAG, "send data to " MACSTR "", MAC2STR(send_cb->mac_addr));
-
-                memcpy(send_param->dest_mac, send_cb->mac_addr, ESP_NOW_ETH_ALEN);
-                espnow_data_prepare(send_param);
+                espnow_data_prepare(*frame);
 
                 /* Send the next data after the previous data is sent. */
-                ESP_ERROR_CHECK(esp_now_send(send_param->dest_mac, (uint8_t*) send_param->buffer, sizeof(ForwardAirFrame)));
+                ESP_ERROR_CHECK(esp_now_send(s_other_mac, (uint8_t*) frame, sizeof(ForwardAirFrame)));
                 break;
             }
             case ESPNOW_RECV_CB:
