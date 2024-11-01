@@ -116,11 +116,16 @@ void app_main(void)
                 for (int i = 0; i < actual_delay_samples; ++i)
                     sum += delay_samples[i];
                 delay = sum/actual_delay_samples;
+                display.set_info(2, format("Delay %d ms", delay/1000));
             }
             display.set_info(0, format("OK %d F %d", successes, failures));
             display.set_info(1, format("Bad CRC %d", crc_errors));
-            display.set_info(2, format("Delay %d ms", delay/1000));
-            display.set_info(3, format("Bat %.2f/%.2f", my_battery, their_battery));
+            std::string peer_bat = "-";
+            if (their_battery > 0)
+                peer_bat = format("%.2f", their_battery);
+            display.set_info(3, format("Bat %.2f/%s",
+                                       my_battery,
+                                       peer_bat.c_str()));
         }
         
         bool ok = send_frame(frame);

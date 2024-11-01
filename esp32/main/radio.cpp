@@ -1,5 +1,6 @@
 #include "defs.h"
 #include "hw.h"
+#include "nvs.h"
 #include "protocol.h"
 #include "radio.h"
 
@@ -27,7 +28,7 @@ ReturnAirFrame received_frame; // protected by receive_mutex
 
 static QueueHandle_t s_espnow_queue;
 
-static uint8_t s_other_mac[ESP_NOW_ETH_ALEN] = { 0xc4, 0xde, 0xe2, 0x19, 0x37, 0x3c };
+static uint8_t s_other_mac[ESP_NOW_ETH_ALEN];
 
 static void espnow_send_cb(const uint8_t* mac_addr, esp_now_send_status_t status);
 static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len);
@@ -37,6 +38,17 @@ void fatal_error(const char* why)
 {
     printf("FATAL ERROR: %s\n", why);
     esp_restart();
+}
+
+static unsigned int to_int(char c)
+{
+  if (c >= '0' && c <= '9')
+      return c - '0';
+  if (c >= 'A' && c <= 'F')
+      return 10 + c - 'A';
+  if (c >= 'a' && c <= 'f')
+      return 10 + c - 'a';
+  return -1;
 }
 
 bool init_radio()
@@ -55,6 +67,15 @@ bool init_radio()
                                           WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G |
                                           WIFI_PROTOCOL_11N | WIFI_PROTOCOL_LR));
 #endif
+
+    uint8_t mac[ESP_NOW_ETH_ALEN];
+    esp_wifi_get_mac((wifi_interface_t) ESP_IF_WIFI_STA, mac);
+    ESP_LOGI(TAG, "My MAC: " MACSTR, MAC2STR(mac));
+
+    const auto peer_mac = get_peer_mac();
+    for (size_t i = 0; i < ESP_NOW_ETH_ALEN; ++i)
+        s_other_mac[i] = 16 * to_int(peer_mac[2*i]) + to_int(peer_mac[2*i+1]);
+    ESP_LOGI(TAG, "Other MAC: " MACSTR, MAC2STR(s_other_mac));
 
     s_espnow_queue = xQueueCreate(ESPNOW_QUEUE_SIZE, sizeof(espnow_event_t));
     if (s_espnow_queue == NULL) {

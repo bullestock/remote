@@ -6,6 +6,7 @@ constexpr const char* VERSION = "0.1.0";
 
 // NVS keys
 constexpr const char* STICK_KEY = "stk";
+constexpr const char* MAC_KEY = "mac";
 
 // Pin definitions
 constexpr const auto PIN_MOSI = (gpio_num_t) 2;

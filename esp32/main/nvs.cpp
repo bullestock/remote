@@ -6,11 +6,13 @@
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include "esp_now.h"
 #include "nvs_flash.h"
 
 const int MAX_STICK = 4;
 
 static uint16_t stick_calibration[2 * MAX_STICK];
+static char peer_mac[2*ESP_NOW_ETH_ALEN + 1];
 
 void set_stick_calibration(int stick, int min_val, int max_val)
 {
@@ -19,12 +21,31 @@ void set_stick_calibration(int stick, int min_val, int max_val)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_blob(my_handle, STICK_KEY, stick_calibration, sizeof(stick_calibration)));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
+}
+
+bool set_peer_mac(const char* mac)
+{
+    if (strlen(mac) != 2*ESP_NOW_ETH_ALEN)
+        return false;
+    strcpy(peer_mac, mac);
+    nvs_handle my_handle;
+    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
+    ESP_ERROR_CHECK(nvs_set_str(my_handle, MAC_KEY, peer_mac));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
+    nvs_close(my_handle);
+    return true;
 }
 
 const uint16_t* get_stick_calibration(int stick)
 {
     return &(stick_calibration[stick * 2]);
+}
+
+const char* get_peer_mac()
+{
+    return peer_mac;
 }
 
 void init_nvs()
@@ -57,6 +78,23 @@ void init_nvs()
             printf("%d  %5d  %5d\n", i,
                    stick_calibration[i * 2],
                    stick_calibration[i * 2 + 1]);
+    }
+    sz = 0;
+    if (nvs_get_str(my_handle, MAC_KEY, nullptr, &sz) != ESP_OK ||
+        sz != 2*ESP_NOW_ETH_ALEN + 1)
+    {
+        printf("No peer MAC (%d)\n", (int) sz);
+        peer_mac[0] = 0;
+    }
+    else
+    {
+        if (nvs_get_str(my_handle, MAC_KEY, peer_mac, &sz) != ESP_OK)
+        {
+            printf("Error reading peer MAC\n");
+            peer_mac[0] = 0;
+        }
+        else
+            printf("Peer MAC %s\n", peer_mac);
     }
     nvs_close(my_handle);
 }
