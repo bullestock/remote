@@ -94,7 +94,7 @@ bool init_radio()
     /* Set primary master key. */
     ESP_ERROR_CHECK(esp_now_set_pmk((uint8_t*) CONFIG_ESPNOW_PMK));
 
-    /* Add broadcast peer information to peer list. */
+    // Add peer to peer list
     auto peer = reinterpret_cast<esp_now_peer_info_t*>(malloc(sizeof(esp_now_peer_info_t)));
     if (!peer)
         fatal_error("Malloc peer information fail");
@@ -165,15 +165,15 @@ static void espnow_task(void *pvParameter)
     espnow_event_t evt;
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
-    ESP_LOGI(TAG, "Start sending broadcast data");
+    ESP_LOGI(TAG, "Start sending data");
 
-    /* Start sending ESPNOW data. */
     auto frame = (ForwardAirFrame*) pvParameter;
     ESP_ERROR_CHECK(esp_now_send(s_other_mac, (uint8_t*) frame, sizeof(ForwardAirFrame)));
 
     while (xQueueReceive(s_espnow_queue, &evt, portMAX_DELAY) == pdTRUE)
     {
-        switch (evt.id) {
+        switch (evt.id)
+            {
             case ESPNOW_SEND_CB:
             {
                 const auto send_status = evt.info.send_status;
@@ -192,9 +192,7 @@ static void espnow_task(void *pvParameter)
                 const auto recv_cb = &evt.info.recv_cb;
 
                 if (recv_cb->data_len < sizeof(ReturnAirFrame))
-                {
                     ESP_LOGE(TAG, "Received ESPNOW data too short, len:%d", recv_cb->data_len);
-                }
                 else
                 {
                     auto frame = reinterpret_cast<const ReturnAirFrame*>(recv_cb->data);

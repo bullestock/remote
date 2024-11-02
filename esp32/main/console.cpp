@@ -277,7 +277,7 @@ void run_console(Display& display)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_switches_cmd));
     
-    set_peer_mac_args.peer_mac = arg_str1(NULL, NULL, "<ident>", "Peer_Mac");
+    set_peer_mac_args.peer_mac = arg_str1(NULL, NULL, "<mac>", "Peer MAC");
     set_peer_mac_args.end = arg_end(2);
     const esp_console_cmd_t set_peer_mac_cmd = {
         .command = "mac",
