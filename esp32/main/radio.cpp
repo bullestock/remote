@@ -12,10 +12,6 @@
 #include <string.h>
 #include <stdint.h>
 
-// TODO:
-// - keys in NVS
-// - other MAC in NVS
-
 // Ticks to wait for queue to become available
 #define ESPNOW_MAXDELAY 512
 
