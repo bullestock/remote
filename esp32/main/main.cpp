@@ -110,22 +110,24 @@ void app_main(void)
 #else
 #endif
             int delay = 0;
+            std::string delay_info;
             if (actual_delay_samples > 0)
             {
                 int64_t sum = 0;
                 for (int i = 0; i < actual_delay_samples; ++i)
                     sum += delay_samples[i];
                 delay = sum/actual_delay_samples;
-                display.set_info(2, format("Delay %d ms", delay/1000));
+                delay_info = format("%d ms", delay/1000);
             }
             display.set_info(0, format("OK %d F %d", successes, failures));
             display.set_info(1, format("Bad CRC %d", crc_errors));
-            std::string peer_bat = "-";
+            std::string peer_bat = "---";
             if (their_battery > 0)
-                peer_bat = format("%.2f", their_battery);
-            display.set_info(3, format("Bat %.2f/%s",
+                peer_bat = format("%2.2fV", their_battery);
+            display.set_info(3, format("%.2V  %s  %s",
                                        my_battery,
-                                       peer_bat.c_str()));
+                                       peer_bat.c_str(),
+                                       delay_info.c_str()));
         }
         
         bool ok = send_frame(frame);
