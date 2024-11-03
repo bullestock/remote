@@ -826,7 +826,7 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "power:+3V3"
+		(symbol "power:+BATT"
 			(power)
 			(pin_names
 				(offset 0)
@@ -843,7 +843,7 @@
 					(hide yes)
 				)
 			)
-			(property "Value" "+3V3"
+			(property "Value" "+BATT"
 				(at 0 3.556 0)
 				(effects
 					(font
@@ -869,7 +869,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" "Power flag, +3.3V"
+			(property "Description" "Power flag, positive battery voltage"
 				(at 0 0 0)
 				(effects
 					(font
@@ -878,7 +878,7 @@
 					(hide yes)
 				)
 			)
-			(property "ki_keywords" "power-flag"
+			(property "ki_keywords" "power-flag battery"
 				(at 0 0 0)
 				(effects
 					(font
@@ -887,7 +887,7 @@
 					(hide yes)
 				)
 			)
-			(symbol "+3V3_0_1"
+			(symbol "+BATT_0_1"
 				(polyline
 					(pts
 						(xy -0.762 1.27) (xy 0 2.54)
@@ -925,12 +925,12 @@
 					)
 				)
 			)
-			(symbol "+3V3_1_1"
+			(symbol "+BATT_1_1"
 				(pin power_in line
 					(at 0 0 90)
 					(length 0)
 					(hide yes)
-					(name "+3V3"
+					(name "+BATT"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -2105,7 +2105,7 @@
 		(dnp no)
 		(uuid "00000000-0000-0000-0000-00005987947b")
 		(property "Reference" "U2"
-			(at 158.75 138.43 0)
+			(at 161.036 116.332 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2113,7 +2113,7 @@
 			)
 		)
 		(property "Value" "74HC165"
-			(at 158.75 143.51 0)
+			(at 159.004 119.126 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2279,7 +2279,7 @@
 		(dnp no)
 		(uuid "00000000-0000-0000-0000-00005e345e48")
 		(property "Reference" "U1"
-			(at 162.56 28.5496 0)
+			(at 165.1 33.274 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2287,7 +2287,7 @@
 			)
 		)
 		(property "Value" "74HC165"
-			(at 162.56 30.861 0)
+			(at 168.148 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2819,7 +2819,7 @@
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
+		(lib_id "power:+BATT")
 		(at 228.6 25.4 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -2827,8 +2827,8 @@
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "1b0f9d2f-9799-4b7b-8218-a66fb2845e9b")
-		(property "Reference" "#PWR022"
+		(uuid "1bfb67da-d788-44fa-a408-e7a86041728a")
+		(property "Reference" "#PWR019"
 			(at 228.6 29.21 0)
 			(effects
 				(font
@@ -2837,8 +2837,8 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+3V3"
-			(at 228.6 21.59 0)
+		(property "Value" "+BATT"
+			(at 228.6 20.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2863,7 +2863,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power flag, positive battery voltage"
 			(at 228.6 25.4 0)
 			(effects
 				(font
@@ -2873,19 +2873,85 @@
 			)
 		)
 		(pin "1"
-			(uuid "c9b77818-659d-498a-854e-9d9f324b0cea")
+			(uuid "305ab032-0195-4b04-9eb3-ad98ff74b589")
 		)
 		(instances
-			(project "remote"
+			(project ""
 				(path "/0776e334-fbf5-4a46-a47e-c7e0521e2a6b/00000000-0000-0000-0000-0000598770f9"
-					(reference "#PWR022")
+					(reference "#PWR019")
 					(unit 1)
 				)
 			)
 		)
 	)
 	(symbol
-		(lib_id "power:+3V3")
+		(lib_id "power:+BATT")
+		(at 154.94 27.94 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5472b4db-37eb-482c-be86-4682ee5f9051")
+		(property "Reference" "#PWR018"
+			(at 154.94 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "+BATT"
+			(at 154.94 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 154.94 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 154.94 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power flag, positive battery voltage"
+			(at 154.94 27.94 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "3a4dde0a-54cd-4c8e-9459-90cacf54c97a")
+		)
+		(instances
+			(project ""
+				(path "/0776e334-fbf5-4a46-a47e-c7e0521e2a6b/00000000-0000-0000-0000-0000598770f9"
+					(reference "#PWR018")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+BATT")
 		(at 147.32 115.57 0)
 		(unit 1)
 		(exclude_from_sim no)
@@ -2893,8 +2959,8 @@
 		(on_board yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "374ba737-a292-4c51-b016-31222d0043e8")
-		(property "Reference" "#PWR021"
+		(uuid "8d96db85-aa79-4f6b-b76e-6d3e07d15751")
+		(property "Reference" "#PWR020"
 			(at 147.32 119.38 0)
 			(effects
 				(font
@@ -2903,8 +2969,8 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "+3V3"
-			(at 147.32 111.76 0)
+		(property "Value" "+BATT"
+			(at 147.32 110.49 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2929,7 +2995,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Power flag, positive battery voltage"
 			(at 147.32 115.57 0)
 			(effects
 				(font
@@ -2939,12 +3005,12 @@
 			)
 		)
 		(pin "1"
-			(uuid "1d605673-5620-4b77-93fa-9f4b880543e1")
+			(uuid "1710058d-f505-4fd4-ab1f-b147b7240836")
 		)
 		(instances
-			(project "remote"
+			(project ""
 				(path "/0776e334-fbf5-4a46-a47e-c7e0521e2a6b/00000000-0000-0000-0000-0000598770f9"
-					(reference "#PWR021")
+					(reference "#PWR020")
 					(unit 1)
 				)
 			)
@@ -3011,72 +3077,6 @@
 			(project "remote"
 				(path "/0776e334-fbf5-4a46-a47e-c7e0521e2a6b/00000000-0000-0000-0000-0000598770f9"
 					(reference "#PWR028")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:+3V3")
-		(at 154.94 27.94 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "c0cc844c-a34a-4d51-aaf0-0d0cbbe68a85")
-		(property "Reference" "#PWR020"
-			(at 154.94 31.75 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "+3V3"
-			(at 154.94 24.13 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 154.94 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" ""
-			(at 154.94 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 154.94 27.94 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "43592f31-325f-461e-9466-00c158b666a8")
-		)
-		(instances
-			(project "remote"
-				(path "/0776e334-fbf5-4a46-a47e-c7e0521e2a6b/00000000-0000-0000-0000-0000598770f9"
-					(reference "#PWR020")
 					(unit 1)
 				)
 			)
