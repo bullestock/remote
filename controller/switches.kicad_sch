@@ -1,5 +1,5 @@
 (kicad_sch
-	(version 20240812)
+	(version 20241004)
 	(generator "eeschema")
 	(generator_version "8.99")
 	(uuid "c4f953cf-bdc6-4d3e-9f48-d8bd89769d12")
@@ -12,23 +12,23 @@
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
-			(property "Reference" "U1"
-				(at 0 24.7904 0)
+			(property "Reference" "U"
+				(at 3.81 -1.27 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Value" "74HC165"
-				(at 0 22.479 0)
+			(property "Value" "74LS165"
+				(at 3.81 -6.35 0)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
 				)
 			)
-			(property "Footprint" "Package_SO:SOP-16_3.9x9.9mm_P1.27mm"
+			(property "Footprint" ""
 				(at 0 0 0)
 				(effects
 					(font
@@ -46,7 +46,7 @@
 					(hide yes)
 				)
 			)
-			(property "Description" ""
+			(property "Description" "Shift Register 8 bits, parallel load"
 				(at 0 0 0)
 				(effects
 					(font
@@ -83,24 +83,9 @@
 						)
 					)
 				)
-			)
-			(symbol "74LS165_0_1"
-				(rectangle
-					(start -10.16 16.51)
-					(end 10.16 -16.51)
-					(stroke
-						(width 0)
-						(type solid)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "74LS165_1_0"
 				(pin power_in line
-					(at 0 -19.05 90)
-					(length 2.54)
+					(at -7.62 -16.51 90)
+					(length 0)
 					(name "GND"
 						(effects
 							(font
@@ -114,6 +99,19 @@
 								(size 1.27 1.27)
 							)
 						)
+					)
+				)
+			)
+			(symbol "74LS165_0_1"
+				(rectangle
+					(start -10.16 16.51)
+					(end 10.16 -16.51)
+					(stroke
+						(width 0)
+						(type solid)
+					)
+					(fill
+						(type none)
 					)
 				)
 			)
@@ -375,7 +373,9 @@
 		)
 		(symbol "Connector_Generic:Conn_01x08"
 			(pin_names
-				(offset 1.016) hide)
+				(offset 1.016)
+				(hide yes)
+			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
@@ -688,7 +688,9 @@
 			(embedded_fonts no)
 		)
 		(symbol "Device:C"
-			(pin_numbers hide)
+			(pin_numbers
+				(hide yes)
+			)
 			(pin_names
 				(offset 0.254)
 			)
@@ -926,7 +928,8 @@
 			(symbol "+3V3_1_1"
 				(pin power_in line
 					(at 0 0 90)
-					(length 0) hide
+					(length 0)
+					(hide yes)
 					(name "+3V3"
 						(effects
 							(font
@@ -1023,7 +1026,8 @@
 			(symbol "GND_1_1"
 				(pin power_in line
 					(at 0 0 270)
-					(length 0) hide
+					(length 0)
+					(hide yes)
 					(name "GND"
 						(effects
 							(font
@@ -1468,7 +1472,8 @@
 			(symbol "GND_1_1"
 				(pin power_in line
 					(at 0 0 270)
-					(length 0) hide
+					(length 0)
+					(hide yes)
 					(name "GND"
 						(effects
 							(font
@@ -1495,6 +1500,12 @@
 		(uuid "494dec5d-709a-48b8-bb93-e8b757a12b6a")
 	)
 	(junction
+		(at 140.97 72.39)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "6ab67a48-039c-4fdb-be90-d1e8f63f52d7")
+	)
+	(junction
 		(at 228.6 40.64)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -1505,12 +1516,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "ed78a64d-090a-41a8-8e6d-84a34de81e78")
-	)
-	(junction
-		(at 140.97 73.66)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "f9b02556-fe30-4c6b-b23d-4bc508042937")
 	)
 	(no_connect
 		(at 172.72 127)
@@ -1539,16 +1544,6 @@
 			(type default)
 		)
 		(uuid "0522eadb-61c1-49d1-888c-dfe53105fca2")
-	)
-	(wire
-		(pts
-			(xy 140.97 73.66) (xy 140.97 68.58)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "088787eb-1c8a-4efa-8344-92ad3c4dadc5")
 	)
 	(wire
 		(pts
@@ -1629,16 +1624,6 @@
 			(type default)
 		)
 		(uuid "35c43776-e63f-47b8-9252-597478f3f9fc")
-	)
-	(wire
-		(pts
-			(xy 162.56 73.66) (xy 162.56 72.39)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "457bb283-b2e5-4fba-b704-3f80813c0ebd")
 	)
 	(wire
 		(pts
@@ -1752,6 +1737,16 @@
 	)
 	(wire
 		(pts
+			(xy 140.97 72.39) (xy 140.97 76.2)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "875a3bcc-6ae3-49c7-8e24-0022fde04bfd")
+	)
+	(wire
+		(pts
 			(xy 125.73 129.54) (xy 137.16 129.54)
 		)
 		(stroke
@@ -1782,7 +1777,7 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 76.2) (xy 140.97 73.66)
+			(xy 140.97 68.58) (xy 140.97 72.39)
 		)
 		(stroke
 			(width 0)
@@ -1822,13 +1817,13 @@
 	)
 	(wire
 		(pts
-			(xy 140.97 73.66) (xy 162.56 73.66)
+			(xy 154.94 72.39) (xy 140.97 72.39)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "a886168e-35e5-45f2-9e8d-1a9d660f552f")
+		(uuid "997d157c-8807-4a7a-bf88-83816d7fe96b")
 	)
 	(wire
 		(pts
@@ -1869,6 +1864,16 @@
 			(type default)
 		)
 		(uuid "cd6df98e-1f18-45ee-ba3c-2e1c60543b0d")
+	)
+	(wire
+		(pts
+			(xy 154.94 69.85) (xy 154.94 72.39)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d17ec0eb-25ce-47b0-a404-6b3f72240ce9")
 	)
 	(wire
 		(pts
@@ -2307,7 +2312,7 @@
 				(hide yes)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "Shift Register 8 bits, parallel load"
 			(at 162.56 53.34 0)
 			(effects
 				(font
