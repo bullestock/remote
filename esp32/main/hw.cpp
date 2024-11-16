@@ -133,8 +133,10 @@ void read_switches(ForwardAirFrame& frame)
     // Get toggle bits
     tmp = (tmp & 0x7F80) >> 7;
     frame.toggles =
-        ((tmp & 0xC0) >> 2) +
-        ((tmp & 0x30) << 2) +
+        ((tmp & 0x40) >> 1) +
+        ((tmp & 0x80) >> 3) +
+        ((tmp & 0x10) << 3) +
+        ((tmp & 0x20) << 1) +
         ((tmp & 0x0C) >> 2) +
         ((tmp & 0x03) << 2);
 }
