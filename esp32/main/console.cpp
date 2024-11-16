@@ -156,6 +156,30 @@ int set_peer_mac(int argc, char** argv)
     return 0;
 }
 
+struct
+{
+    struct arg_dbl* lp_rate;
+    struct arg_end* end;
+} set_lp_rate_args;
+
+int set_lp_rate(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &set_lp_rate_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, set_lp_rate_args.end, argv[0]);
+        return 1;
+    }
+    const auto lp_rate = set_lp_rate_args.lp_rate->dval[0];
+    if (!set_lowpass_rate(lp_rate))
+    {
+        printf("ERROR: Invalid rate\n");
+        return 1;
+    }
+    printf("OK: LP rate set to %f\n", lp_rate);
+    return 0;
+}
+
 void initialize_console()
 {
     /* Disable buffering on stdin */
@@ -287,6 +311,17 @@ void run_console(Display& display)
         .argtable = &set_peer_mac_args
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&set_peer_mac_cmd));
+
+    set_lp_rate_args.lp_rate = arg_dbl1(NULL, NULL, "<rate>", "LP filter rate");
+    set_lp_rate_args.end = arg_end(2);
+    const esp_console_cmd_t set_lp_rate_cmd = {
+        .command = "lp",
+        .help = "Set lowpass filter rate",
+        .hint = nullptr,
+        .func = &set_lp_rate,
+        .argtable = &set_lp_rate_args
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&set_lp_rate_cmd));
 
     const char* prompt = LOG_COLOR_I "remote> " LOG_RESET_COLOR;
     int probe_status = linenoiseProbe();

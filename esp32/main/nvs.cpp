@@ -1,6 +1,7 @@
 #include "nvs.h"
 
 #include "defs.h"
+#include "lowpass.h"
 
 #include <string.h>
 
@@ -13,6 +14,7 @@ const int MAX_STICK = 4;
 
 static uint16_t stick_calibration[2 * MAX_STICK];
 static char peer_mac[2*ESP_NOW_ETH_ALEN + 1];
+static float lowpass_rate = 0.0;
 
 void set_stick_calibration(int stick, int min_val, int max_val)
 {
@@ -33,6 +35,18 @@ bool set_peer_mac(const char* mac)
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_str(my_handle, MAC_KEY, peer_mac));
+    ESP_ERROR_CHECK(nvs_commit(my_handle));
+    nvs_close(my_handle);
+    return true;
+}
+
+bool set_lowpass_rate(float rate)
+{
+    if (rate <= 0.0 || rate >= 1.0)
+        return false;
+    nvs_handle my_handle;
+    ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
+    ESP_ERROR_CHECK(nvs_set_blob(my_handle, LP_RATE_KEY, &rate, sizeof(rate)));
     ESP_ERROR_CHECK(nvs_commit(my_handle));
     nvs_close(my_handle);
     return true;
@@ -95,6 +109,15 @@ void init_nvs()
         }
         else
             printf("Peer MAC %s\n", peer_mac);
+    }
+    sz = sizeof(lowpass_rate);
+    if (nvs_get_blob(my_handle, LP_RATE_KEY, &lowpass_rate, &sz) != ESP_OK ||
+        sz != sizeof(lowpass_rate))
+        printf("No lowpass rate\n");
+    else
+    {
+        printf("Lowpass rate: %f\n", lowpass_rate);
+        LowPassFilter::set_rate(lowpass_rate);
     }
     nvs_close(my_handle);
 }
