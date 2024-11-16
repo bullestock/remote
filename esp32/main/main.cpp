@@ -124,7 +124,7 @@ void app_main(void)
             std::string peer_bat = "---";
             if (their_battery > 0)
                 peer_bat = format("%2.2fV", their_battery);
-            display.set_info(3, format("%.2V  %s  %s",
+            display.set_info(3, format("%1.2fV  %s  %s",
                                        my_battery,
                                        peer_bat.c_str(),
                                        delay_info.c_str()));
