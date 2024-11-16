@@ -1,6 +1,7 @@
 #include "hw.h"
 #include "defs.h"
 #include "display.h"
+#include "lowpass.h"
 #include "nvs.h"
 #include "protocol.h"
 
@@ -158,15 +159,17 @@ static int calibrated(int stick, int value)
     return clamped((value - cal[0]) * 4095 / (cal[1] - cal[0]));
 }
 
+static LowPassFilter filters[4];
+
 void fill_frame(ForwardAirFrame& frame,
                 int64_t ticks)
 {
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
     frame.ticks = ticks;
-    frame.left_x = calibrated(0, read_adc(LEFT_X_CHANNEL));
-    frame.left_y = calibrated(1, read_adc(LEFT_Y_CHANNEL));
-    frame.right_x = calibrated(2, read_adc(RIGHT_X_CHANNEL));
-    frame.right_y = calibrated(3, read_adc(RIGHT_Y_CHANNEL));
+    frame.left_x = calibrated(0, filters[0].filter(read_adc(LEFT_X_CHANNEL)));
+    frame.left_y = calibrated(1, filters[1].filter(read_adc(LEFT_Y_CHANNEL)));
+    frame.right_x = calibrated(2, filters[2].filter(read_adc(RIGHT_X_CHANNEL)));
+    frame.right_y = calibrated(3, filters[3].filter(read_adc(RIGHT_Y_CHANNEL)));
     frame.left_pot = read_adc(POT1_CHANNEL);
     frame.right_pot = read_adc(POT2_CHANNEL);
     read_switches(frame);
