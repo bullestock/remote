@@ -21,7 +21,7 @@ struct ForwardAirFrame
     /// 01  Up
     /// 00  Center
     /// 10  Down
-    uint16_t toggles;           // 17
+    uint8_t toggles;            // 17
     uint8_t pushbuttons;        // 18
     /// 01  Top
     /// 00  Center
