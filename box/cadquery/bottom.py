@@ -133,9 +133,9 @@ chp_d1 = 8
 chp_d2 = 15
 result = (result.
           faces("<Z").workplane(centerOption='CenterOfMass').
-          transformed(rotate=(90, 0, 0), offset=(0, 75, -10)).
+          transformed(rotate=(90, -34, 0), offset=(100, 80, -10)).
           slot2D(chp_d2, chp_d1).
-          cutBlind(10)
+          cutBlind(100)
           )
 
 show_object(result)
