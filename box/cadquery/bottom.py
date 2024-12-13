@@ -119,12 +119,11 @@ result = (result.faces(">Z").workplane(-oah).
           )
 
 # Antenna cutout
-ant_d = 10.5
-ant_d2 = 2*ant_d
+ant_d = 6.8
 result = (result.
           faces("<Z").workplane().
-          transformed(rotate=(90, 0, 90), offset=(30 - 4.3, -100, -oah + ant_d - ant_d2/2)).
-          slot2D(ant_d2, ant_d).
+          transformed(rotate=(90, 0, 90), offset=(25, -100, -oah + 1.2*ant_d)).
+          circle(ant_d/2).
           cutBlind(10)
           )
 
