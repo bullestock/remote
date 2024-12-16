@@ -1,4 +1,4 @@
-charger_d1 = 17.5
+charger_d1 = 19.1 # 17.5
 charger_d2 = 27.8
 charger_d3 = 3
 charger_d4 = 1.5
