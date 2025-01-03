@@ -104,8 +104,8 @@ bool init_radio()
 
     send_mutex = xSemaphoreCreateMutex();
     receive_mutex = xSemaphoreCreateMutex();
-    
-    /* Initialize sending parameters. */
+
+    // Allocate first frame
     auto frame = reinterpret_cast<ForwardAirFrame*>(malloc(sizeof(ForwardAirFrame)));
     if (!frame)
         fatal_error("Malloc send parameter fail");
@@ -117,9 +117,9 @@ bool init_radio()
     return true;
 }
 
-/* ESPNOW sending or receiving callback function is called in WiFi task.
- * Users should not do lengthy operations from this task. Instead, post
- * necessary data to a queue and handle it from a lower priority task. */
+// ESPNOW sending or receiving callback function is called in WiFi task.
+// Users should not do lengthy operations from this task. Instead, post
+// necessary data to a queue and handle it from a lower priority task.
 static void espnow_send_cb(const uint8_t*, esp_now_send_status_t status)
 {
     espnow_event_t evt;

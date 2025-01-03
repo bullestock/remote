@@ -21,8 +21,7 @@ void app_main(void)
 
     init_hardware();
 
-    SSD1306_t ssd;
-    Display display(ssd);
+    Display& display = Display::instance();
 
     init_nvs();
     
@@ -67,6 +66,7 @@ void app_main(void)
     }
 
     printf("\nStarting application\n");
+    xTaskCreate(display_task, "display_task", 4*1024, NULL, 1, NULL);
 
     int consecutive_errors = 0;
     unsigned long failures = 0;
@@ -93,22 +93,7 @@ void app_main(void)
         if (++count > 100)
         {
             count = 0;
-            printf("Update display\n");
-#if 0
-            display.clear();
-            display.add_progress(format("L %3d %3d",
-                                        frame.left_x, frame.left_y));
-            display.add_progress(format("R %3d %3d",
-                                        frame.right_x, frame.right_y));
-            display.add_progress(format("B %02X T %02X S %d",
-                                        frame.pushbuttons,
-                                        frame.toggles,
-                                        frame.slide));
-            display.add_progress(format("P %02X %02X",
-                                        frame.left_pot, frame.right_pot));
-            display.add_progress(format("B %.3f", my_battery));
-#else
-#endif
+            display.set_debug_info(frame);
             int delay = 0;
             std::string delay_info;
             if (actual_delay_samples > 0)
@@ -142,7 +127,7 @@ void app_main(void)
             ++successes;
 
             ReturnAirFrame ret_frame;
-            for (int i = 0; !ready && (i < 100); ++i)
+            for (int i = 0; !ready && (i < 10); ++i)
             {
                 if (xSemaphoreTake(receive_mutex, portMAX_DELAY) == pdTRUE)
                 {
