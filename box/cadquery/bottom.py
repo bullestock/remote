@@ -1,12 +1,12 @@
 from defs import *
 
 # Overall height
-oah = 33.5
+oah = 33.5 + 3
 # Shell thickness
 th = 3
 # Height of standoffs for mainboard
-mainboard_standoff_h = 11.6 + 2.75
-controller_standoff_h = 5
+mainboard_standoff_h = 11.6 + 2.75 + 3
+controller_standoff_h = 5 + 3
 standoff_d = 8
 
 lid_screwpost_h = 5
@@ -69,7 +69,7 @@ result = (result.faces("<Z").workplane(-th).
 result = (result.faces("<Z").workplane(-th).
           pushPoints(controller_standoffs).
           circle(insert_d/2).
-          cutBlind(-insert_l)
+          cutBlind(-oah)
           )
 
 # Mainboard standoffs, L
@@ -104,7 +104,7 @@ result = (result.workplaneFromTagged("main_s").workplane(-mainboard_standoff_h).
 # Screwposts
 
 for c in screwpost_coords:
-    result = result + screwpost_body(c[0], c[1], 10, oah - th - lid_screwpost_h, th)
+    result = result + screwpost_body(c[0], c[1], 10, oah - th - lid_screwpost_h - 2, th)
 
 result = (result.faces(">Z").workplane().
           pushPoints(screwpost_coords).
