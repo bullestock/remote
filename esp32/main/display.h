@@ -34,6 +34,7 @@ private:
     void thread_body();
     
     SSD1306_t display;
+    bool display_present = false;
     // Used by add_progress()
     int row = 0;
     std::vector<std::string> lines;
@@ -43,6 +44,7 @@ private:
     std::string status;
     std::string last_status;
     ForwardAirFrame debug_info;
+    ForwardAirFrame last_debug_info;
     std::string info_lines[NOF_INFO_LINES];
     bool info_lines_dirty[NOF_INFO_LINES];
 

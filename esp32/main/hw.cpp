@@ -89,7 +89,7 @@ int read_adc(int channel)
     if (res != ESP_OK)
     {
         ESP_LOGE(TAG, "Error reading ADC: %d", res);
-        return 0;
+        return std::numeric_limits<int>::max();
     }
 
     return value[0] * 256 + value[1];
@@ -153,15 +153,32 @@ static int clamped(int value)
 
 static int calibrated(int stick, int value)
 {
+    if (value >= 4096)
+        return value;
     const auto cal = get_stick_calibration(stick);
     if (cal[1] == 0)
         return clamped(value);
     return clamped((value - cal[0]) * 4095 / (cal[1] - cal[0]));
 }
 
+bool check(int value)
+{
+    return value < 4096;
+}
+
+bool check(const ForwardAirFrame& frame)
+{
+    return check(frame.left_x) &&
+        check(frame.left_y) &&
+        check(frame.right_x) &&
+        check(frame.right_y) &&
+        check(frame.left_pot) &&
+        check(frame.right_pot);
+}
+
 static LowPassFilter filters[4];
 
-void fill_frame(ForwardAirFrame& frame,
+bool fill_frame(ForwardAirFrame& frame,
                 int64_t ticks)
 {
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
@@ -172,8 +189,11 @@ void fill_frame(ForwardAirFrame& frame,
     frame.right_y = calibrated(3, filters[3].filter(read_adc(RIGHT_Y_CHANNEL)));
     frame.left_pot = read_adc(POT1_CHANNEL);
     frame.right_pot = read_adc(POT2_CHANNEL);
+    if (!check(frame))
+        return false;
     read_switches(frame);
     set_crc(frame);
+    return true;
 }
 
 float get_my_battery()

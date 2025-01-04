@@ -10,7 +10,7 @@ int read_adc(int channel);
 
 void read_switches(ForwardAirFrame& frame);
 
-void fill_frame(ForwardAirFrame& frame,
+bool fill_frame(ForwardAirFrame& frame,
                 int64_t ticks);
 
 /// Get averaged battery voltage in V

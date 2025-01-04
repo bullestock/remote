@@ -86,7 +86,11 @@ void app_main(void)
     {
         const auto send_time = esp_timer_get_time();
         ForwardAirFrame frame;
-        fill_frame(frame, send_time);
+        if (!fill_frame(frame, send_time))
+        {
+            vTaskDelay(100 / portTICK_PERIOD_MS);
+            continue;
+        }
 
         const auto my_battery = get_my_battery();
 

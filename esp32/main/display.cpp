@@ -1,5 +1,8 @@
 #include "display.h"
 #include "defs.h"
+#include "format.h"
+
+#include <string.h>
 
 static constexpr const int STATUS_START = 4;
 
@@ -14,16 +17,27 @@ Display::Display()
     display._address = DISPLAY_I2C_ADDRESS;
     display._flip = false;
 
-    ssd1306_init(&display, 128, 64);
+    display_present = ssd1306_init(&display, 128, 64);
+    if (!display_present)
+    {
+        ESP_LOGE(TAG, "Display not present");
+        return;
+    }
+
     ssd1306_contrast(&display, 0xff);
     clear();
 
     for (int i = 0; i < NOF_INFO_LINES; ++i)
         info_lines_dirty[i] = false;
+
+    memset(&debug_info, 0, sizeof(debug_info));
+    memset(&last_debug_info, 0, sizeof(last_debug_info));
 }
 
 void Display::clear()
 {
+    if (!display_present)
+        return;
     ssd1306_clear_screen(&display, false);
     lines.clear();
     row = 0;
@@ -59,6 +73,8 @@ SSD1306_t* Display::device()
 
 void Display::add_progress(const std::string& status)
 {
+    if (!display_present)
+        return;
     std::string txt = std::string(" ") + status;
     ssd1306_display_text(device(), row, txt.c_str(), txt.size(), false);
     ++row;
@@ -80,6 +96,8 @@ void Display::thread_body()
     while (1)
     {
         vTaskDelay(100 / portTICK_PERIOD_MS);
+        if (!display_present)
+            continue;
         std::string new_status;
         std::string info_lines_copy[NOF_INFO_LINES];
         bool info_lines_dirty_copy[NOF_INFO_LINES];
@@ -115,6 +133,18 @@ void Display::thread_body()
                                      info_lines_copy[i].c_str(), info_lines_copy[i].size(),
                                      false);
             }
+        }
+        // Update debug
+        if (debug_info.right_x != last_debug_info.right_x ||
+            debug_info.right_y != last_debug_info.right_y)
+        {
+            const auto txt = format("R %3d %3d",
+                                    debug_info.right_x, debug_info.right_y);
+            ssd1306_clear_line(device(), STATUS_START + NOF_INFO_LINES, false);
+            ssd1306_display_text(device(), STATUS_START + NOF_INFO_LINES,
+                                 txt.c_str(), txt.size(),
+                                 false);
+            last_debug_info = debug_info;
         }
     }
 }
