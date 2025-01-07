@@ -110,12 +110,11 @@ void app_main(void)
                 delay = sum/actual_delay_samples;
                 delay_info = format("%d ms", delay/1000);
             }
-            display.set_info(0, format("Sent %d Err %d", successes, failures));
-            display.set_info(1, format("Bad CRC %d", crc_errors));
+            display.set_info(0, format("S %d E %d", successes, failures));
             std::string peer_bat = "---";
             if (their_battery > 0)
                 peer_bat = format("%2.2fV", their_battery);
-            display.set_info(3, format("%1.2fV  %s  %s",
+            display.set_info(1, format("%1.2fV  %s  %s",
                                        my_battery,
                                        peer_bat.c_str(),
                                        delay_info.c_str()));
@@ -180,11 +179,11 @@ void app_main(void)
             }
         }
         if (consecutive_errors > 10)
-            display.set_status("-----");
+            display.set_status("!!!!!!");
         else if (!ready)
-            display.set_status("!!!!!");
+            display.set_status("------");
         else
-            display.set_status("Ready");
+            display.set_status("\x7f\x7f\x7f\x7f\x7f\x7f");
     }
 }
 
