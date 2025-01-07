@@ -179,14 +179,15 @@ bool check(const ForwardAirFrame& frame)
 static LowPassFilter filters[4];
 
 bool fill_frame(ForwardAirFrame& frame,
-                int64_t ticks)
+                int64_t ticks,
+                bool initial)
 {
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
     frame.ticks = ticks;
-    frame.left_x = calibrated(0, filters[0].filter(read_adc(LEFT_X_CHANNEL)));
-    frame.left_y = calibrated(1, filters[1].filter(read_adc(LEFT_Y_CHANNEL)));
-    frame.right_x = calibrated(2, filters[2].filter(read_adc(RIGHT_X_CHANNEL)));
-    frame.right_y = calibrated(3, filters[3].filter(read_adc(RIGHT_Y_CHANNEL)));
+    frame.left_x = calibrated(0, filters[0].filter(read_adc(LEFT_X_CHANNEL), initial));
+    frame.left_y = calibrated(1, filters[1].filter(read_adc(LEFT_Y_CHANNEL), initial));
+    frame.right_x = calibrated(2, filters[2].filter(read_adc(RIGHT_X_CHANNEL), initial));
+    frame.right_y = calibrated(3, filters[3].filter(read_adc(RIGHT_Y_CHANNEL), initial));
     frame.left_pot = read_adc(POT1_CHANNEL);
     frame.right_pot = read_adc(POT2_CHANNEL);
     if (!check(frame))

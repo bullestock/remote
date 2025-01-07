@@ -82,15 +82,17 @@ void app_main(void)
     display.clear();
     display.set_status("Ready");
     int count = 90;
+    bool initial = true;
     while (1)
     {
         const auto send_time = esp_timer_get_time();
         ForwardAirFrame frame;
-        if (!fill_frame(frame, send_time))
+        if (!fill_frame(frame, send_time, initial))
         {
             vTaskDelay(100 / portTICK_PERIOD_MS);
             continue;
         }
+        initial = false;
 
         const auto my_battery = get_my_battery();
 
@@ -108,7 +110,7 @@ void app_main(void)
                 delay = sum/actual_delay_samples;
                 delay_info = format("%d ms", delay/1000);
             }
-            display.set_info(0, format("OK %d F %d", successes, failures));
+            display.set_info(0, format("Sent %d Err %d", successes, failures));
             display.set_info(1, format("Bad CRC %d", crc_errors));
             std::string peer_bat = "---";
             if (their_battery > 0)

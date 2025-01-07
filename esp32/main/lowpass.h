@@ -9,7 +9,7 @@ public:
 
     static void set_rate(float rate);
 
-    float filter(float value);
+    float filter(float value, bool initial = false);
 
 private:
     static float A;

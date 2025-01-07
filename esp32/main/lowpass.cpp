@@ -7,10 +7,13 @@ void LowPassFilter::set_rate(float rate)
     A = rate;
 }
 
-float LowPassFilter::filter(float value)
+float LowPassFilter::filter(float value, bool initial)
 {
     if (value >= 4096)
         return value;
-    previous += A * (value - previous);
+    if (initial)
+        previous = value;
+    else
+        previous += A * (value - previous);
     return previous;
 }
