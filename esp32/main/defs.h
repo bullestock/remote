@@ -2,7 +2,7 @@
 
 #include <driver/gpio.h>
 
-constexpr const char* VERSION = "0.5.0";
+constexpr const char* VERSION = "0.6.0";
 
 // NVS keys
 constexpr const char* STICK_KEY = "stk";
@@ -26,7 +26,7 @@ constexpr const auto LEFT_Y_CHANNEL = 2;
 constexpr const auto RIGHT_X_CHANNEL = 1;
 constexpr const auto RIGHT_Y_CHANNEL = 5;
 constexpr const auto POT1_CHANNEL = 0;
-constexpr const auto POT2_CHANNEL = 2;
+constexpr const auto POT2_CHANNEL = 4;
 constexpr const auto BATTERY_CHANNEL = 3;
 
 constexpr const auto DISPLAY_I2C_ADDRESS = 0x3C;
