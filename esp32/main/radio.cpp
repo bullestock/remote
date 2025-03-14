@@ -215,11 +215,11 @@ static void espnow_task(void *pvParameter)
 bool send_frame(ForwardAirFrame& frame)
 {
 #if 0
-    printf("X %3d Y %3d X %3d Y %3d S %02X %02X %d P %02X %02X\n",
+    printf("X %4d Y %4d X %4d Y %4d S %02X B %02X T %02X P %4d %4d\n",
            frame.left_x, frame.left_y, frame.right_x, frame.right_y,
+           frame.slide,
            frame.pushbuttons,
            frame.toggles,
-           frame.slide,
            frame.left_pot, frame.right_pot);
 #endif
 
