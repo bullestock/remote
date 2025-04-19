@@ -4,13 +4,23 @@
 
 void init_nvs();
 
-void set_stick_calibration(int stick, int min_val, int max_val);
+struct calibration_data
+{
+    uint16_t min;
+    uint16_t mid;
+    uint16_t max;
+};
+
+void set_stick_calibration(int stick,
+                           int min_val,
+                           int mid_val,
+                           int max_val);
 
 bool set_peer_mac(const char* peer_mac);
 
 bool set_lowpass_rate(float rate);
 
-const uint16_t* get_stick_calibration(int stick);
+const calibration_data& get_stick_calibration(int stick);
 
 const char* get_peer_mac();
 

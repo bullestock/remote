@@ -12,14 +12,18 @@
 
 const int MAX_STICK = 4;
 
-static uint16_t stick_calibration[2 * MAX_STICK];
+static calibration_data stick_calibration[MAX_STICK];
 static char peer_mac[2*ESP_NOW_ETH_ALEN + 1];
 static float lowpass_rate = 0.0;
 
-void set_stick_calibration(int stick, int min_val, int max_val)
+void set_stick_calibration(int stick,
+                           int min_val,
+                           int mid_val,
+                           int max_val)
 {
-    stick_calibration[stick * 2] = min_val;
-    stick_calibration[stick * 2 + 1] = max_val;
+    stick_calibration[stick].min = min_val;
+    stick_calibration[stick].mid = mid_val;
+    stick_calibration[stick].max = max_val;
     nvs_handle my_handle;
     ESP_ERROR_CHECK(nvs_open("storage", NVS_READWRITE, &my_handle));
     ESP_ERROR_CHECK(nvs_set_blob(my_handle, STICK_KEY, stick_calibration, sizeof(stick_calibration)));
@@ -52,9 +56,9 @@ bool set_lowpass_rate(float rate)
     return true;
 }
 
-const uint16_t* get_stick_calibration(int stick)
+const calibration_data& get_stick_calibration(int stick)
 {
-    return &(stick_calibration[stick * 2]);
+    return stick_calibration[stick];
 }
 
 const char* get_peer_mac()
@@ -81,17 +85,19 @@ void init_nvs()
         printf("No stick calibration data\n");
         for (int i = 0; i < MAX_STICK; ++i)
         {
-            stick_calibration[i] = 0;
-            stick_calibration[i + 1] = 4095;
+            stick_calibration[i].min = 0;
+            stick_calibration[i].mid = 2048;
+            stick_calibration[i].max = 4095;
         }
     }
     else
     {
         printf("Stick calibration data:\n");
         for (int i = 0; i < MAX_STICK; ++i)
-            printf("%d  %5d  %5d\n", i,
-                   stick_calibration[i * 2],
-                   stick_calibration[i * 2 + 1]);
+            printf("%d  %5d  %5d  %5d\n", i,
+                   stick_calibration[i].min,
+                   stick_calibration[i].mid,
+                   stick_calibration[i].max);
     }
     sz = 0;
     if (nvs_get_str(my_handle, MAC_KEY, nullptr, &sz) != ESP_OK ||
@@ -121,3 +127,7 @@ void init_nvs()
     }
     nvs_close(my_handle);
 }
+
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:

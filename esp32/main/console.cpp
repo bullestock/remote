@@ -47,22 +47,69 @@ static int test_adc(int argc, char** argv)
     printf("Running ADC test\n");
 
     const int chan = test_adc_args.channel->ival[0];
-    for (int n = 0; n < 200; ++n)
+    const int N = 200;
+
+    int64_t sum = 0;
+    int min = 4096;
+    int max = 0;
+    for (int n = 0; n < N; ++n)
     {
         vTaskDelay(50/portTICK_PERIOD_MS);
         if (chan < 0)
         {
             for (int i = 0; i < 7; ++i)
-            {
-                for (int j = -1; j > chan; --j)
-                    read_adc(i);
                 printf("%04d ", read_adc(i));
-            }
             printf("\n");
         }
         else
-            printf("ADC channel %d: %d\n", chan, read_adc(chan));
+        {
+            const int val = read_adc(chan);
+            printf("ADC channel %d: %d\n", chan, val);
+            sum += val;
+            min = std::min(min, val);
+            max = std::max(max, val);
+        }
     }
+    if (chan >= 0)
+        printf("Min %4d avg %4d max %4d\n", min, static_cast<int>(sum/N), max);
+    
+    return 0;
+}
+
+struct
+{
+    struct arg_int* stick;
+    struct arg_end* end;
+} test_stick_args;
+
+static int test_stick(int argc, char** argv)
+{
+    int nerrors = arg_parse(argc, argv, (void**) &test_stick_args);
+    if (nerrors != 0)
+    {
+        arg_print_errors(stderr, test_stick_args.end, argv[0]);
+        return 1;
+    }
+    printf("Running stick test\n");
+
+    const int stick = test_stick_args.stick->ival[0];
+    const int N = 200;
+
+    float sum = 0;
+    float min = 4096;
+    float max = 0;
+    bool initial = true;
+    for (int n = 0; n < N; ++n)
+    {
+        vTaskDelay(50/portTICK_PERIOD_MS);
+        const auto val = read_stick(stick, initial);
+        initial = false;
+        printf("Stick %d: %2.3f\n", stick, val);
+        sum += val;
+        min = std::min(min, val);
+        max = std::max(max, val);
+    }
+    printf("Min %2.3f avg %2.3f max %2.3f\n", min, static_cast<float>(sum/N), max);
     
     return 0;
 }
@@ -85,6 +132,7 @@ struct
 {
     struct arg_int* stick;
     struct arg_int* min_val;
+    struct arg_int* mid_val;
     struct arg_int* max_val;
     struct arg_end* end;
 } calibrate_args;
@@ -103,7 +151,7 @@ static int calibrate(int argc, char** argv)
         for (int stick = 0; stick < 4; ++stick)
         {
             const auto cal = get_stick_calibration(stick);
-            printf("Stick %d: Min %d max %d\n", stick, cal[0], cal[1]);
+            printf("Stick %d: Min %5d mid %5d max %5d\n", stick, cal.min, cal.mid, cal.max);
         }
         return 0;
     }
@@ -112,7 +160,7 @@ static int calibrate(int argc, char** argv)
     {
         const auto stick = calibrate_args.stick->ival[0];
         const auto cal = get_stick_calibration(stick);
-        printf("Stick %d: Min %d max %d\n", stick, cal[0], cal[1]);
+        printf("Stick %d: Min %5d mid %5d max %5d\n", stick, cal.min, cal.mid, cal.max);
         return 0;
     }
 
@@ -132,6 +180,7 @@ static int calibrate(int argc, char** argv)
 
     set_stick_calibration(calibrate_args.stick->ival[0],
                           calibrate_args.min_val->ival[0],
+                          calibrate_args.mid_val->ival[0],
                           calibrate_args.max_val->ival[0]);    
     return 0;
 }
@@ -287,6 +336,17 @@ void run_console(Display& display)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_adc_cmd));
 
+    test_stick_args.stick = arg_int1(NULL, NULL, "<stick>", "Stick (0: LX, 1: LY, 2: RX, 3: RY)");
+    test_stick_args.end = arg_end(2);
+    const esp_console_cmd_t test_stick_cmd = {
+        .command = "stick",
+        .help = "Test stick",
+        .hint = nullptr,
+        .func = &test_stick,
+        .argtable = &test_stick_args,
+    };
+    ESP_ERROR_CHECK(esp_console_cmd_register(&test_stick_cmd));
+
     const esp_console_cmd_t test_display_cmd = {
         .command = "display",
         .help = "Test display",
@@ -298,6 +358,7 @@ void run_console(Display& display)
 
     calibrate_args.stick = arg_int0(NULL, NULL, "<stick>", "Stick (0: LX, 1: LY, 2: RX, 3: RY)");
     calibrate_args.min_val = arg_int0(NULL, NULL, "<min>", "Minimum value (0-4095)");
+    calibrate_args.mid_val = arg_int0(NULL, NULL, "<mid>", "Middle value (0-4095)");
     calibrate_args.max_val = arg_int0(NULL, NULL, "<min>", "Minimum value (0-4095)");
     calibrate_args.end = arg_end(10);
     const esp_console_cmd_t calibrate_cmd = {

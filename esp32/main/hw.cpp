@@ -13,6 +13,8 @@
 
 #include <unistd.h>
 
+#include <cmath>
+
 // 1001000
 const int SINGLE_ENDED = 0x80;
 const int IREF_ON_AD_ON = 0x0C; // Internal reference ON, A/D converter ON
@@ -142,28 +144,30 @@ void read_switches(ForwardAirFrame& frame)
         ((tmp & 0x03) << 2);
 }
 
-static int clamped(int value)
+static float clamped(int value, float min_value = -1.0)
 {
     if (value < 0)
-        return 0;
+        return min_value;
     if (value > 4095)
-        return 4095;
-    return value;
+        return 1.0;
+    return (value - 2048)/2048.0;
 }
 
-static int calibrated(int stick, int value)
+static float calibrated(int stick, int value)
 {
     if (value >= 4096)
-        return value;
+        return NAN;
     const auto cal = get_stick_calibration(stick);
-    if (cal[1] == 0)
+    if (cal.max == 0)
         return clamped(value);
-    return clamped((value - cal[0]) * 4095 / (cal[1] - cal[0]));
+    if (value >= cal.mid)
+        return clamped(2048 + (value - cal.mid) * 2048 / (cal.max - cal.mid));
+    return clamped((value - cal.min) * 2048 / (cal.mid - cal.min));
 }
 
-bool check(int value)
+bool check(float value)
 {
-    return value < 4096;
+    return value >= -1.0 && value <= 1.0;
 }
 
 bool check(const ForwardAirFrame& frame)
@@ -178,18 +182,43 @@ bool check(const ForwardAirFrame& frame)
 
 static LowPassFilter filters[4];
 
+float read_stick(int stick, bool initial)
+{
+    int chan = 0;
+    int sign = 1;
+    switch (stick)
+    {
+    case 0:
+        chan = LEFT_X_CHANNEL;
+        break;
+    case 1:
+        chan = LEFT_Y_CHANNEL;
+        sign = -1;
+        break;
+    case 2:
+        chan = RIGHT_X_CHANNEL;
+        sign = -1;
+        break;
+    case 3:
+        chan = RIGHT_Y_CHANNEL;
+        break;
+    }
+
+    return sign * calibrated(stick, filters[stick].filter(read_adc(chan), initial));
+}
+
 bool fill_frame(ForwardAirFrame& frame,
                 int64_t ticks,
                 bool initial)
 {
     frame.magic = ForwardAirFrame::MAGIC_VALUE;
     frame.ticks = ticks;
-    frame.left_x = calibrated(0, filters[0].filter(read_adc(LEFT_X_CHANNEL), initial));
-    frame.left_y = calibrated(1, filters[1].filter(read_adc(LEFT_Y_CHANNEL), initial));
-    frame.right_x = calibrated(2, filters[2].filter(read_adc(RIGHT_X_CHANNEL), initial));
-    frame.right_y = calibrated(3, filters[3].filter(read_adc(RIGHT_Y_CHANNEL), initial));
-    frame.left_pot = read_adc(POT1_CHANNEL);
-    frame.right_pot = read_adc(POT2_CHANNEL);
+    frame.left_x = read_stick(0, initial);
+    frame.left_y = read_stick(1, initial);
+    frame.right_x = read_stick(2, initial);
+    frame.right_y = read_stick(3, initial);
+    frame.left_pot = clamped(read_adc(POT1_CHANNEL), 0.0);
+    frame.right_pot = clamped(read_adc(POT2_CHANNEL), 0.0);
     if (!check(frame))
         return false;
     read_switches(frame);
