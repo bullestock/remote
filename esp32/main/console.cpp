@@ -12,9 +12,11 @@
 #include "esp_log.h"
 #include "esp_console.h"
 #include <esp_timer.h>
-#include "esp_vfs_dev.h"
+#include <esp_vfs.h>
+#include <esp_vfs_dev.h>
 
 #include <driver/uart.h>
+#include <driver/uart_vfs.h>
 
 #include "linenoise/linenoise.h"
 #include "argtable3/argtable3.h"
@@ -93,6 +95,30 @@ static int calibrate(int argc, char** argv)
     if (nerrors != 0)
     {
         arg_print_errors(stderr, calibrate_args.end, argv[0]);
+        return 1;
+    }
+
+    if (calibrate_args.stick->count < 1)
+    {
+        for (int stick = 0; stick < 4; ++stick)
+        {
+            const auto cal = get_stick_calibration(stick);
+            printf("Stick %d: Min %d max %d\n", stick, cal[0], cal[1]);
+        }
+        return 0;
+    }
+
+    if (calibrate_args.min_val->count < 1)
+    {
+        const auto stick = calibrate_args.stick->ival[0];
+        const auto cal = get_stick_calibration(stick);
+        printf("Stick %d: Min %d max %d\n", stick, cal[0], cal[1]);
+        return 0;
+    }
+
+    if (calibrate_args.max_val->count < 1)
+    {
+        printf("Error: Missing max argument\n");
         return 1;
     }
 
@@ -182,17 +208,17 @@ int set_lp_rate(int argc, char** argv)
 
 void initialize_console()
 {
-    /* Disable buffering on stdin */
+    // Disable buffering on stdin
     setvbuf(stdin, NULL, _IONBF, 0);
 
-    /* Minicom, screen, idf_monitor send CR when ENTER key is pressed */
-    esp_vfs_dev_uart_port_set_rx_line_endings(0, ESP_LINE_ENDINGS_CR);
-    /* Move the caret to the beginning of the next line on '\n' */
-    esp_vfs_dev_uart_port_set_tx_line_endings(0, ESP_LINE_ENDINGS_CRLF);
+    // Minicom, screen, idf_monitor send CR when ENTER key is pressed
+    uart_vfs_dev_port_set_rx_line_endings(0, ESP_LINE_ENDINGS_CR);
+    // Move the caret to the beginning of the next line on '\n'
+    uart_vfs_dev_port_set_tx_line_endings(0, ESP_LINE_ENDINGS_CRLF);
 
-    /* Configure UART. Note that REF_TICK is used so that the baud rate remains
-     * correct while APB frequency is changing in light sleep mode.
-     */
+    // Configure UART. Note that REF_TICK is used so that the baud rate remains
+    // correct while APB frequency is changing in light sleep mode.
+    
     uart_config_t uart_config;
     memset(&uart_config, 0, sizeof(uart_config));
     uart_config.baud_rate = CONFIG_ESP_CONSOLE_UART_BAUDRATE;
@@ -202,14 +228,14 @@ void initialize_console()
     uart_config.source_clk = UART_SCLK_REF_TICK;
     ESP_ERROR_CHECK(uart_param_config((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM, &uart_config));
 
-    /* Install UART driver for interrupt-driven reads and writes */
+    // Install UART driver for interrupt-driven reads and writes
     ESP_ERROR_CHECK(uart_driver_install((uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM,
                                          256, 0, 0, NULL, 0));
 
-    /* Tell VFS to use UART driver */
-    esp_vfs_dev_uart_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
+    // Tell VFS to use UART driver
+    uart_vfs_dev_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
 
-    /* Initialize the console */
+    // Initialize the console
     esp_console_config_t console_config;
     memset(&console_config, 0, sizeof(console_config));
     console_config.max_cmdline_args = 8;
@@ -219,17 +245,17 @@ void initialize_console()
 #endif
     ESP_ERROR_CHECK(esp_console_init(&console_config));
 
-    /* Configure linenoise line completion library */
-    /* Enable multiline editing. If not set, long commands will scroll within
-     * single line.
-     */
+    // Configure linenoise line completion library
+
+    // Enable multiline editing. If not set, long commands will scroll within
+    // single line.
     linenoiseSetMultiLine(1);
 
-    /* Tell linenoise where to get command completions and hints */
+    // Tell linenoise where to get command completions and hints
     linenoiseSetCompletionCallback(&esp_console_get_completion);
     linenoiseSetHintsCallback((linenoiseHintsCallback*) &esp_console_get_hint);
 
-    /* Set command history size */
+    // Set command history size
     linenoiseHistorySetMaxLen(100);
 }
 
@@ -270,10 +296,10 @@ void run_console(Display& display)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_display_cmd));
 
-    calibrate_args.stick = arg_int1(NULL, NULL, "<stick>", "Stick (0: LX, 1: LY, 2: RX, 3: RY)");
-    calibrate_args.min_val = arg_int1(NULL, NULL, "<min>", "Minimum value (0-4095)");
-    calibrate_args.max_val = arg_int1(NULL, NULL, "<min>", "Minimum value (0-4095)");
-    calibrate_args.end = arg_end(2);
+    calibrate_args.stick = arg_int0(NULL, NULL, "<stick>", "Stick (0: LX, 1: LY, 2: RX, 3: RY)");
+    calibrate_args.min_val = arg_int0(NULL, NULL, "<min>", "Minimum value (0-4095)");
+    calibrate_args.max_val = arg_int0(NULL, NULL, "<min>", "Minimum value (0-4095)");
+    calibrate_args.end = arg_end(10);
     const esp_console_cmd_t calibrate_cmd = {
         .command = "cal",
         .help = "Calibrate sticks",
@@ -333,9 +359,6 @@ void run_console(Display& display)
                "On Windows, try using Putty instead.\n");
         linenoiseSetDumbMode(1);
 #if CONFIG_LOG_COLORS
-        /* Since the terminal doesn't support escape sequences,
-         * don't use color codes in the prompt.
-         */
         prompt = "remote> ";
 #endif // CONFIG_LOG_COLORS
     }
