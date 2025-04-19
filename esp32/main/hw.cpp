@@ -144,13 +144,24 @@ void read_switches(ForwardAirFrame& frame)
         ((tmp & 0x03) << 2);
 }
 
-static float clamped(int value, float min_value = -1.0)
+static float clamped_neg_pos(int value)
 {
     if (value < 0)
-        return min_value;
+        return -1.0;
     if (value > 4095)
         return 1.0;
     return (value - 2048)/2048.0;
+}
+
+static float clamped_pos(int value, bool invert = false)
+{
+    if (invert)
+        value = 4096 - value;
+    if (value < 0)
+        return 0.0;
+    if (value > 4095)
+        return 1.0;
+    return value/4096.0;
 }
 
 static float calibrated(int stick, int value)
@@ -159,10 +170,10 @@ static float calibrated(int stick, int value)
         return NAN;
     const auto cal = get_stick_calibration(stick);
     if (cal.max == 0)
-        return clamped(value);
+        return clamped_neg_pos(value);
     if (value >= cal.mid)
-        return clamped(2048 + (value - cal.mid) * 2048 / (cal.max - cal.mid));
-    return clamped((value - cal.min) * 2048 / (cal.mid - cal.min));
+        return clamped_neg_pos(2048 + (value - cal.mid) * 2048 / (cal.max - cal.mid));
+    return clamped_neg_pos((value - cal.min) * 2048 / (cal.mid - cal.min));
 }
 
 bool check(float value)
@@ -217,8 +228,8 @@ bool fill_frame(ForwardAirFrame& frame,
     frame.left_y = read_stick(1, initial);
     frame.right_x = read_stick(2, initial);
     frame.right_y = read_stick(3, initial);
-    frame.left_pot = clamped(read_adc(POT1_CHANNEL), 0.0);
-    frame.right_pot = clamped(read_adc(POT2_CHANNEL), 0.0);
+    frame.left_pot = clamped_pos(read_adc(POT1_CHANNEL));
+    frame.right_pot = clamped_pos(read_adc(POT2_CHANNEL), true);
     if (!check(frame))
         return false;
     read_switches(frame);
