@@ -26,8 +26,8 @@ static QueueHandle_t s_espnow_queue;
 
 static uint8_t s_other_mac[ESP_NOW_ETH_ALEN];
 
-static void espnow_send_cb(const uint8_t* mac_addr, esp_now_send_status_t status);
-static void espnow_recv_cb(const esp_now_recv_info_t *recv_info, const uint8_t *data, int len);
+static void espnow_send_cb(const wifi_tx_info_t* info, esp_now_send_status_t status);
+static void espnow_recv_cb(const esp_now_recv_info_t* recv_info, const uint8_t *data, int len);
 static void espnow_task(void *pvParameter);
 
 void fatal_error(const char* why)
@@ -120,7 +120,7 @@ bool init_radio()
 // ESPNOW sending or receiving callback function is called in WiFi task.
 // Users should not do lengthy operations from this task. Instead, post
 // necessary data to a queue and handle it from a lower priority task.
-static void espnow_send_cb(const uint8_t*, esp_now_send_status_t status)
+static void espnow_send_cb(const wifi_tx_info_t*, esp_now_send_status_t status)
 {
     espnow_event_t evt;
     evt.id = ESPNOW_SEND_CB;
