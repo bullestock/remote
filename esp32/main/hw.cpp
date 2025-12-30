@@ -97,8 +97,10 @@ int read_adc(int channel)
     return value[0] * 256 + value[1];
 }
 
-void read_switches(ForwardAirFrame& frame)
+Switch_state read_switches()
 {
+    Switch_state state;
+    
     uint16_t tmp = 0;
 
     gpio_set_level(PIN_CP, 1);
@@ -129,19 +131,21 @@ void read_switches(ForwardAirFrame& frame)
     // 0        654 321
 
     const uint8_t pushbuttons = tmp & 0x77;
-    frame.pushbuttons = ((pushbuttons & 0x70) >> 1) + (pushbuttons & 0x07);
+    state.pushbuttons = ((pushbuttons & 0x70) >> 1) + (pushbuttons & 0x07);
 
-    frame.slide = (tmp & 0x0008) >> 3;
+    state.slide = (tmp & 0x0008) >> 3;
 
     // Get toggle bits
     tmp = (tmp & 0x7F80) >> 7;
-    frame.toggles =
+    state.toggles =
         ((tmp & 0x40) >> 1) +
         ((tmp & 0x80) >> 3) +
         ((tmp & 0x10) << 3) +
         ((tmp & 0x20) << 1) +
         ((tmp & 0x0C) >> 2) +
         ((tmp & 0x03) << 2);
+
+    return state;
 }
 
 static float clamped_neg_pos(int value)
@@ -186,9 +190,7 @@ bool check(const ForwardAirFrame& frame)
     return check(frame.left_x) &&
         check(frame.left_y) &&
         check(frame.right_x) &&
-        check(frame.right_y) &&
-        check(frame.left_pot) &&
-        check(frame.right_pot);
+        check(frame.right_y);
 }
 
 static LowPassFilter filters[4];
@@ -228,11 +230,15 @@ bool fill_frame(ForwardAirFrame& frame,
     frame.left_y = read_stick(1, initial);
     frame.right_x = read_stick(2, initial);
     frame.right_y = read_stick(3, initial);
+    /*
     frame.left_pot = clamped_pos(read_adc(POT1_CHANNEL));
     frame.right_pot = clamped_pos(read_adc(POT2_CHANNEL), true);
+    */
     if (!check(frame))
         return false;
-    read_switches(frame);
+    /*
+      read_switches(frame);
+    */
     set_crc(frame);
     return true;
 }

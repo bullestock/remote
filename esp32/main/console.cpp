@@ -199,10 +199,9 @@ static int test_switches(int, char**)
     for (int n = 0; n < 25; ++n)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
-        ForwardAirFrame frame;
-        read_switches(frame);
+        const auto state = read_switches();
         printf("Toggles: %02X  Push: %02X  Slide: %01X\n",
-               frame.toggles, frame.pushbuttons, frame.slide);
+               state.toggles, state.pushbuttons, state.slide);
     }
     
     return 0;
