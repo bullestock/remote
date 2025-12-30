@@ -15,16 +15,15 @@ Display& Display::instance()
 Display::Display()
 {
     display._address = DISPLAY_I2C_ADDRESS;
-    display._flip = false;
 
-    display_present = ssd1306_init(&display, 128, 64);
+    display_present = sh1107_init(&display, 128, 128);
     if (!display_present)
     {
         ESP_LOGE(TAG, "Display not present");
         return;
     }
 
-    ssd1306_contrast(&display, 0xff);
+    sh1107_contrast(&display, 0xff);
     clear();
 
     for (int i = 0; i < NOF_INFO_LINES; ++i)
@@ -38,7 +37,7 @@ void Display::clear()
 {
     if (!display_present)
         return;
-    ssd1306_clear_screen(&display, false);
+    sh1107_clear_screen(&display, false);
     lines.clear();
     row = 0;
 }
@@ -66,7 +65,7 @@ void Display::set_debug_info(const ForwardAirFrame& frame)
     debug_info = frame;
 }
 
-SSD1306_t* Display::device()
+SH1107_t* Display::device()
 {
     return &display;
 }
@@ -76,7 +75,7 @@ void Display::add_progress(const std::string& status)
     if (!display_present)
         return;
     std::string txt = std::string(" ") + status;
-    ssd1306_display_text(device(), row, txt.c_str(), txt.size(), false);
+    sh1107_display_text(device(), row, 0, txt.c_str(), txt.size(), false);
     ++row;
     lines.push_back(status);
     if (row < 7)
@@ -87,7 +86,8 @@ void Display::add_progress(const std::string& status)
     clear();
     for (int i = 0; i < lines.size(); ++i)
     {
-        ssd1306_display_text(device(), i, lines[i].c_str(), lines[i].size(), false);
+        sh1107_display_text(device(), i, 0,
+                            lines[i].c_str(), lines[i].size(), false);
     }
 }
 
@@ -118,20 +118,21 @@ void Display::thread_body()
         // Update status
         if (!new_status.empty())
         {
-            ssd1306_clear_line(device(), 0, false);
-            ssd1306_display_text_x3(device(), 0,
-                                    new_status.c_str(), new_status.size(),
-                                    false);
+            sh1107_clear_line(device(), 0, false);
+            sh1107_display_text(device(), 0, 0,
+                                new_status.c_str(), new_status.size(),
+                                false);
         }
         // Update changed info lines
         for (int i = 0; i < NOF_INFO_LINES; ++i)
         {
             if (info_lines_dirty_copy[i])
             {
-                ssd1306_clear_line(device(), STATUS_START + i, false);
-                ssd1306_display_text(device(), STATUS_START + i,
-                                     info_lines_copy[i].c_str(), info_lines_copy[i].size(),
-                                     false);
+                sh1107_clear_line(device(), STATUS_START + i, false);
+                sh1107_display_text(device(), STATUS_START + i, 0,
+                                    info_lines_copy[i].c_str(),
+                                    info_lines_copy[i].size(),
+                                    false);
             }
         }
         // Update debug
@@ -140,10 +141,11 @@ void Display::thread_body()
         {
             const auto txt = format("R %3d %3d",
                                     debug_info.right_x, debug_info.right_y);
-            ssd1306_clear_line(device(), STATUS_START + NOF_INFO_LINES, false);
-            ssd1306_display_text(device(), STATUS_START + NOF_INFO_LINES,
-                                 txt.c_str(), txt.size(),
-                                 false);
+            sh1107_clear_line(device(), STATUS_START + NOF_INFO_LINES, false);
+            sh1107_display_text(device(),
+                                STATUS_START + NOF_INFO_LINES, 0,
+                                txt.c_str(), txt.size(),
+                                false);
             last_debug_info = debug_info;
         }
     }

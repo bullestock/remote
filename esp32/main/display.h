@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "protocol.h"
-#include "ssd1306.h"
+#include "sh1107.h"
 
 class Display
 {
@@ -14,7 +14,7 @@ public:
 
     void clear();
 
-    SSD1306_t* device();
+    SH1107_t* device();
 
     /// Add progress message (used during boot).
     void add_progress(const std::string& status);
@@ -33,7 +33,7 @@ private:
 
     void thread_body();
     
-    SSD1306_t display;
+    SH1107_t display;
     bool display_present = false;
     // Used by add_progress()
     int row = 0;

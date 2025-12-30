@@ -76,7 +76,7 @@ void init_hardware()
 
     i2c_device_config_t display_cfg = {
         .dev_addr_length = I2C_ADDR_BIT_LEN_7,
-        .device_address = I2C_ADDRESS,
+        .device_address = DISPLAY_I2C_ADDRESS,
         .scl_speed_hz = I2C_MASTER_FREQ_HZ,
     };
     ESP_ERROR_CHECK(i2c_master_bus_add_device(i2c_bus_handle, &display_cfg, &dev_handle));
