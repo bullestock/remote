@@ -119,9 +119,10 @@ static int test_display(int, char**)
     printf("Running display test\n");
 
     the_display->clear();
-    for (int i = 0; i < 20; ++i)
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    for (int i = 0; i < 5; ++i)
     {
-        the_display->add_progress(format("Line %d", i+1));
+        the_display->add_progress(format("Line %d ---", i+1));
         vTaskDelay(500 / portTICK_PERIOD_MS);
     }
     
@@ -352,7 +353,7 @@ void run_console(Display& display)
         .help = "Test display",
         .hint = nullptr,
         .func = &test_display,
-        .argtable = nullptr
+        .argtable = nullptr,
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_display_cmd));
 

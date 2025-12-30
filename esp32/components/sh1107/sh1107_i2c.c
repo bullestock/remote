@@ -61,13 +61,13 @@ bool i2c_init(SH1107_t * dev, int width, int height)
 	int out_index = 0;
 	out_buf[out_index++] = I2C_CONTROL_BYTE_CMD_STREAM;
 	out_buf[out_index++] = 0xAE;
-	out_buf[out_index++] = 0xDC;
+	out_buf[out_index++] = 0xDC; //
 	out_buf[out_index++] = 0x00;
 	out_buf[out_index++] = 0x81;
 	out_buf[out_index++] = 0x2F;
 	out_buf[out_index++] = 0x20;
 	out_buf[out_index++] = 0xA0;
-	out_buf[out_index++] = 0xC0;
+	out_buf[out_index++] = 0xC0; // c7
 	out_buf[out_index++] = 0xA8;
 	out_buf[out_index++] = 0x7F;
 	out_buf[out_index++] = 0xD3;
@@ -84,7 +84,8 @@ bool i2c_init(SH1107_t * dev, int width, int height)
 	out_buf[out_index++] = 0xA4;
 	out_buf[out_index++] = 0xA6;
 	//out_buf[out_index++] = 0xA7;	// Inverted display
-	out_buf[out_index++] = 0xAF;
+	out_buf[out_index++] = 0xAF; // Display on
+    // ff
 
 	esp_err_t res;
 	res = i2c_master_transmit(dev_handle, out_buf, out_index, I2C_TICKS_TO_WAIT);
@@ -102,6 +103,8 @@ void i2c_display_image(SH1107_t * dev, int page, int seg, uint8_t * images, int 
 	if (page >= dev->_pages) return;
 	if (seg >= dev->_width) return;
 
+    seg += dev->_x_offset;
+    
 	uint8_t columLow = seg & 0x0F;
 	uint8_t columHigh = (seg >> 4) & 0x0F;
 

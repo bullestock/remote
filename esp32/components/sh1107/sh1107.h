@@ -51,6 +51,7 @@ typedef struct {
 	int _height;
 	int _pages;
 	int _direction;
+    int _x_offset;
 	int16_t _dc;
 	spi_device_handle_t _SPIHandle;
 	PAGE_t _page[16];

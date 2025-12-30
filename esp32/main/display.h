@@ -39,7 +39,7 @@ private:
     int row = 0;
     std::vector<std::string> lines;
 
-    static const int NOF_INFO_LINES = 3;
+    static const int NOF_INFO_LINES = 12;
     std::mutex mutex;
     std::string status;
     std::string last_status;

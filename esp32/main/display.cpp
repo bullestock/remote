@@ -15,6 +15,7 @@ Display& Display::instance()
 Display::Display()
 {
     display._address = DISPLAY_I2C_ADDRESS;
+    display._x_offset = 96;
 
     display_present = sh1107_init(&display, 128, 128);
     if (!display_present)
@@ -78,7 +79,7 @@ void Display::add_progress(const std::string& status)
     sh1107_display_text(device(), row, 0, txt.c_str(), txt.size(), false);
     ++row;
     lines.push_back(status);
-    if (row < 7)
+    if (row < 12)
         return; // still room for more
     // Out of room, scroll up
     lines.erase(lines.begin());

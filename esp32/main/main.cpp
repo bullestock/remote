@@ -148,7 +148,8 @@ void app_main(void)
             }
             if (!ready)
             {
-                printf("Not ready\n");
+                if (ready)
+                    printf("Not ready\n");
                 ++failures;
             }
             else
