@@ -117,7 +117,7 @@ void sh1107_display_text(SH1107_t * dev, int row, int col, const char * text, in
 
 void sh1107_clear_screen(SH1107_t * dev, bool invert)
 {
-	uint8_t zero[64];
+	uint8_t zero[128];
 	if (invert) {
 		memset(zero, 0xff, sizeof(zero));
 	} else {
