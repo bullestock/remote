@@ -120,10 +120,13 @@ static int test_display(int, char**)
 
     the_display->clear();
     vTaskDelay(1000 / portTICK_PERIOD_MS);
-    for (int i = 0; i < 5; ++i)
+    const char* txt = "0123456789ABCDEFghijkl";
+    for (int i = 0; i < 16; ++i)
     {
-        the_display->add_progress(format("Line %d ---", i+1));
-        vTaskDelay(500 / portTICK_PERIOD_MS);
+        auto s = std::string(txt) + std::string(txt);
+        s = s.substr(i, i + 16);
+        the_display->add_progress(s);
+        vTaskDelay(100 / portTICK_PERIOD_MS);
     }
     
     return 0;

@@ -39,7 +39,6 @@ void Display::clear()
     if (!display_present)
         return;
     sh1107_clear_screen(&display, false);
-    lines.clear();
     row = 0;
 }
 
@@ -75,21 +74,10 @@ void Display::add_progress(const std::string& status)
 {
     if (!display_present)
         return;
-    std::string txt = std::string(" ") + status;
-    sh1107_display_text(device(), row, 0, txt.c_str(), txt.size(), false);
+    sh1107_display_text(device(), row, 0, status.c_str(), status.size(), false);
     ++row;
-    lines.push_back(status);
-    if (row < 12)
-        return; // still room for more
-    // Out of room, scroll up
-    lines.erase(lines.begin());
-    --row;
-    clear();
-    for (int i = 0; i < lines.size(); ++i)
-    {
-        sh1107_display_text(device(), i, 0,
-                            lines[i].c_str(), lines[i].size(), false);
-    }
+    if (row >= 16)
+        row = 0;
 }
 
 void Display::thread_body()

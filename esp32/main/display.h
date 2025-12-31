@@ -37,7 +37,6 @@ private:
     bool display_present = false;
     // Used by add_progress()
     int row = 0;
-    std::vector<std::string> lines;
 
     static const int NOF_INFO_LINES = 12;
     std::mutex mutex;
