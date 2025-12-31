@@ -73,7 +73,7 @@ bool i2c_init(SH1107_t * dev, int width, int height)
 	out_buf[out_index++] = 0xD3;
 	out_buf[out_index++] = 0x60;
 	out_buf[out_index++] = 0xD5;
-	out_buf[out_index++] = 0x51;
+	out_buf[out_index++] = 0x50;
 	out_buf[out_index++] = 0xD9;
 	out_buf[out_index++] = 0x22;
 	out_buf[out_index++] = 0xDB;
