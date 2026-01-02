@@ -228,12 +228,15 @@ bool fill_frame(ForwardAirFrame& frame,
     frame.ticks = ticks;
     frame.left_x = read_stick(0, initial);
     frame.left_y = read_stick(1, initial);
-    frame.right_x = read_stick(2, initial);
-    frame.right_y = read_stick(3, initial);
-    /*
-    frame.left_pot = clamped_pos(read_adc(POT1_CHANNEL));
-    frame.right_pot = clamped_pos(read_adc(POT2_CHANNEL), true);
-    */
+    frame.volume = clamped_pos(read_adc(POT1_CHANNEL));
+    const auto right_pot = clamped_pos(read_adc(POT2_CHANNEL), true);
+    // Map pot (0-1) to max_power (0.2-1.0)
+    const float MIN_POWER = 0.2;
+    const float MAX_POWER = 1.0;
+    const float max_power = std::min(MAX_POWER,
+                                     MIN_POWER + (MAX_POWER - MIN_POWER)*right_pot);
+    frame.right_x = max_power * read_stick(2, initial);
+    frame.right_y = max_power * read_stick(3, initial);
     if (!check(frame))
         return false;
     /*

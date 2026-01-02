@@ -10,6 +10,8 @@
 class Display
 {
 public:
+    static const int NOF_INFO_LINES = 8;
+
     static Display& instance();
 
     void clear();
@@ -38,7 +40,6 @@ private:
     // Used by add_progress()
     int row = 0;
 
-    static const int NOF_INFO_LINES = 12;
     std::mutex mutex;
     std::string status;
     std::string last_status;

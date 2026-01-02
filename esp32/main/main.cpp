@@ -71,7 +71,7 @@ void app_main(void)
     int consecutive_errors = 0;
     unsigned long failures = 0;
     unsigned long crc_errors = 0;
-    unsigned long successes = 0;
+    unsigned long sent = 0;
     float their_battery = 0.0;
 
     // Round trip delay in microseconds
@@ -110,14 +110,16 @@ void app_main(void)
                 delay = sum/actual_delay_samples;
                 delay_info = format("%d ms", delay/1000);
             }
-            display.set_info(0, format("S %d E %d", successes, failures));
+            display.set_info(Display::NOF_INFO_LINES - 2,
+                             format("S %d E %d", sent, failures));
             std::string peer_bat = "---";
             if (their_battery > 0)
                 peer_bat = format("%2.2fV", their_battery);
-            display.set_info(1, format("%1.2fV  %s  %s",
-                                       my_battery,
-                                       peer_bat.c_str(),
-                                       delay_info.c_str()));
+            display.set_info(Display::NOF_INFO_LINES - 1,
+                             format("%1.2fV  %s  %s",
+                                    my_battery,
+                                    peer_bat.c_str(),
+                                    delay_info.c_str()));
         }
         
         bool ok = send_frame(frame);
@@ -129,7 +131,7 @@ void app_main(void)
         bool ready = false;
         if (ok)
         {
-            ++successes;
+            ++sent;
 
             ReturnAirFrame ret_frame;
             for (int i = 0; !ready && (i < 10); ++i)

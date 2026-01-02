@@ -128,7 +128,7 @@ void Display::thread_body()
         if (debug_info.right_x != last_debug_info.right_x ||
             debug_info.right_y != last_debug_info.right_y)
         {
-            const auto txt = format("R %3d %3d",
+            const auto txt = format("R %.2f %.2f",
                                     debug_info.right_x, debug_info.right_y);
             sh1107_clear_line(device(), STATUS_START + NOF_INFO_LINES, false);
             sh1107_display_text(device(),
