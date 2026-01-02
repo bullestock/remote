@@ -23,8 +23,12 @@ struct ForwardAirFrame
     float volume;
     float analog;
 
+    static const int SOUND_RANDOM = 0xFFFE;
+    static const int SOUND_ABORT = 0xFFFF;
+
     /// 0000:      No sound
-    /// 0001-FFFE: Start playing specified sound
+    /// 0001-FFFD: Start playing specified sound
+    /// FFFE:      Random sound
     /// FFFF:      Abort sound
     uint16_t sound;
 
@@ -71,3 +75,6 @@ bool check_crc(const T& frame)
     return crc == frame.crc;
 }
 
+// Local Variables:
+// compile-command: "(cd ..; idf.py build)"
+// End:
