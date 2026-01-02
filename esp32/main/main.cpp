@@ -182,11 +182,13 @@ void app_main(void)
             }
         }
         if (consecutive_errors > 10)
-            display.set_status("!!!!!!");
+            display.set_status("!!!!!!!!!!!!!!!!");
         else if (!ready)
-            display.set_status("------");
+            display.set_status("\x81\x81\x81\x81\x81\x81\x81\x81"
+                               "\x81\x81\x81\x81\x81\x81\x81\x81");
         else
-            display.set_status("\x7f\x7f\x7f\x7f\x7f\x7f");
+            display.set_status("\x80\x80\x80\x80\x80\x80\x80\x80"
+                               "\x80\x80\x80\x80\x80\x80\x80\x80");
     }
 }
 
