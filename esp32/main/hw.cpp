@@ -229,6 +229,7 @@ bool fill_frame(ForwardAirFrame& frame,
     frame.left_x = read_stick(0, initial);
     frame.left_y = read_stick(1, initial);
     frame.volume = clamped_pos(read_adc(POT1_CHANNEL));
+    frame.analog = 0.0f;
     const auto right_pot = clamped_pos(read_adc(POT2_CHANNEL), true);
     // Map pot (0-1) to max_power (0.2-1.0)
     const float MIN_POWER = 0.2;

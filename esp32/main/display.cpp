@@ -4,6 +4,8 @@
 
 #include <string.h>
 
+#include <freertos/FreeRTOS.h>
+
 static constexpr const int STATUS_START = 4;
 
 Display& Display::instance()

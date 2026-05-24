@@ -65,7 +65,7 @@ bool init_radio()
 #endif
 
     uint8_t mac[ESP_NOW_ETH_ALEN];
-    esp_wifi_get_mac((wifi_interface_t) ESP_IF_WIFI_STA, mac);
+    esp_wifi_get_mac(WIFI_IF_STA, mac);
     ESP_LOGI(TAG, "My MAC: " MACSTR, MAC2STR(mac));
 
     const auto peer_mac = get_peer_mac();

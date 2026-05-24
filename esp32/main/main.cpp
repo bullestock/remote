@@ -132,6 +132,11 @@ void app_main(void)
         if (ok)
         {
             ++sent;
+            if (sent >= 10000)
+            {
+                sent = 0;
+                failures = 0;
+            }
 
             ReturnAirFrame ret_frame;
             for (int i = 0; !ready && (i < 10); ++i)

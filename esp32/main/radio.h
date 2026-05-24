@@ -7,7 +7,7 @@
 #include "esp_now.h"
 
 #define ESPNOW_WIFI_MODE WIFI_MODE_STA
-#define ESPNOW_WIFI_IF   (wifi_interface_t) ESP_IF_WIFI_STA
+#define ESPNOW_WIFI_IF   WIFI_IF_STA
 
 #define ESPNOW_QUEUE_SIZE           6
 
