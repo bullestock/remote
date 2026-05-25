@@ -10,7 +10,7 @@
 class Display
 {
 public:
-    static const int NOF_INFO_LINES = 8;
+    static const int NOF_INFO_LINES = 5;
 
     static Display& instance();
 

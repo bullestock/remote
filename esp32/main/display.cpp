@@ -6,7 +6,7 @@
 
 #include <freertos/FreeRTOS.h>
 
-static constexpr const int STATUS_START = 4;
+static constexpr const int STATUS_START = 2;
 
 Display& Display::instance()
 {
@@ -34,6 +34,7 @@ Display::Display()
 
     memset(&debug_info, 0, sizeof(debug_info));
     memset(&last_debug_info, 0, sizeof(last_debug_info));
+    last_debug_info.right_x = 1000;
 }
 
 void Display::clear()

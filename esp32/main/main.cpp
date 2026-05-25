@@ -14,6 +14,10 @@
 
 #include "protocol.h"
 
+static std::vector<std::string> tracks;
+static size_t track_count = 0;
+
+
 extern "C"
 void app_main(void)
 {
@@ -72,6 +76,8 @@ void app_main(void)
     unsigned long failures = 0;
     unsigned long crc_errors = 0;
     unsigned long sent = 0;
+    int64_t good_frames = 0;
+    int64_t last_track_requested = -1;
     float their_battery = 0.0;
 
     // Round trip delay in microseconds
@@ -96,10 +102,33 @@ void app_main(void)
 
         const auto my_battery = get_my_battery();
 
+        if ((good_frames > 10) && (frame.command == Command::None))
+        {
+            // We have established communication. Decide which command to send.
+            if (tracks.empty() || (tracks.size() < track_count))
+            {
+                if (last_track_requested >= 0 &&
+                    (good_frames - last_track_requested < 10))
+                {
+                    //printf("Waiting\n");
+                }
+                else
+                {
+                    frame.data.sound.index = tracks.size();
+                    printf("Requesting track %d\n", frame.data.sound.index);
+                    frame.command = Command::Sound;
+                    frame.data.sound.sound_command = SoundCommand::ListSounds;
+                    last_track_requested = good_frames;
+                }
+            }
+        }
+
         if (++count > 100)
         {
             count = 0;
             display.set_debug_info(frame);
+            display.set_info(0,
+                             format("T %d", (int) tracks.size()));
             int delay = 0;
             std::string delay_info;
             if (actual_delay_samples > 0)
@@ -110,12 +139,12 @@ void app_main(void)
                 delay = sum/actual_delay_samples;
                 delay_info = format("%d ms", delay/1000);
             }
-            display.set_info(Display::NOF_INFO_LINES - 2,
+            display.set_info(1,
                              format("S %d E %d", sent, failures));
             std::string peer_bat = "---";
             if (their_battery > 0)
                 peer_bat = format("%2.2fV", their_battery);
-            display.set_info(Display::NOF_INFO_LINES - 1,
+            display.set_info(2,
                              format("%1.2fV  %s  %s",
                                     my_battery,
                                     peer_bat.c_str(),
@@ -175,14 +204,31 @@ void app_main(void)
                 else
                 {
                     const auto end_time = esp_timer_get_time();
+                    ++good_frames;
 
                     for (int i = actual_delay_samples-1; i > 0; --i)
                         delay_samples[i] = delay_samples[i-1];
                     delay_samples[0] = end_time - send_time;
                     if (actual_delay_samples < NOF_DELAY_SAMPLES)
                         ++actual_delay_samples;
+                    switch (ret_frame.command)
+                    {
+                    case Command::None:
+                    case Command::Pwm:
+                        break;
 
-                    their_battery = ret_frame.battery/1000.0;
+                    case Command::Battery:
+                        their_battery = ret_frame.data.battery.mV/1000.0;
+                        break;
+
+                    case Command::Sound:
+                        track_count = ret_frame.data.track.track_count;
+                        printf("Received track %u of %u\n", ret_frame.data.track.index, track_count);
+                        if (ret_frame.data.track.index == 0)
+                            tracks.clear();
+                        tracks.push_back(ret_frame.data.track.track);
+                        break;
+                    }
                 }
             }
         }
