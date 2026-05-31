@@ -6,6 +6,8 @@
 #include "nvs.h"
 #include "radio.h"
 
+#include <chrono>
+#include <random>
 #include <string.h>
 
 #include <freertos/FreeRTOS.h>
@@ -17,6 +19,9 @@
 static std::vector<std::string> tracks;
 static size_t track_count = 0;
 
+static void handle_switches(std::default_random_engine& generator,
+                            ForwardAirFrame& frame,
+                            Display& display);
 
 extern "C"
 void app_main(void)
@@ -89,6 +94,10 @@ void app_main(void)
     display.set_status("Ready");
     int count = 90;
     bool initial = true;
+
+    const unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
+
     while (1)
     {
         const auto send_time = esp_timer_get_time();
@@ -102,6 +111,8 @@ void app_main(void)
 
         const auto my_battery = get_my_battery();
 
+        handle_switches(generator, frame, display);
+        
         if ((good_frames > 10) && (frame.command == Command::None))
         {
             // We have established communication. Decide which command to send.
@@ -240,6 +251,70 @@ void app_main(void)
         else
             display.set_status("\x80\x80\x80\x80\x80\x80\x80\x80"
                                "\x80\x80\x80\x80\x80\x80\x80\x80");
+    }
+}
+
+static void handle_switches(std::default_random_engine& generator,
+                            ForwardAirFrame& frame,
+                            Display& display)
+{
+    static Switch_state last_switch_state;
+    static bool first = true;
+    static int random_sound = -1;
+    static int fixed_sound = 0;
+
+    if (first)
+    {
+        memset(&last_switch_state, 0, sizeof(last_switch_state));
+        first = false;
+    }
+    const auto switch_state = read_switches();
+    if (!memcmp(&switch_state, &last_switch_state, sizeof(last_switch_state)))
+        return;
+    last_switch_state = switch_state;
+    // Effects mode
+    switch (switch_state.toggles[0])
+    {
+    case Switch_state::Up:
+        // Random
+        if (random_sound < 0)
+        {
+            std::uniform_int_distribution<int> distribution(0, tracks.size());
+            random_sound = distribution(generator);
+            printf("New random sound: %d\n", random_sound);
+            display.set_info(3, format("R %s", tracks[random_sound].c_str()));
+        }
+        break;
+    case Switch_state::Center:
+        // Browse
+    case Switch_state::Down:
+        // Fixed
+        break;
+    }
+    // Play sound?
+    if (switch_state.pushbuttons & 0x20)
+    {
+        switch (switch_state.toggles[0])
+        {
+        case Switch_state::Up:
+            // Random
+            frame.command = Command::Sound;
+            frame.data.sound.sound_command = SoundCommand::PlaySound;
+            frame.data.sound.index = random_sound;
+            printf("Playing random sound (%d)\n", random_sound);
+            random_sound = -1;
+            break;
+        case Switch_state::Center:
+            // Browse
+            break;
+        case Switch_state::Down:
+            // Fixed
+            frame.command = Command::Sound;
+            frame.data.sound.sound_command = SoundCommand::PlaySound;
+            frame.data.sound.index = fixed_sound;
+            printf("Playing fixed sound (%d)\n", fixed_sound);
+            break;
+        }
     }
 }
 

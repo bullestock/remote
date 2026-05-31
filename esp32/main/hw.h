@@ -6,16 +6,15 @@ class ForwardAirFrame;
 
 struct Switch_state
 {
-    /// Two bits per switch:
-    /// 01  Up
-    /// 00  Center
-    /// 10  Down
-    uint8_t toggles;
+    enum Toggle_state
+    {
+        Up,
+        Center,
+        Down
+    };
+    Toggle_state toggles[4];
     uint8_t pushbuttons;
-    /// 01  Top
-    /// 00  Center
-    /// 10  Bottom
-    uint8_t slide;
+    Toggle_state slide;
 };
 
 void init_hardware();

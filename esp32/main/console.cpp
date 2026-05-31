@@ -203,8 +203,22 @@ static int test_switches(int, char**)
     {
         vTaskDelay(500/portTICK_PERIOD_MS);
         const auto state = read_switches();
-        printf("Toggles: %02X  Push: %02X  Slide: %01X\n",
-               state.toggles, state.pushbuttons, state.slide);
+        printf("Toggles: ");
+        for (const auto& e : state.toggles)
+            if (e == Switch_state::Up)
+                printf("U");
+            else if (e == Switch_state::Down)
+                printf("D");
+            else
+                printf("C");
+        printf("  Push: %02X  Slide: ",
+               state.pushbuttons);
+        if (state.slide == Switch_state::Up)
+            printf("U\n");
+        else if (state.slide == Switch_state::Down)
+            printf("D\n");
+        else
+            printf("C\n");
     }
     
     return 0;

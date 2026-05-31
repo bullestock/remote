@@ -97,6 +97,15 @@ int read_adc(int channel)
     return value[0] * 256 + value[1];
 }
 
+static Switch_state::Toggle_state get_toggle_state(int bits, bool invert = false)
+{
+    if (bits & 1)
+        return invert ? Switch_state::Down : Switch_state::Up;
+    if (bits & 2)
+        return invert ? Switch_state::Up : Switch_state::Down;
+    return Switch_state::Center;
+}
+
 Switch_state read_switches()
 {
     Switch_state state;
@@ -133,18 +142,14 @@ Switch_state read_switches()
     const uint8_t pushbuttons = tmp & 0x77;
     state.pushbuttons = ((pushbuttons & 0x70) >> 1) + (pushbuttons & 0x07);
 
-    state.slide = (tmp & 0x0008) >> 3;
+    state.slide = get_toggle_state((tmp & 0x0008) >> 3);
 
     // Get toggle bits
     tmp = (tmp & 0x7F80) >> 7;
-    state.toggles =
-        ((tmp & 0x40) >> 1) +
-        ((tmp & 0x80) >> 3) +
-        ((tmp & 0x10) << 3) +
-        ((tmp & 0x20) << 1) +
-        ((tmp & 0x0C) >> 2) +
-        ((tmp & 0x03) << 2);
-
+    state.toggles[0] = get_toggle_state((tmp & 0x0C) >> 2);
+    state.toggles[1] = get_toggle_state(tmp & 0x03);
+    state.toggles[2] = get_toggle_state((tmp & 0xC0) >> 6, true);
+    state.toggles[3] = get_toggle_state((tmp & 0x30) >> 4, true);
     return state;
 }
 
@@ -228,10 +233,6 @@ bool fill_frame(ForwardAirFrame& frame,
     frame.ticks = ticks;
     frame.left_x = read_stick(0, initial);
     frame.left_y = read_stick(1, initial);
-#if 0
-    frame.volume = clamped_pos(read_adc(POT1_CHANNEL));
-    frame.analog = 0.0f;
-#endif
     const auto right_pot = clamped_pos(read_adc(POT2_CHANNEL), true);
     // Map pot (0-1) to max_power (0.2-1.0)
     const float MIN_POWER = 0.2;
@@ -242,9 +243,6 @@ bool fill_frame(ForwardAirFrame& frame,
     frame.right_y = max_power * read_stick(3, initial);
     if (!check(frame))
         return false;
-    /*
-      read_switches(frame);
-    */
     set_crc(frame);
     return true;
 }
