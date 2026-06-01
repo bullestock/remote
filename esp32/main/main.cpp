@@ -16,7 +16,8 @@
 
 #include "protocol.h"
 
-static std::vector<std::string> tracks;
+static std::vector<std::string> effects;
+static std::vector<std::string> music;
 static size_t track_count = 0;
 
 static void handle_switches(std::default_random_engine& generator,
@@ -116,7 +117,7 @@ void app_main(void)
         if ((good_frames > 10) && (frame.command == Command::None))
         {
             // We have established communication. Decide which command to send.
-            if (tracks.empty() || (tracks.size() < track_count))
+            if (effects.empty() || (effects.size() < track_count))
             {
                 if (last_track_requested >= 0 &&
                     (good_frames - last_track_requested < 10))
@@ -125,10 +126,26 @@ void app_main(void)
                 }
                 else
                 {
-                    frame.data.sound.index = tracks.size();
+                    frame.data.sound.index = effects.size();
                     printf("Requesting track %d\n", frame.data.sound.index);
                     frame.command = Command::Sound;
-                    frame.data.sound.sound_command = SoundCommand::ListSounds;
+                    frame.data.sound.sound_command = SoundCommand::ListEffects;
+                    last_track_requested = good_frames;
+                }
+            }
+            else if (music.empty() || (music.size() < track_count))
+            {
+                if (last_track_requested >= 0 &&
+                    (good_frames - last_track_requested < 10))
+                {
+                    //printf("Waiting\n");
+                }
+                else
+                {
+                    frame.data.sound.index = music.size();
+                    printf("Requesting track %d\n", frame.data.sound.index);
+                    frame.command = Command::Sound;
+                    frame.data.sound.sound_command = SoundCommand::ListMusic;
                     last_track_requested = good_frames;
                 }
             }
@@ -139,7 +156,7 @@ void app_main(void)
             count = 0;
             display.set_debug_info(frame);
             display.set_info(0,
-                             format("T %d", (int) tracks.size()));
+                             format("T %d", (int) effects.size()));
             int delay = 0;
             std::string delay_info;
             if (actual_delay_samples > 0)
@@ -233,11 +250,18 @@ void app_main(void)
                         break;
 
                     case Command::Sound:
-                        track_count = ret_frame.data.track.track_count;
-                        printf("Received track %u of %u\n", ret_frame.data.track.index, track_count);
-                        if (ret_frame.data.track.index == 0)
-                            tracks.clear();
-                        tracks.push_back(ret_frame.data.track.track);
+                        {
+                            track_count = ret_frame.data.track.track_count;
+                            printf("Received track %u of %u: %s\n",
+                                   ret_frame.data.track.index, track_count, ret_frame.data.track.track);
+                            auto& v = ret_frame.data.track.command == SoundCommand::ListEffects ? effects : music;
+                            if (ret_frame.data.track.index == 0)
+                                v.clear();
+                            if (ret_frame.data.track.index < v.size())
+                                printf("SKIP %d\n", ret_frame.data.track.index);
+                            else
+                                v.push_back(ret_frame.data.track.track);
+                        }
                         break;
                     }
                 }
@@ -279,10 +303,10 @@ static void handle_switches(std::default_random_engine& generator,
         // Random
         if (random_sound < 0)
         {
-            std::uniform_int_distribution<int> distribution(0, tracks.size());
+            std::uniform_int_distribution<int> distribution(0, effects.size());
             random_sound = distribution(generator);
             printf("New random sound: %d\n", random_sound);
-            display.set_info(3, format("R %s", tracks[random_sound].c_str()));
+            display.set_info(3, format("R %s", effects[random_sound].c_str()));
         }
         break;
     case Switch_state::Center:

@@ -14,7 +14,8 @@ enum class Command
 
 enum class SoundCommand
 {
-    ListSounds,
+    ListEffects,
+    ListMusic,
     PlaySound,
     StopSound,
 };
@@ -25,7 +26,8 @@ struct ForwardAirFrame
     // Version 1 was A5A6
     // Version 2 was A5A7
     // Version 3 was A5A8
-    static const uint16_t MAGIC_VALUE = 0xA5A9;
+    // Version 4 was A5A9
+    static const uint16_t MAGIC_VALUE = 0xA5AA;
 
     static const int SOUND_RANDOM = 0xFFFF;
     
@@ -83,6 +85,7 @@ struct ReturnAirFrame
         } battery;
         struct
         {
+            SoundCommand command;
             uint16_t index;
             uint16_t track_count;
             char track[TRACK_NAME_SIZE];
