@@ -306,7 +306,13 @@ static void handle_switches(std::default_random_engine& generator,
             std::uniform_int_distribution<int> distribution(0, effects.size());
             random_sound = distribution(generator);
             printf("New random sound: %d\n", random_sound);
-            display.set_info(3, format("R %s", effects[random_sound].c_str()));
+            if (random_sound >= effects.size())
+            {
+                printf("ERROR: index too large (effects %d)\n", (int) effects.size());
+                random_sound = -1;
+            }
+            else
+                display.set_info(3, format("R %s", effects[random_sound].c_str()));
         }
         break;
     case Switch_state::Center:
