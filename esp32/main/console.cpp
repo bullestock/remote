@@ -78,6 +78,7 @@ static int test_adc(int argc, char** argv)
 
 struct
 {
+    struct arg_str* mode;
     struct arg_int* stick;
     struct arg_end* end;
 } test_stick_args;
@@ -92,25 +93,64 @@ static int test_stick(int argc, char** argv)
     }
     printf("Running stick test\n");
 
+    const auto mode = test_stick_args.mode->sval[0];
     const int stick = test_stick_args.stick->ival[0];
     const int N = 200;
-
     float sum = 0;
-    float min = 4096;
-    float max = 0;
-    bool initial = true;
-    for (int n = 0; n < N; ++n)
+    if (mode[0] == 'r')
     {
-        vTaskDelay(50/portTICK_PERIOD_MS);
-        const auto val = read_stick(stick, initial);
-        initial = false;
-        printf("Stick %d: %2.3f\n", stick, val);
-        sum += val;
-        min = std::min(min, val);
-        max = std::max(max, val);
-    }
-    printf("Min %2.3f avg %2.3f max %2.3f\n", min, static_cast<float>(sum/N), max);
+        int chan = 0;
+        switch (stick)
+        {
+        case 0:
+            chan = LEFT_X_CHANNEL;
+            break;
+        case 1:
+            chan = LEFT_Y_CHANNEL;
+            break;
+        case 2:
+            chan = RIGHT_X_CHANNEL;
+            break;
+        case 3:
+            chan = RIGHT_Y_CHANNEL;
+            break;
+        }
     
+        int min = 4096;
+        int max = 0;
+        for (int n = 0; n < N; ++n)
+        {
+            vTaskDelay(50/portTICK_PERIOD_MS);
+            const auto val = read_adc(chan);
+            printf("Stick %d: %4d\n", stick, val);
+            sum += val;
+            min = std::min(min, val);
+            max = std::max(max, val);
+        }
+        printf("Min %4d avg %4d max %4d\n", min, static_cast<int>(sum/N), max);
+    }
+    else if (mode[0] == 's')
+    {
+        float min = 10.0;
+        float max = -10.0;
+        bool initial = true;
+        for (int n = 0; n < N; ++n)
+        {
+            vTaskDelay(50/portTICK_PERIOD_MS);
+            const auto val = read_stick(stick, initial);
+            initial = false;
+            printf("Stick %d: %2.3f\n", stick, val);
+            sum += val;
+            min = std::min(min, val);
+            max = std::max(max, val);
+        }
+        printf("Min %2.3f avg %2.3f max %2.3f\n", min, static_cast<float>(sum/N), max);
+    }
+    else
+    {
+        printf("ERROR: Bad mode '%s'\n", mode);
+        return 1;
+    }
     return 0;
 }
 
@@ -353,6 +393,7 @@ void run_console(Display& display)
     };
     ESP_ERROR_CHECK(esp_console_cmd_register(&test_adc_cmd));
 
+    test_stick_args.mode = arg_str1(NULL, NULL, "<mode>", "Mode: raw/scaled");
     test_stick_args.stick = arg_int1(NULL, NULL, "<stick>", "Stick (0: LX, 1: LY, 2: RX, 3: RY)");
     test_stick_args.end = arg_end(2);
     const esp_console_cmd_t test_stick_cmd = {

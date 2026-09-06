@@ -173,11 +173,26 @@ static float clamped_pos(int value, bool invert = false)
     return value/4096.0;
 }
 
-static float calibrated(int stick, int value)
+static float calibrated(int stick, int value, bool initial)
 {
+    // Cached calibration data, with autozero
+    static calibration_data calibrations[MAX_STICK];
+    if (initial)
+        calibrations[stick] = get_stick_calibration(stick);
+
     if (value >= 4096)
         return NAN;
-    const auto cal = get_stick_calibration(stick);
+    const auto& cal = calibrations[stick];
+    if (initial)
+    {
+        if (abs(value - cal.mid) < 10)
+        {
+            printf("Autozero stick %d: %d -> %d\n", stick, cal.mid, value);
+            calibrations[stick].mid = value;
+        }
+        else
+            printf("No autozero for stick %d: %d vs %d\n", stick, cal.mid, value);
+    }
     if (cal.max == 0)
         return clamped_neg_pos(value);
     if (value >= cal.mid)
@@ -222,7 +237,10 @@ float read_stick(int stick, bool initial)
         break;
     }
 
-    return sign * calibrated(stick, filters[stick].filter(read_adc(chan), initial));
+    return sign * calibrated(stick,
+                             filters[stick].filter(read_adc(chan),
+                                                   initial),
+                            initial);
 }
 
 bool fill_frame(ForwardAirFrame& frame,

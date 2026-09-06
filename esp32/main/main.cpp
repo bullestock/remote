@@ -19,6 +19,8 @@
 static std::vector<std::string> effects;
 static std::vector<std::string> music;
 static size_t track_count = 0;
+static int random_sound = -1;
+static int fixed_sound = 0; // todo
 
 static void handle_switches(std::default_random_engine& generator,
                             ForwardAirFrame& frame,
@@ -215,6 +217,11 @@ void app_main(void)
                 if (ready)
                     printf("Not ready\n");
                 ++failures;
+                effects.clear();
+                music.clear();
+                track_count = 0;
+                random_sound = -1;
+                fixed_sound = 0;
             }
             else
             {
@@ -284,8 +291,6 @@ static void handle_switches(std::default_random_engine& generator,
 {
     static Switch_state last_switch_state;
     static bool first = true;
-    static int random_sound = -1;
-    static int fixed_sound = 0;
 
     if (first)
     {
@@ -310,6 +315,7 @@ static void handle_switches(std::default_random_engine& generator,
             {
                 printf("ERROR: index too large (effects %d)\n", (int) effects.size());
                 random_sound = -1;
+                display.set_info(3, "R -");
             }
             else
                 display.set_info(3, format("R %s", effects[random_sound].c_str()));

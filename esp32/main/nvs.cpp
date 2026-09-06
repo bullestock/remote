@@ -10,8 +10,6 @@
 #include "esp_now.h"
 #include "nvs_flash.h"
 
-const int MAX_STICK = 4;
-
 static calibration_data stick_calibration[MAX_STICK];
 static char peer_mac[2*ESP_NOW_ETH_ALEN + 1];
 static float lowpass_rate = 0.0;

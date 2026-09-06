@@ -9,6 +9,8 @@ constexpr const char* STICK_KEY = "stk";
 constexpr const char* MAC_KEY = "mac";
 constexpr const char* LP_RATE_KEY = "lpr";
 
+constexpr const int MAX_STICK = 4;
+
 // Pin definitions
 constexpr const auto PIN_MOSI = (gpio_num_t) 2;
 constexpr const auto PIN_SCK = (gpio_num_t) 4;
